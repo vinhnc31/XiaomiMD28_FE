@@ -1,5 +1,3 @@
-import {LocationProvider} from '@src/hooks/useLocation/locationProvider';
-import {SocketProvider} from '@src/hooks/useSocket/socketProvider';
 import {ToastHandlingProvider} from '@src/hooks/useToast/toast-handling';
 import RootComponent from '@src/navigations';
 import store from '@src/stores';
@@ -15,20 +13,13 @@ const App = () => {
     <Provider store={store.store}>
       <PersistGate loading={null} persistor={store.persistor}>
         <SafeAreaProvider>
-          <LocationProvider>
-            <SocketProvider>
-              <ToastHandlingProvider>
-                <RootComponent />
-              </ToastHandlingProvider>
-            </SocketProvider>
-          </LocationProvider>
+          <ToastHandlingProvider>
+            <RootComponent />
+          </ToastHandlingProvider>
         </SafeAreaProvider>
       </PersistGate>
 
-      <Toast
-        config={toastConfig}
-        topOffset={DimensionUtils.getStatusBarHeight()}
-      />
+      <Toast config={toastConfig} topOffset={DimensionUtils.getStatusBarHeight()} />
     </Provider>
   );
 };
