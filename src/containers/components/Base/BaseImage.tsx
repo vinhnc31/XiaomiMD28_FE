@@ -67,9 +67,9 @@ export function BaseImage(props: Props) {
     return (
       <TouchableOpacity onPress={onPress} style={style} activeOpacity={activeOpacity || 0.8} disabled={disabled}>
         {noFastImage ? (
+          // @ts-ignore
           <Image
             resizeMode={resizeMode}
-            // @ts-ignore
             source={image}
             style={[{width, height, tintColor: color, borderRadius}, imageStyle || {}]}
           />
@@ -90,9 +90,9 @@ export function BaseImage(props: Props) {
   return (
     <View style={style}>
       {noFastImage ? (
+        // @ts-ignore
         <Image
           resizeMode={resizeMode}
-          // @ts-ignore
           source={image}
           style={[{width, height, tintColor: color, borderRadius}, imageStyle || {}]}
         />

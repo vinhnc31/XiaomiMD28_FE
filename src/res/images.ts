@@ -4,4 +4,5 @@ export const images = {
   avataEmpty: require('../assets/images/avataEmpty.png'),
   iconCamera: require('../assets/images/iconCamera.png'),
   noNetwork: require('../assets/images/noNetwork.png'),
+  iconSplash: require('../assets/images/iconSplash.png'),
 };

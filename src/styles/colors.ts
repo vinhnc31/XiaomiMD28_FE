@@ -5,4 +5,5 @@ export enum Colors {
   gray = '#CBCBCB',
   blue = '#486BD5',
   red = '#FF0F00',
+  disable = '#A0AEC0',
 }
