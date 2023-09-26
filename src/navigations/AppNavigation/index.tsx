@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {APP_NAVIGATION} from '@src/navigations/routes';
-import {useAppSelector} from '@src/stores';
 import {Colors} from '@src/styles/colors';
 import React, {useEffect, useRef} from 'react';
 import {AppState, AppStateStatus} from 'react-native';
-import {useDispatch} from 'react-redux';
 import RootScreen from './root';
 import {AppStackParam} from './stackParam';
 

@@ -3,7 +3,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {MENU_NAVIGATION} from '@src/navigations/routes';
 import {Colors} from '@src/styles/colors';
 import React from 'react';
-import IoniconsIcons from 'react-native-vector-icons/Ionicons';
+import {BaseIcon} from '@src/containers/components/Base/BaseIcon';
 import {MenuStackParam} from './stackParam';
 import styles from './styles';
 import {Text} from 'react-native';
@@ -28,7 +28,7 @@ const RootScreen = () => {
           tabBarLabel: ({focused}) => (
             <Text style={focused ? styles.tabBarActiveLabelStyle : styles.tabBarLabelStyle}>Trang chủ</Text>
           ),
-          tabBarIcon: ({color, size}) => <IoniconsIcons name="home-outline" color={color} size={size} />,
+          tabBarIcon: ({color, size}) => <BaseIcon name="home-outline" color={color} size={size} />,
         }}
       />
       <Tab.Screen
@@ -38,7 +38,7 @@ const RootScreen = () => {
           tabBarLabel: ({focused}) => (
             <Text style={focused ? styles.tabBarActiveLabelStyle : styles.tabBarLabelStyle}>Yêu thích</Text>
           ),
-          tabBarIcon: ({color, size}) => <IoniconsIcons name="document-text-outline" color={color} size={size} />,
+          tabBarIcon: ({color, size}) => <BaseIcon name="document-text-outline" color={color} size={size} />,
         }}
       />
 
@@ -49,7 +49,7 @@ const RootScreen = () => {
           tabBarLabel: ({focused}) => (
             <Text style={focused ? styles.tabBarActiveLabelStyle : styles.tabBarLabelStyle}>Thông báo</Text>
           ),
-          tabBarIcon: ({color, size}) => <IoniconsIcons name="notifications-outline" color={color} size={size} />,
+          tabBarIcon: ({color, size}) => <BaseIcon name="notifications-outline" color={color} size={size} />,
         }}
       />
       <Tab.Screen
@@ -59,7 +59,7 @@ const RootScreen = () => {
           tabBarLabel: ({focused}) => (
             <Text style={focused ? styles.tabBarActiveLabelStyle : styles.tabBarLabelStyle}>Tài khoản</Text>
           ),
-          tabBarIcon: ({color, size}) => <IoniconsIcons name="person-circle-outline" color={color} size={size} />,
+          tabBarIcon: ({color, size}) => <BaseIcon name="person-circle-outline" color={color} size={size} />,
         }}
       />
     </Tab.Navigator>

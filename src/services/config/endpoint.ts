@@ -6,6 +6,7 @@ const endpoint = {
     logout: '/api/auth/logout',
     profile: '/api/users/profile',
   },
+  account: '/api/account',
   categories: 'v',
 };
 
