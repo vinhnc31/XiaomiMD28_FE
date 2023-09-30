@@ -1,8 +1,8 @@
 export enum Colors {
   white = '#ffffff',
-  primary = '##FF642E', // màu chính
+  primary = '#FF642E', // màu chính
   black = '#000000',
-  gray = '#CBCBCB',
+  gray = '#808080',
   blue = '#486BD5',
   red = '#FF0F00',
   disable = '#A0AEC0',

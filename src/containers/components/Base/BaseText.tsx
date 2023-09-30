@@ -47,7 +47,7 @@ export function BaseText(props: Props) {
   const textStyles = [{fontSize, color, textTransform}, style];
 
   // @ts-ignore
-  const textContent = children || content || t(text, params) || '';
+  const textContent = children || content || text || '';
 
   const renderText = () => (
     <Text numberOfLines={numberOfLines} style={textStyles}>

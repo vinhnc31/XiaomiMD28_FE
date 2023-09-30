@@ -29,21 +29,18 @@ interface Props {
 export function BaseButton(props: Props) {
   const {disableColor = '#ddd'} = props;
 
-  const getBackgroundColor = () => {
+  const getBackgroundColor = (): string => {
     if (props.backgroundColor) {
       return props.backgroundColor;
     }
     if (props.disable) {
       return disableColor;
     }
-    if (props.secondary) {
-      return '#fff';
-    }
 
     return Colors.primary;
   };
 
-  const getTextColor = () => {
+  const getTextColor = (): string => {
     if (props.textColor) {
       return props.textColor;
     }
@@ -51,14 +48,11 @@ export function BaseButton(props: Props) {
       return props.disableTextColor || '#999';
     }
 
-    if (props.secondary) {
-      return Colors.buttonActive;
-    }
-
     return '#fff';
   };
 
   return (
+    //@ts-ignore
     <TouchableOpacity
       disabled={props.disable || props.loading}
       onPress={props.onPress}
@@ -70,7 +64,6 @@ export function BaseButton(props: Props) {
           width: props.width || '100%',
           height: vs(props.height || 45),
           marginTop: vs(props.marginTop || 10),
-          borderColor: props.secondary ? Colors.buttonActive : undefined,
           borderWidth: props.secondary ? 1 : undefined,
         },
         props.style,
