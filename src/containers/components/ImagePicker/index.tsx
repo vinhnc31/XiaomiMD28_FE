@@ -148,7 +148,7 @@ function PopupChooseMedias(props: PopupChooseMediasProps, ref: ForwardedRef<Choo
         <View style={styles.modalContent}>
           {/* Tiêu đề */}
           <View style={styles.wrapperButton}>
-            <Text style={styles.titleStyle}>{'Chọn ảnh'}</Text>
+            <Text style={styles.titleStyle}>Chọn ảnh</Text>
           </View>
 
           {/* Chụp ảnh từ camera */}
