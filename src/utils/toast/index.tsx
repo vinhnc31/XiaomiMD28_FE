@@ -6,7 +6,7 @@ import {BaseImage} from '@src/containers/components/Base';
 
 export {Toast};
 
-const ToasComponent = (props: BaseToastProps & {type: ToastType}) => {
+const ToastComponent = (props: BaseToastProps & {type: ToastType}) => {
   const {icon, bgColor, textColor} = useMemo(() => {
     let bgColor = '#E4FFEA';
     let icon = require('./images/icSuccess.png');
@@ -67,13 +67,13 @@ export const toastConfig = {
       Overwrite 'success' type,
       by modifying the existing `BaseToast` component
     */
-  success: (props: any) => <ToasComponent {...props} />,
+  success: (props: any) => <ToastComponent {...props} />,
   /*
       Overwrite 'error' type,
       by modifying the existing `ErrorToast` component
     */
   error: (props: any) => {
-    return <ToasComponent {...props} />;
+    return <ToastComponent {...props} />;
   },
 };
 

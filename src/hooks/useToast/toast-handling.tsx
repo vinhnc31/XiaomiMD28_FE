@@ -25,8 +25,8 @@ const Component = (props: {children: any}) => {
   const showSuccess = (payload: IToastPayload) => {
     Toast.show({
       type: ToastType.Success,
-      text1: payload.title || t('common:alert') || '',
-      text2: payload.messageText || t(payload.message as string) || '',
+      text1: 'Thông báo',
+      text2: payload.messageText || '',
     });
   };
 

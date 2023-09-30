@@ -12,10 +12,10 @@ interface IToastContext {
   showThowError: (error: any) => void;
 }
 
-function useToast() {
+const useToast = () => {
   const {showError, showSuccess, showThowError} = useContext(ToastContext);
   return {showError, showSuccess, showThowError};
-}
+};
 
 export const ToastContext = React.createContext<IToastContext>({
   showError: (payload: IToastPayload) => ({}),
