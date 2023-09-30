@@ -16,7 +16,7 @@ interface Props {
 const LogInScreen = (props: Props) => {
   return (
     <SafeAreaView>
-      <Text>Đăng ký</Text>
+      <Text>Đăng nhập</Text>
     </SafeAreaView>
   );
 };
