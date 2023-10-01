@@ -49,7 +49,7 @@ export default StyleSheet.create({
   button: {
     height: vs(48),
     backgroundColor: Colors.primary,
-    borderRadius: ms(10),
+    borderRadius: ms(40),
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: vs(10),
@@ -63,7 +63,7 @@ export default StyleSheet.create({
   },
 
   bodyFooter: {
-    marginTop: vs(12),
+    marginTop: vs(20),
     flexDirection: 'row',
     justifyContent: 'center',
   },

@@ -38,7 +38,7 @@ const RootScreen = () => {
           tabBarLabel: ({focused}) => (
             <Text style={focused ? styles.tabBarActiveLabelStyle : styles.tabBarLabelStyle}>Yêu thích</Text>
           ),
-          tabBarIcon: ({color, size}) => <BaseIcon name="document-text-outline" color={color} size={size} />,
+          tabBarIcon: ({color, size}) => <BaseIcon name="heart-outline" color={color} size={size} />,
         }}
       />
 

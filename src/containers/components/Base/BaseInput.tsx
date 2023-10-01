@@ -17,6 +17,7 @@ interface Props {
   numberOfline?: number;
   showTitle?: boolean;
   leftIcon: string;
+  borderRadius?: number;
 }
 
 const InputBase = ({
@@ -32,6 +33,7 @@ const InputBase = ({
   phoneNumber = false,
   showTitle = false,
   leftIcon = '',
+  borderRadius,
 }: Props) => {
   const [isSecureTextEntry, setIsSecureTextEntry] = useState(true);
 
@@ -44,7 +46,7 @@ const InputBase = ({
         </Text>
       )}
       {password ? (
-        <View style={styles.innerInput}>
+        <View style={[styles.innerInput, {borderRadius: ms(borderRadius ? borderRadius : 5)}]}>
           <View style={styles.input}>
             {leftIcon && leftIcon.length > 0 && <BaseIcon name={leftIcon} size={24} color={Colors.black} />}
             <TextInput
@@ -63,7 +65,7 @@ const InputBase = ({
       ) : (
         <>
           {multiline ? (
-            <View style={styles.innerInputMutiline}>
+            <View style={[styles.innerInput, {borderRadius: ms(borderRadius ? borderRadius : 5)}]}>
               <View style={styles.input}>
                 {leftIcon && leftIcon.length > 0 && <BaseIcon name={leftIcon} size={24} color={Colors.black} />}
                 <TextInput
@@ -80,7 +82,7 @@ const InputBase = ({
               </View>
             </View>
           ) : (
-            <View style={styles.innerInput}>
+            <View style={[styles.innerInput, {borderRadius: ms(borderRadius ? borderRadius : 5)}]}>
               <View style={styles.input}>
                 {leftIcon && leftIcon.length > 0 && <BaseIcon name={leftIcon} size={24} color={Colors.black} />}
                 <TextInput
@@ -103,7 +105,7 @@ const InputBase = ({
   );
 };
 
-export default InputBase;
+export default React.memo(InputBase);
 
 const styles = StyleSheet.create({
   title: {

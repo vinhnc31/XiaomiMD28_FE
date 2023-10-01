@@ -61,7 +61,13 @@ const LogInComponent = (props: Props) => {
             <View style={styles.body}>
               <View style={styles.bodyInner}>
                 <View>
-                  <BaseInput leftIcon={'mail-outline'} title="Tài khoản" value={text} onChangeText={setText} />
+                  <BaseInput
+                    leftIcon={'mail-outline'}
+                    title="Email"
+                    value={text}
+                    onChangeText={setText}
+                    borderRadius={40}
+                  />
                 </View>
                 <View>
                   <BaseInput
@@ -70,6 +76,7 @@ const LogInComponent = (props: Props) => {
                     valuePassword={password}
                     onChangeText={setPassword}
                     password
+                    borderRadius={40}
                   />
                 </View>
                 <TouchableOpacity style={{marginVertical: vs(10), alignSelf: 'flex-end'}}>
