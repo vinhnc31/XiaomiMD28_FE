@@ -3,6 +3,12 @@ import {Dimensions, StyleSheet} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 export default StyleSheet.create({
+  //dung chung 
+  titleText: {
+    fontSize: 20,
+    color: '#2A2A2A',
+    fontFamily: 'LibreBaskerville-Bold',
+  },
   //search
   mainContainer: {
     flexDirection: 'row',
@@ -36,7 +42,7 @@ export default StyleSheet.create({
   // danh muc
   categoryView: {
     marginTop: 8,
-    height: vs(160),
+    height: vs(140),
     backgroundColor: 'white',
     paddingHorizontal: 8,
   },
@@ -47,12 +53,7 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
 
-  categoryText: {
-    fontSize: 20,
-    color: '#2A2A2A',
-    fontFamily: 'LibreBaskerville-Bold',
-  },
-
+ 
   viewButton: {flexDirection: 'row', alignItems: 'center'},
 
   seeMoreText: {
@@ -71,33 +72,33 @@ export default StyleSheet.create({
 
   categoryItem: {
     width: vs(90),
-    height: vs(150),
+    height: vs(140),
     marginRight: vs(12),
-    paddingHorizontal: 5,
-    paddingVertical: 5,
+    padding: 8,
     alignItems: 'center',
-  },
-
-  categoryImage: {
-    width: vs(90),
-    height: vs(110), 
   },
 
   viewCategoryImage: {
     width: vs(90), 
     height: vs(90), 
+    padding: 8,
     alignItems: 'center', 
     justifyContent: 'center', 
     borderWidth: vs(1),
-    borderColor: '#CCCCCC',
+    borderColor: '#EEEAEA',
     borderRadius: vs(20),
   },
 
+  categoryImage: {
+    width: vs(80),
+    height: vs(80), 
+    borderRadius: 16
+  },
 
   viewCategoryTextName: {
     fontSize: vs(14), 
     color: 'black', 
-    marginTop: vs(4),
+    marginTop: vs(6),
     fontFamily: 'LibreBaskerville-Regular',
   },
 
@@ -113,28 +114,31 @@ export default StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#FFFFFF',
     marginTop: 2,
-    width: '100%'
   },
-  itemImage: {
+  item: {
+    width: Dimensions.get('window').width - 16, // Width full màn hình
+    height: 200, // Chiều cao cố định cho mỗi item
+    marginTop: 5,
+    // backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    borderWidth: 1,
+  },
+  image: {
     width: '100%', // Ảnh sẽ đầy màn hình theo chiều ngang
-    // height: '100%',
-    aspectRatio: 16/8, // Chỉ số khung hình ảnh (thay đổi theo ảnh)
+    height: '100%', // Ảnh sẽ đầy màn hình theo chiều cao
+    aspectRatio: 16 / 9
   },
-  itemText: {
-    position: 'absolute',
-    bottom: 0, // Đặt vị trí dưới cùng của hình ảnh
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Màu nền cho dòng văn bản (với độ trong suốt)
-    color: 'white', // Màu văn bản
-    padding: 10,
-    fontSize: 20,
-  },
-
-  textContainer: {
+  overlay: {
     position: 'absolute',
     bottom: 0,
     left: 0,
-    width: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    right: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Màu nền cho dòng văn bản (với độ trong suốt)
+  },
+  text: {
+    color: 'white', // Màu văn bản
+    padding: 10,
+    fontSize: 20,
   },
 
  

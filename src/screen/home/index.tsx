@@ -18,7 +18,7 @@ interface Props {
 const HomeScreen = (props: Props) => {
 
   const data = [
-    { id: '1', name: 'Category 1', image: require('../../assets/images/logo.png') },
+    { id: '1', name: 'Category 1', image: require('../../assets/images/demo.jpg') },
     { id: '2', name: 'Category 2', image: require('../../assets/images/logo.png') },
     { id: '3', name: 'Category 3', image: require('../../assets/images/logo.png') },
     { id: '4', name: 'Category 4', image: require('../../assets/images/logo.png') },
@@ -26,9 +26,12 @@ const HomeScreen = (props: Props) => {
     { id: '6', name: 'Category', image: require('../../assets/images/logo.png') },
     { id: '7', name: 'Category 7', image: require('../../assets/images/logo.png') },
     { id: '8', name: 'Category 8', image: require('../../assets/images/logo.png') },
-
-    // Thêm dữ liệu danh mục khác nếu cần
   ];
+
+
+  const [showAll, setShowAll] = useState(false);
+  const displayedData = showAll ? data : data.slice(0, 3);
+
 
   return (
     <SafeAreaView style={{ backgroundColor: 'white' }}>
@@ -66,7 +69,7 @@ const HomeScreen = (props: Props) => {
 
         <View style={styles.categoryView}>
           <View style={styles.contentWrapper}>
-            <Text style={styles.categoryText}>Danh mục</Text>
+            <Text style={styles.titleText}>Danh mục</Text>
             <TouchableOpacity onPress={() => console.log("clicked")}>
               <View style={styles.viewButton}>
                 <Text style={styles.seeMoreText}>Xem thêm</Text>
@@ -97,28 +100,26 @@ const HomeScreen = (props: Props) => {
           </View>
         </View>
 
-        <View style={{ width: '100%', backgroundColor: '#C2c' }}>
-          <Text>Yeu thich gan nhat</Text>
+        <View style={{ width: '100%', paddingHorizontal: 8, marginTop: 16}}>
+          <Text style={styles.titleText}>Yêu thích gần nhất</Text>
+
           <FlatList
-            data={data.slice(0, 3)}
+            data={displayedData}
             keyExtractor={(item) => item.id}
             horizontal={true}
             contentContainerStyle={styles.flatListContainer}
             renderItem={({ item }) => (
-              <View style={styles.itemContainer}>
-                <Image
-                  source={item.image}
-                  style={styles.itemImage}
-                  resizeMode="cover" // Thay đổi chế độ xử lý ảnh
-                />
-                <View style={styles.textContainer}>
-                  <Text style={styles.itemText}>{item.name}</Text>
+              <View style={styles.item}>
+                <Image source={item.image} style={styles.image} resizeMode="cover" />
+                <View style={styles.overlay}>
+                  <Text style={styles.text}>{item.name}</Text>
+                  <Text style={styles.text}>{item.name}</Text>
+                  <Text style={styles.text}>{item.name}</Text>
                 </View>
               </View>
             )}
             scrollEnabled={false}
           />
-
 
 
         </View>
