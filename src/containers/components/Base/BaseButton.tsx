@@ -23,6 +23,7 @@ interface Props {
   loadingColor?: string;
   renderIcon?: React.ReactNode;
   renderLeftIcon?: React.ReactNode;
+  // renderRightIcon?: React.ReactNode;
   secondary?: boolean;
 }
 
@@ -68,7 +69,7 @@ export function BaseButton(props: Props) {
         },
         props.style,
       ]}>
-      {props.renderLeftIcon && props.renderLeftIcon}
+      {props.renderLeftIcon && props.renderLeftIcon }
       <BaseText
         style={[styles.buttonLabelStyle, {fontSize: ms(props.fontSize || 16), color: getTextColor()}, props.textStyle]}
         text={props.text}

@@ -7,6 +7,7 @@ import {AppState, AppStateStatus} from 'react-native';
 import RootScreen from './root';
 import {AppStackParam} from './stackParam';
 
+
 const Stack = createNativeStackNavigator<AppStackParam>();
 
 const AppNavigationScreen = () => {
