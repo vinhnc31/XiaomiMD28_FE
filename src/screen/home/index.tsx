@@ -23,7 +23,7 @@ const HomeScreen = (props: Props) => {
     { id: '3', name: 'Category 3', image: require('../../assets/images/logo.png') },
     { id: '4', name: 'Category 4', image: require('../../assets/images/logo.png') },
     { id: '5', name: 'Category 5', image: require('../../assets/images/logo.png') },
-    { id: '6', name: 'Category 6', image: require('../../assets/images/logo.png') },
+    { id: '6', name: 'Category', image: require('../../assets/images/logo.png') },
     { id: '7', name: 'Category 7', image: require('../../assets/images/logo.png') },
     { id: '8', name: 'Category 8', image: require('../../assets/images/logo.png') },
 
@@ -97,8 +97,30 @@ const HomeScreen = (props: Props) => {
           </View>
         </View>
 
-        <View style={{ width: '100%', height: 600, backgroundColor: '#C2c' }}>
+        <View style={{ width: '100%', backgroundColor: '#C2c' }}>
           <Text>Yeu thich gan nhat</Text>
+          <FlatList
+            data={data.slice(0, 3)}
+            keyExtractor={(item) => item.id}
+            horizontal={true}
+            contentContainerStyle={styles.flatListContainer}
+            renderItem={({ item }) => (
+              <View style={styles.itemContainer}>
+                <Image
+                  source={item.image}
+                  style={styles.itemImage}
+                  resizeMode="cover" // Thay đổi chế độ xử lý ảnh
+                />
+                <View style={styles.textContainer}>
+                  <Text style={styles.itemText}>{item.name}</Text>
+                </View>
+              </View>
+            )}
+            scrollEnabled={false}
+          />
+
+
+
         </View>
 
         <View style={{ width: '100%', height: 1000, backgroundColor: '#aaaaaa' }}>

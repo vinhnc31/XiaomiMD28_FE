@@ -1,5 +1,5 @@
 import {ms, vs} from '@src/styles/scalingUtils';
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 export default StyleSheet.create({
@@ -29,14 +29,14 @@ export default StyleSheet.create({
   },
   title: {
     fontSize: ms(16),
-    fontFamily: 'LibreBaskerville-Bold',
+    fontFamily: 'LibreBaskerville-Regular',
     color: '#7F7D7D',
   },
 
   // danh muc
   categoryView: {
     marginTop: 8,
-    height: vs(180),
+    height: vs(160),
     backgroundColor: 'white',
     paddingHorizontal: 8,
   },
@@ -59,7 +59,8 @@ export default StyleSheet.create({
     color: '#5073EF',
     textDecorationLine: 'underline',
     marginRight: 4,
-    fontFamily: 'Ledger-Regular',
+    fontFamily: 'LibreBaskerville-Regular',
+    fontSize: vs(14)
   },
 
   rightArrowImage: {
@@ -69,45 +70,72 @@ export default StyleSheet.create({
   },
 
   categoryItem: {
-    width: vs(110),
+    width: vs(90),
     height: vs(150),
     marginRight: vs(12),
     paddingHorizontal: 5,
     paddingVertical: 5,
     alignItems: 'center',
-    justifyContent: 'center',
-    
   },
 
   categoryImage: {
-    width: vs(110),
+    width: vs(90),
     height: vs(110), 
   },
 
   viewCategoryImage: {
-    width: '100%', alignItems: 'center', 
+    width: vs(90), 
+    height: vs(90), 
+    alignItems: 'center', 
     justifyContent: 'center', 
-    height: vs(110), 
-    borderWidth: 1,
+    borderWidth: vs(1),
     borderColor: '#CCCCCC',
-    borderRadius: 20,
-
-    // shadowColor: "#000000",
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 1,
-    // },
-    // shadowOpacity: 0.22,
-    // shadowRadius: 2.22,
-
-    // elevation: 3,
+    borderRadius: vs(20),
   },
 
 
   viewCategoryTextName: {
-    fontSize: vs(16), 
+    fontSize: vs(14), 
     color: 'black', 
     marginTop: vs(4),
-    fontFamily: 'LibreBaskervilleBold-A606',
-  }
+    fontFamily: 'LibreBaskerville-Regular',
+  },
+
+  //danh sach yeu thich
+  flatListContainer: {
+    flexDirection: 'column', // Chia đều theo chiều dọc
+    justifyContent: 'space-between',
+  },
+  itemContainer: {
+    flex: 1,
+    height: Dimensions.get('window').height / 3, // Chia đều thành 3 phần theo chiều dọc
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+    marginTop: 2,
+    width: '100%'
+  },
+  itemImage: {
+    width: '100%', // Ảnh sẽ đầy màn hình theo chiều ngang
+    // height: '100%',
+    aspectRatio: 16/8, // Chỉ số khung hình ảnh (thay đổi theo ảnh)
+  },
+  itemText: {
+    position: 'absolute',
+    bottom: 0, // Đặt vị trí dưới cùng của hình ảnh
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Màu nền cho dòng văn bản (với độ trong suốt)
+    color: 'white', // Màu văn bản
+    padding: 10,
+    fontSize: 20,
+  },
+
+  textContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+
+ 
 });
