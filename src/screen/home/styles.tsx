@@ -65,7 +65,7 @@ export default StyleSheet.create({
 
   rightArrowImage: {
     width: vs(12),
-    height: 12,
+    height: vs(12),
     marginTop: 4,
   },
 
