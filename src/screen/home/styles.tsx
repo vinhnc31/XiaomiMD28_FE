@@ -3,7 +3,7 @@ import {Dimensions, StyleSheet} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 export default StyleSheet.create({
-  //dung chung 
+  //dung chung
   titleText: {
     fontSize: 18,
     color: '#2A2A2A',
@@ -53,7 +53,6 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
 
- 
   viewButton: {flexDirection: 'row', alignItems: 'center'},
 
   seeMoreText: {
@@ -61,7 +60,7 @@ export default StyleSheet.create({
     textDecorationLine: 'underline',
     marginRight: 4,
     fontFamily: 'LibreBaskerville-Regular',
-    fontSize: vs(14)
+    fontSize: vs(14),
   },
 
   rightArrowImage: {
@@ -79,25 +78,25 @@ export default StyleSheet.create({
   },
 
   viewCategoryImage: {
-    width: vs(90), 
-    height: vs(90), 
+    width: vs(90),
+    height: vs(90),
     padding: 8,
-    alignItems: 'center', 
-    justifyContent: 'center', 
+    alignItems: 'center',
+    justifyContent: 'center',
     borderWidth: vs(1),
     borderColor: '#EEEAEA',
     borderRadius: vs(20),
   },
 
   categoryImage: {
-    width: vs(80),
-    height: vs(80), 
-    borderRadius: 16
+    width: 85,
+    height: 85,
+    borderRadius: 16,
   },
 
   viewCategoryTextName: {
-    fontSize: vs(12), 
-    color: 'black', 
+    fontSize: vs(12),
+    color: 'black',
     marginTop: vs(6),
     fontFamily: 'LibreBaskerville-Regular',
   },
@@ -121,13 +120,14 @@ export default StyleSheet.create({
     marginTop: 5,
     borderRadius: 20,
     borderWidth: 1,
-    paddingHorizontal: 8
+    paddingHorizontal: 8,
+    borderColor: '#C2C2C2',
   },
   image: {
     width: '100%', // Ảnh sẽ đầy màn hình theo chiều ngang
     height: '100%', // Ảnh sẽ đầy màn hình theo chiều cao
     aspectRatio: 16 / 9,
-    borderRadius: 16
+    borderRadius: 16,
   },
   overlay: {
     flex: 1,
@@ -149,8 +149,44 @@ export default StyleSheet.create({
     width: 25,
     height: 25,
     marginRight: 8,
-    marginBottom: 4
+    marginBottom: 4,
+  },
+
+
+  //Gợi ý hôm nay
+  flatListSuggestContainer: {
+    // padding: 8, 
+  },
+  suggestItem: {
+    flex: 1,
+    flexDirection: 'column',
+    width: Dimensions.get('screen').width / 2 - 20,
+    height: 256,
+    borderColor: 'black',
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: 10,
+    marginVertical: 6,
+    borderRadius: 20
+  }, 
+
+  viewSuggestImage: {
+    flex: 6, 
+    width: '100%',
+    height: '100%',
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  viewSuggestText: {
+    flex: 4,
+    backgroundColor: 'blue',
+    width: '100%',
+    height: '100%',
+    borderRadius: 20
+
   }
 
- 
 });

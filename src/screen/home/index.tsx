@@ -4,7 +4,7 @@ import styles from './styles';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { MenuStackParam } from '@src/navigations/AppNavigation/stackParam';
 import { MENU_NAVIGATION } from '@src/navigations/routes';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Text, ScrollView, View, TouchableOpacity, Image, TouchableWithoutFeedback, FlatList } from 'react-native';
 import BaseInput from '@src/containers/components/Base/BaseInput';
 import { BaseButton } from '@src/containers/components/Base';
@@ -16,23 +16,39 @@ interface Props {
 }
 
 const HomeScreen = (props: Props) => {
-
-  const data = [
-    { id: '1', name: 'Robot hút bụi lau nhà Dreame D9 Max', image: require('../../assets/images/demo.jpg') },
-    { id: '2', name: 'Category 2', image: require('../../assets/images/logo.png') },
-    { id: '3', name: 'Category 3', image: require('../../assets/images/logo.png') },
-    { id: '4', name: 'Category 4', image: require('../../assets/images/logo.png') },
-    { id: '5', name: 'Category 5', image: require('../../assets/images/logo.png') },
-    { id: '6', name: 'Category', image: require('../../assets/images/logo.png') },
-    { id: '7', name: 'Category 7', image: require('../../assets/images/logo.png') },
-    { id: '8', name: 'Category 8', image: require('../../assets/images/logo.png') },
-  ];
-
+  const [data1, setData] = useState<Movie[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   const [showAll, setShowAll] = useState(false);
-  const displayedData = showAll ? data : data.slice(0, 3);
+  const displayedData = showAll ? data1 : data1.slice(0, 3);
 
+  type Movie = {
+    id: string;
+    name: string;
+    image: string;
+    price: string;
+  };
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+  const fetchData = async () => {
+    try {
+      const response = await fetch('https://6399d10b16b0fdad774a46a6.mockapi.io/booCar');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const result = await response.json();
+      console.log(result);
+      setData(result);
+      setLoading(false);
+      setError('');
+    } catch (error) {
+      setError("err");
+      setLoading(false);
+    }
+  };
   return (
     <SafeAreaView style={{ backgroundColor: 'white' }}>
       <View style={styles.mainContainer}>
@@ -57,16 +73,12 @@ const HomeScreen = (props: Props) => {
           />
         </View>
       </View>
-
-
-
-      <ScrollView>
+      <ScrollView indicatorStyle="black" showsVerticalScrollIndicator={false}>
         <View style={{ height: 200 }}>
           <View style={{ backgroundColor: 'yellow', width: '100%', height: '100%', borderRadius: 20 }}>
             <Text>Slideshow</Text>
           </View>
         </View>
-
         <View style={styles.categoryView}>
           <View style={styles.contentWrapper}>
             <Text style={styles.titleText}>Danh mục</Text>
@@ -80,17 +92,19 @@ const HomeScreen = (props: Props) => {
               </View>
             </TouchableOpacity>
           </View>
-
           <View style={{ height: '100%' }}>
             <FlatList
-              data={data}
+              data={data1}
               keyExtractor={(item) => item.id}
               horizontal={true}
               renderItem={({ item }) => (
                 <TouchableOpacity onPress={() => console.log("da chon 1 item", item.id)}>
                   <View style={styles.categoryItem}>
                     <View style={styles.viewCategoryImage}>
-                      <Image source={item.image} style={styles.categoryImage} />
+                      <Image
+                        source={{ uri: item.image }}
+                        style={styles.categoryImage}
+                      />
                     </View>
                     <Text style={styles.viewCategoryTextName}>{item.name}</Text>
                   </View>
@@ -99,55 +113,65 @@ const HomeScreen = (props: Props) => {
             />
           </View>
         </View>
-
         <View style={{ width: '100%', paddingHorizontal: 8, marginTop: 16 }}>
           <Text style={styles.titleText}>Yêu thích gần nhất</Text>
-
           <FlatList
             data={displayedData}
             keyExtractor={(item) => item.id}
             horizontal={true}
             contentContainerStyle={styles.flatListContainer}
             renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => console.log("code Xem chi tiet data")}>
-              <View style={styles.item}>
-                <Image source={item.image} style={styles.image} resizeMode="cover" />
-                <View style={styles.overlay}>
-                  <View style={{ flex: 2.5, alignItems: 'flex-end', justifyContent: 'center' }}>
-                    <TouchableOpacity onPress={() => console.log("code logic button tymm <3")}>
-                      <Image
-                        style={styles.imgFavourite}
-                        source={require('../../assets/images/favourite.png')}
-                      />
-                    </TouchableOpacity>
+              <TouchableOpacity onPress={() => console.log("code Xem chi tiet data: ", item.name)}>
+                <View style={styles.item}>
+                  <Image source={{ uri: item.image }} style={styles.image} resizeMode="cover" />
+                  <View style={styles.overlay}>
+                    <View style={{ flex: 2.5, alignItems: 'flex-end', justifyContent: 'center' }}>
+                      <TouchableOpacity onPress={() => console.log("code logic button tymm <3")}>
+                        <Image
+                          style={styles.imgFavourite}
+                          source={require('../../assets/images/favourite.png')}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                    <View style={{ flex: 4 }}></View>
+                    <View style={{ flex: 1.5, justifyContent: 'center', paddingHorizontal: 8 }}>
+                      <Text style={styles.text}>{item.name}</Text>
+                    </View>
+                    <View style={{ flex: 1.5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 8 }}>
+                      <Text style={styles.text}>4.9(50)</Text>
+                      <Text style={styles.text}>{item.price}<Text style={{ textDecorationLine: 'underline', color: 'red' }}>đ</Text></Text>
+                    </View>
                   </View>
-                  <View style={{ flex: 4 }}></View>
-                  <View style={{ flex: 1.5, justifyContent: 'center', paddingHorizontal: 8}}>
-                    <Text style={styles.text}>{item.name}</Text>
-                  </View>
-                  <View style={{ flex: 1.5,flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 8}}>
-                    <Text style={styles.text}>4.9(50)</Text>
-                    <Text style={styles.text}>9.865.432đ</Text>
-                  </View>
-
-
-
-                  
                 </View>
-              </View>
               </TouchableOpacity>
             )}
             scrollEnabled={false}
           />
-
-
         </View>
-
-        <View style={{ width: '100%', height: 1000, backgroundColor: '#aaaaaa' }}>
-          <Text>Goi y hom nay</Text>
+        <View style={{ width: '100%', marginTop: 16, paddingBottom: 100 }}>
+          <Text style={styles.titleText}>Gợi ý hôm nay</Text>
+          <FlatList
+            data={data1}
+            keyExtractor={(item) => item.id}
+            numColumns={2}
+            contentContainerStyle={styles.flatListSuggestContainer}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => console.log("da chon 1 item", item.id)}>
+                <View style={styles.suggestItem}>
+                  <View style={styles.viewSuggestImage}>
+                    <Image
+                      source={{ uri: item.image }}
+                      style={{width: '70%', height: '90%'}}
+                    />
+                  </View>
+                  <View style={styles.viewSuggestText}>
+                    <Text style={styles.viewCategoryTextName}>{item.name}</Text>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
         </View>
-
-
       </ScrollView>
     </SafeAreaView>
   );
