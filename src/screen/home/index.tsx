@@ -18,7 +18,7 @@ interface Props {
 const HomeScreen = (props: Props) => {
 
   const data = [
-    { id: '1', name: 'Category 1', image: require('../../assets/images/demo.jpg') },
+    { id: '1', name: 'Robot hút bụi lau nhà Dreame D9 Max', image: require('../../assets/images/demo.jpg') },
     { id: '2', name: 'Category 2', image: require('../../assets/images/logo.png') },
     { id: '3', name: 'Category 3', image: require('../../assets/images/logo.png') },
     { id: '4', name: 'Category 4', image: require('../../assets/images/logo.png') },
@@ -100,7 +100,7 @@ const HomeScreen = (props: Props) => {
           </View>
         </View>
 
-        <View style={{ width: '100%', paddingHorizontal: 8, marginTop: 16}}>
+        <View style={{ width: '100%', paddingHorizontal: 8, marginTop: 16 }}>
           <Text style={styles.titleText}>Yêu thích gần nhất</Text>
 
           <FlatList
@@ -109,14 +109,33 @@ const HomeScreen = (props: Props) => {
             horizontal={true}
             contentContainerStyle={styles.flatListContainer}
             renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => console.log("code Xem chi tiet data")}>
               <View style={styles.item}>
                 <Image source={item.image} style={styles.image} resizeMode="cover" />
                 <View style={styles.overlay}>
-                  <Text style={styles.text}>{item.name}</Text>
-                  <Text style={styles.text}>{item.name}</Text>
-                  <Text style={styles.text}>{item.name}</Text>
+                  <View style={{ flex: 2.5, alignItems: 'flex-end', justifyContent: 'center' }}>
+                    <TouchableOpacity onPress={() => console.log("code logic button tymm <3")}>
+                      <Image
+                        style={styles.imgFavourite}
+                        source={require('../../assets/images/favourite.png')}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{ flex: 4 }}></View>
+                  <View style={{ flex: 1.5, justifyContent: 'center', paddingHorizontal: 8}}>
+                    <Text style={styles.text}>{item.name}</Text>
+                  </View>
+                  <View style={{ flex: 1.5,flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 8}}>
+                    <Text style={styles.text}>4.9(50)</Text>
+                    <Text style={styles.text}>9.865.432đ</Text>
+                  </View>
+
+
+
+                  
                 </View>
               </View>
+              </TouchableOpacity>
             )}
             scrollEnabled={false}
           />

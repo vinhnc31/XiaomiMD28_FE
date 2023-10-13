@@ -5,7 +5,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 export default StyleSheet.create({
   //dung chung 
   titleText: {
-    fontSize: 20,
+    fontSize: 18,
     color: '#2A2A2A',
     fontFamily: 'LibreBaskerville-Bold',
   },
@@ -96,7 +96,7 @@ export default StyleSheet.create({
   },
 
   viewCategoryTextName: {
-    fontSize: vs(14), 
+    fontSize: vs(12), 
     color: 'black', 
     marginTop: vs(6),
     fontFamily: 'LibreBaskerville-Regular',
@@ -117,29 +117,40 @@ export default StyleSheet.create({
   },
   item: {
     width: Dimensions.get('window').width - 16, // Width full màn hình
-    height: 200, // Chiều cao cố định cho mỗi item
+    height: 168, // Chiều cao cố định cho mỗi item
     marginTop: 5,
-    // backgroundColor: '#FFFFFF',
     borderRadius: 20,
     borderWidth: 1,
+    paddingHorizontal: 8
   },
   image: {
     width: '100%', // Ảnh sẽ đầy màn hình theo chiều ngang
     height: '100%', // Ảnh sẽ đầy màn hình theo chiều cao
-    aspectRatio: 16 / 9
+    aspectRatio: 16 / 9,
+    borderRadius: 16
   },
   overlay: {
+    flex: 1,
+    flexDirection: 'column',
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Màu nền cho dòng văn bản (với độ trong suốt)
+    top: 0,
+    // backgroundColor: 'rgba(0, 0, 0, 0.2)', // Màu nền cho dòng văn bản (với độ trong suốt)
   },
   text: {
-    color: 'white', // Màu văn bản
-    padding: 10,
-    fontSize: 20,
+    color: '#FF4C4C', // Màu văn bản
+    fontSize: 14,
+    fontFamily: 'LibreBaskerville-Bold',
   },
+
+  imgFavourite: {
+    width: 25,
+    height: 25,
+    marginRight: 8,
+    marginBottom: 4
+  }
 
  
 });
