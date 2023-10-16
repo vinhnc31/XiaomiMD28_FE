@@ -10,6 +10,7 @@ import BaseInput from '@src/containers/components/Base/BaseInput';
 import { BaseButton } from '@src/containers/components/Base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+
 interface Props {
   navigation: BottomTabNavigationProp<MenuStackParam>;
   route: RouteProp<MenuStackParam, MENU_NAVIGATION.HOME>;
@@ -17,7 +18,7 @@ interface Props {
 
 const HomeScreen = (props: Props) => {
   const [data1, setData] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState('');
 
   const [showAll, setShowAll] = useState(false);
@@ -50,7 +51,7 @@ const HomeScreen = (props: Props) => {
     }
   };
   return (
-    <SafeAreaView style={{ backgroundColor: 'white' }}>
+    <SafeAreaView style={{ backgroundColor: 'white', padding: 8 }}>
       <View style={styles.mainContainer}>
         <TouchableWithoutFeedback onPress={() => console.log("code chuyen man")}>
           <View style={styles.inputContainer}>
@@ -76,7 +77,7 @@ const HomeScreen = (props: Props) => {
       <ScrollView indicatorStyle="black" showsVerticalScrollIndicator={false}>
         <View style={{ height: 200 }}>
           <View style={{ backgroundColor: 'yellow', width: '100%', height: '100%', borderRadius: 20 }}>
-            <Text>Slideshow</Text>
+            <Text>slideshow</Text>
           </View>
         </View>
         <View style={styles.categoryView}>
@@ -106,7 +107,9 @@ const HomeScreen = (props: Props) => {
                         style={styles.categoryImage}
                       />
                     </View>
-                    <Text style={styles.viewCategoryTextName}>{item.name}</Text>
+                    <View style={styles.viewCategoryText}>
+                      <Text numberOfLines={2} style={styles.viewCategoryTextName}>{item.name}</Text>
+                    </View>
                   </View>
                 </TouchableOpacity>
               )}
@@ -121,9 +124,9 @@ const HomeScreen = (props: Props) => {
             horizontal={true}
             contentContainerStyle={styles.flatListContainer}
             renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => console.log("code Xem chi tiet data: ", item.name)}>
+              <TouchableWithoutFeedback onPress={() => console.log("code Xem chi tiet data: ", item.name)}>
                 <View style={styles.item}>
-                  <Image source={{ uri: item.image }} style={styles.image} resizeMode="cover" />
+                  <Image source={{ uri: item.image }} style={styles.image} resizeMode="stretch" />
                   <View style={styles.overlay}>
                     <View style={{ flex: 2.5, alignItems: 'flex-end', justifyContent: 'center' }}>
                       <TouchableOpacity onPress={() => console.log("code logic button tymm <3")}>
@@ -134,38 +137,73 @@ const HomeScreen = (props: Props) => {
                       </TouchableOpacity>
                     </View>
                     <View style={{ flex: 4 }}></View>
-                    <View style={{ flex: 1.5, justifyContent: 'center', paddingHorizontal: 8 }}>
-                      <Text style={styles.text}>{item.name}</Text>
+                    <View style={{ flex: 1.5, justifyContent: 'center', paddingHorizontal: 12 }}>
+                      <Text numberOfLines={1} style={styles.text}>{item.name}</Text>
                     </View>
-                    <View style={{ flex: 1.5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 8 }}>
-                      <Text style={styles.text}>4.9(50)</Text>
+                    <View style={{ flex: 1.5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 12 }}>
+                      <View style={styles.viewStar}>
+                        <Image
+                          style={styles.imgStar}
+                          source={require('../../assets/images/star4.png')}
+                        />
+                        <Text style={styles.text}>4.9</Text>
+                        <Text style={styles.textCmt}>(50)</Text>
+                      </View>
                       <Text style={styles.text}>{item.price}<Text style={{ textDecorationLine: 'underline', color: 'red' }}>đ</Text></Text>
                     </View>
                   </View>
                 </View>
-              </TouchableOpacity>
+              </TouchableWithoutFeedback>
             )}
             scrollEnabled={false}
           />
         </View>
-        <View style={{ width: '100%', marginTop: 16, paddingBottom: 100 }}>
+        <View style={{ width: '100%', paddingBottom: 100 }}>
           <Text style={styles.titleText}>Gợi ý hôm nay</Text>
           <FlatList
             data={data1}
+            style={{ flex: 1 }}
             keyExtractor={(item) => item.id}
             numColumns={2}
-            contentContainerStyle={styles.flatListSuggestContainer}
+            // contentContainerStyle={styles.flatListSuggestContainer}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => console.log("da chon 1 item", item.id)}>
                 <View style={styles.suggestItem}>
                   <View style={styles.viewSuggestImage}>
                     <Image
                       source={{ uri: item.image }}
-                      style={{width: '70%', height: '90%'}}
+                      style={{ width: '70%', height: '90%' }}
                     />
+                    <View style={{ width: '100%', position: 'absolute', top: 10, alignItems: 'flex-end' }}>
+                      <TouchableOpacity onPress={() => console.log("da thich")}>
+                        <Image
+                          style={styles.imgFavourite}
+                          source={require('../../assets/images/favourite.png')}
+                        />
+                      </TouchableOpacity>
+                    </View>
                   </View>
+                  <View style={{ flex: 0.5 }} />
+
+                  <Image
+                    style={{
+                      width: 30,
+                      height: 35, position: 'absolute', left: 16, bottom: 75
+                    }}
+                    source={require('../../assets/images/hot2.png')}
+                  />
+
                   <View style={styles.viewSuggestText}>
-                    <Text style={styles.viewCategoryTextName}>{item.name}</Text>
+                    <Text numberOfLines={1} style={styles.suggestTextName}>{item.name}</Text>
+                    <Text style={styles.text}>{item.price}<Text style={{ textDecorationLine: 'underline', color: 'red' }}>đ</Text></Text>
+                    <View style={styles.viewStar}>
+                      <Image
+                        style={styles.imgStar}
+                        source={require('../../assets/images/star4.png')}
+                      />
+                      <Text style={styles.text}>4.9</Text>
+                      <Text style={styles.textCmt}>(50)</Text>
+                    </View>
                   </View>
                 </View>
               </TouchableOpacity>

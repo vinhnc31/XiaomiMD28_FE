@@ -33,6 +33,7 @@
     "react-native-fast-image": "^8.6.3",
     "react-native-gesture-handler": "^2.13.1",
     "react-native-image-crop-picker": "^0.40.0",
+    "react-native-image-slider-box": "^2.0.7",
     "react-native-mmkv": "^2.10.2",
     "react-native-offline": "^6.0.2",
     "react-native-pager-view": "^6.2.0",
@@ -76,7 +77,4 @@
       "npm run format"
     ]
   }
-
-  
- 
 }

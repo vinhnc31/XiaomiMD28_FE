@@ -9,6 +9,29 @@ export default StyleSheet.create({
     color: '#2A2A2A',
     fontFamily: 'LibreBaskerville-Bold',
   },
+
+  //view đánh giá sản phẩm
+  viewStar: {
+    flexDirection: 'row', 
+    alignItems: 'center'
+  },
+  text: {
+    color: '#FF4C4C', // Màu văn bản
+    fontSize: 14,
+    fontFamily: 'LibreBaskerville-Bold',
+  },
+
+  textCmt: {
+    color: '#817F7F', // Màu văn bản
+    fontSize: 14,
+    fontFamily: 'LibreBaskerville-Bold',
+  },
+
+  imgStar: {width: 12, height: 12},
+  //
+
+
+
   //search
   mainContainer: {
     flexDirection: 'row',
@@ -42,6 +65,7 @@ export default StyleSheet.create({
   // danh muc
   categoryView: {
     marginTop: 8,
+    marginBottom: 8,
     height: vs(140),
     backgroundColor: 'white',
     paddingHorizontal: 8,
@@ -70,27 +94,36 @@ export default StyleSheet.create({
   },
 
   categoryItem: {
+    flex: 1,
+    flexDirection: 'column',
     width: vs(90),
     height: vs(140),
     marginRight: vs(12),
-    padding: 8,
-    alignItems: 'center',
   },
 
   viewCategoryImage: {
-    width: vs(90),
-    height: vs(90),
-    padding: 8,
+    flex: 6,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: vs(1),
-    borderColor: '#EEEAEA',
-    borderRadius: vs(20),
+    borderRadius: 16,
+    padding: 1,
+
+    elevation: 2, // Độ sâu của đổ bóng (cho Android)
+    shadowColor: 'black', // Màu của đổ bóng (cho iOS)
+    shadowOffset: { width: 0, height: 2 }, // Độ dài và độ rộng của đổ bóng (cho iOS)
+    shadowOpacity: 0.2, // Độ trong suốt của đổ bóng (cho iOS)
+    shadowRadius: 2, // Bán kính của đổ bóng (cho iOS)
+   
+  },
+
+  viewCategoryText: {
+    flex: 3,
+    alignItems: 'center',
   },
 
   categoryImage: {
-    width: 85,
-    height: 85,
+    width: "100%",
+    height: '100%',
     borderRadius: 16,
   },
 
@@ -103,8 +136,8 @@ export default StyleSheet.create({
 
   //danh sach yeu thich
   flatListContainer: {
+    flex: 1,
     flexDirection: 'column', // Chia đều theo chiều dọc
-    justifyContent: 'space-between',
   },
   itemContainer: {
     flex: 1,
@@ -113,21 +146,33 @@ export default StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#FFFFFF',
     marginTop: 2,
+
+    elevation: 5, // Độ sâu của đổ bóng (cho Android)
+    shadowColor: 'black', // Màu của đổ bóng (cho iOS)
+    shadowOffset: { width: 0, height: 2 }, // Độ dài và độ rộng của đổ bóng (cho iOS)
+    shadowOpacity: 0.2, // Độ trong suốt của đổ bóng (cho iOS)
+    shadowRadius: 2, // Bán kính của đổ bóng (cho iOS)
   },
   item: {
-    width: Dimensions.get('window').width - 16, // Width full màn hình
-    height: 168, // Chiều cao cố định cho mỗi item
-    marginTop: 5,
+    flex:1,
+    height: 168, 
+    marginTop: 6,
+    marginBottom: 10,
     borderRadius: 20,
-    borderWidth: 1,
-    paddingHorizontal: 8,
+    // borderWidth: 1,
     borderColor: '#C2C2C2',
+
+    elevation: 5, // Độ sâu của đổ bóng (cho Android)
+    shadowColor: 'black', // Màu của đổ bóng (cho iOS)
+    shadowOffset: { width: 0, height: 2 }, // Độ dài và độ rộng của đổ bóng (cho iOS)
+    shadowOpacity: 0.2, // Độ trong suốt của đổ bóng (cho iOS)
+    shadowRadius: 2, // Bán kính của đổ bóng (cho iOS)
   },
   image: {
-    width: '100%', // Ảnh sẽ đầy màn hình theo chiều ngang
+    flex: 1,
     height: '100%', // Ảnh sẽ đầy màn hình theo chiều cao
-    aspectRatio: 16 / 9,
-    borderRadius: 16,
+    width: 'auto',
+    borderRadius: 20,
   },
   overlay: {
     flex: 1,
@@ -139,19 +184,14 @@ export default StyleSheet.create({
     top: 0,
     // backgroundColor: 'rgba(0, 0, 0, 0.2)', // Màu nền cho dòng văn bản (với độ trong suốt)
   },
-  text: {
-    color: '#FF4C4C', // Màu văn bản
-    fontSize: 14,
-    fontFamily: 'LibreBaskerville-Bold',
-  },
+
 
   imgFavourite: {
     width: 25,
     height: 25,
-    marginRight: 8,
-    marginBottom: 4,
+    marginRight: 10,
+    marginBottom: 6,
   },
-
 
   //Gợi ý hôm nay
   flatListSuggestContainer: {
@@ -160,15 +200,21 @@ export default StyleSheet.create({
   suggestItem: {
     flex: 1,
     flexDirection: 'column',
-    width: Dimensions.get('screen').width / 2 - 20,
+    width: Dimensions.get('window').width / 2 - 24,
     height: 256,
-    borderColor: 'black',
+    borderColor: '#F6F8F6',
     borderWidth: 1,
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginHorizontal: 10,
+    marginHorizontal: 8,
     marginVertical: 6,
-    borderRadius: 20
+    borderRadius: 20,
+    backgroundColor: '#F8F6F6', 
+
+    elevation: 5, // Độ sâu của đổ bóng (cho Android)
+    shadowColor: '#F8F6F6', // Màu của đổ bóng (cho iOS)
+    shadowOffset: { width: 0, height: 2 }, // Độ dài và độ rộng của đổ bóng (cho iOS)
+    shadowOpacity: 0.2, // Độ trong suốt của đổ bóng (cho iOS)
+    shadowRadius: 2, // Bán kính của đổ bóng (cho iOS)
   }, 
 
   viewSuggestImage: {
@@ -181,12 +227,24 @@ export default StyleSheet.create({
   },
 
   viewSuggestText: {
-    flex: 4,
-    backgroundColor: 'blue',
+    flex: 3,
     width: '100%',
     height: '100%',
-    borderRadius: 20
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    justifyContent: 'space-around',
 
+  },
+  suggestTextName: {
+    fontSize: 16, 
+    fontFamily: 'LibreBaskerville-Regular',
+    color: '#000000'
+  },
+
+  suggestTextPrice: {
+    color: '#FF4C4C', // Màu văn bản
+    fontSize: 14,
+    fontFamily: 'LibreBaskerville-Bold',
   }
 
 });
