@@ -11,6 +11,7 @@ import { BaseButton } from '@src/containers/components/Base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { BaseLoading } from '@src/containers/components/Base/BaseLoading';
 import Swiper from 'react-native-swiper';
+import TouchableScale from 'react-native-touchable-scale';
 
 interface Props {
   navigation: BottomTabNavigationProp<MenuStackParam>;
@@ -96,9 +97,8 @@ const HomeScreen = (props: Props) => {
       {loading ? <BaseLoading size={20} top={100} loading={true} /> : (
         <ScrollView indicatorStyle="black" showsVerticalScrollIndicator={false}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-
           <View style={{ height: 168, marginHorizontal: 8, marginTop: 16, borderRadius: 20}}>
-              <Swiper showsButtons={false} loop={true} autoplay={true} autoplayTimeout={3}>
+              <Swiper showsButtons={true} loop={true} autoplay={true} autoplayTimeout={3}>
                 {data1.map((item) => (
                   <View style={styles.slide} key={item.id}>
                     <Image source={{ uri: item.image }} style={styles.image1} />
@@ -106,7 +106,6 @@ const HomeScreen = (props: Props) => {
                 ))}
               </Swiper>
           </View>
-
           <View style={styles.categoryView}>
             <View style={styles.contentWrapper}>
               <Text style={styles.titleText}>Danh mục</Text>
@@ -127,7 +126,7 @@ const HomeScreen = (props: Props) => {
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => (
-                  <TouchableOpacity onPress={() => console.log("da chon 1 item", item.id)}>
+                  <TouchableScale onPress={() => console.log("da chon 1 item", item.id)} activeScale={0.9} friction={9} tension={100}>
                     <View style={styles.categoryItem}>
                       <View style={styles.viewCategoryImage}>
                         <Image
@@ -139,12 +138,11 @@ const HomeScreen = (props: Props) => {
                         <Text numberOfLines={2} style={styles.viewCategoryTextName}>{item.name}</Text>
                       </View>
                     </View>
-                  </TouchableOpacity>
+                  </TouchableScale>
                 )}
               />
             </View>
           </View>
-
           <View style={{ width: '100%', paddingHorizontal: 8, marginTop: 24, marginBottom: 8}}>
             <Text style={styles.titleText}>Yêu thích gần nhất</Text>
             <FlatList
@@ -187,7 +185,6 @@ const HomeScreen = (props: Props) => {
               scrollEnabled={false}
             />
           </View>
-
           <View style={{ width: '100%', paddingBottom: 100 }}>
             <Text style={styles.titleText}>Gợi ý hôm nay</Text>
             <FlatList
@@ -198,7 +195,7 @@ const HomeScreen = (props: Props) => {
               scrollEnabled={false}
               contentContainerStyle={styles.flatListSuggestContainer}
               renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => console.log("da chon 1 item", item.id)}>
+                <TouchableScale onPress={() => console.log("da chon 1 item", item.id)} activeScale={0.9} friction={9} tension={100}>
                   <View style={styles.suggestItem}>
                     <View style={styles.viewSuggestImage}>
                       <Image
@@ -232,7 +229,7 @@ const HomeScreen = (props: Props) => {
                       </View>
                     </View>
                   </View>
-                </TouchableOpacity>
+                </TouchableScale>
               )}
             />
 

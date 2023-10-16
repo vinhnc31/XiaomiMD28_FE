@@ -47,8 +47,8 @@ export default StyleSheet.create({
     height: vs(48),
     marginVertical: vs(8),
     borderRadius: 16,
-    borderColor: '#C2C2C2',
-    backgroundColor: '#E8E8E8',
+    borderColor: '#EEEAEA',
+    backgroundColor: '#F0F0F0',
   },
   buttonContainer: {
     flex: 1.7,
