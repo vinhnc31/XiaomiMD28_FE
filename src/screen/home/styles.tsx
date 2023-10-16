@@ -64,7 +64,7 @@ export default StyleSheet.create({
 
   // danh muc
   categoryView: {
-    marginTop: 8,
+    marginTop: 16,
     marginBottom: 8,
     height: vs(140),
     backgroundColor: 'white',
@@ -156,13 +156,13 @@ export default StyleSheet.create({
   item: {
     flex:1,
     height: 168, 
-    marginTop: 6,
+    marginTop: 8,
     marginBottom: 10,
     borderRadius: 20,
     // borderWidth: 1,
     borderColor: '#C2C2C2',
 
-    elevation: 5, // Độ sâu của đổ bóng (cho Android)
+    elevation: 2, // Độ sâu của đổ bóng (cho Android)
     shadowColor: 'black', // Màu của đổ bóng (cho iOS)
     shadowOffset: { width: 0, height: 2 }, // Độ dài và độ rộng của đổ bóng (cho iOS)
     shadowOpacity: 0.2, // Độ trong suốt của đổ bóng (cho iOS)
@@ -245,6 +245,21 @@ export default StyleSheet.create({
     color: '#FF4C4C', // Màu văn bản
     fontSize: 14,
     fontFamily: 'LibreBaskerville-Bold',
-  }
+  },
 
+
+  //slideshow
+  slide: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    backgroundColor: 'blue'
+  },
+  
+  image1: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 20
+  },
 });
