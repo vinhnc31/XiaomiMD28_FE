@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { RouteProp } from '@react-navigation/native';
+import { RouteProp, useNavigation } from '@react-navigation/native';
 import styles from './styles';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { MenuStackParam } from '@src/navigations/AppNavigation/stackParam';
-import { MENU_NAVIGATION } from '@src/navigations/routes';
+import { MENU_NAVIGATION, GUEST_NAVIGATION} from '@src/navigations/routes';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Text, ScrollView, View, TouchableOpacity, Image, TouchableWithoutFeedback, FlatList, RefreshControl, SectionList } from 'react-native';
 import BaseInput from '@src/containers/components/Base/BaseInput';
@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { BaseLoading } from '@src/containers/components/Base/BaseLoading';
 import Swiper from 'react-native-swiper';
 import TouchableScale from 'react-native-touchable-scale';
+import { navigateToPage} from '@src/navigations/services';
 
 interface Props {
   navigation: BottomTabNavigationProp<MenuStackParam>;
@@ -51,6 +52,11 @@ const HomeScreen = (props: Props) => {
     fetchData()
       .then(() => setRefreshing(false))
       .catch(() => setRefreshing(false));
+  };
+
+
+  const goToCategory = () => {
+    navigateToPage(GUEST_NAVIGATION.CATEGORY)
   };
 
   const fetchData = async () => {
@@ -98,7 +104,7 @@ const HomeScreen = (props: Props) => {
         <ScrollView indicatorStyle="black" showsVerticalScrollIndicator={false}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
           <View style={{ height: 168, marginHorizontal: 8, marginTop: 16, borderRadius: 20}}>
-              <Swiper showsButtons={true} loop={true} autoplay={true} autoplayTimeout={3}>
+              <Swiper showsButtons={false} loop={true} autoplay={true} autoplayTimeout={3}>
                 {data1.map((item) => (
                   <View style={styles.slide} key={item.id}>
                     <Image source={{ uri: item.image }} style={styles.image1} />
@@ -109,7 +115,7 @@ const HomeScreen = (props: Props) => {
           <View style={styles.categoryView}>
             <View style={styles.contentWrapper}>
               <Text style={styles.titleText}>Danh mục</Text>
-              <TouchableOpacity onPress={() => console.log("clicked")}>
+              <TouchableOpacity onPress={goToCategory}>
                 <View style={styles.viewButton}>
                   <Text style={styles.seeMoreText}>Xem thêm</Text>
                   <Image

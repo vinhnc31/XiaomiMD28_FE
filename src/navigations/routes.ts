@@ -8,6 +8,7 @@ export enum ROUTES {
 export enum GUEST_NAVIGATION {
   LOGIN = 'LOGIN',
   REGISTER = 'REGISTER',
+  CATEGORY = 'CATEGORY',
 }
 
 export enum APP_NAVIGATION {

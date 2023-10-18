@@ -11,6 +11,9 @@
     "format": "prettier --write \"src/**/*.{ts,tsx}\""
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.14",
     "@react-native-community/datetimepicker": "^7.6.0",
     "@react-native-community/netinfo": "^9.4.1",
     "@react-native-masked-view/masked-view": "^0.2.9",

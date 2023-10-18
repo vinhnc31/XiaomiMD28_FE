@@ -9,6 +9,7 @@ import React, {useEffect, useState} from 'react';
 import {GuestStackParam} from './stackParam';
 import LoginScreen from '@src/screen/authen/login';
 import RegisterScreen from '@src/screen/authen/register';
+import CategoryScreen from '@src/screen/category/index';
 
 const Stack = createNativeStackNavigator<GuestStackParam>();
 
@@ -45,6 +46,7 @@ const GuestNavigationComponent = () => {
       screenOptions={{headerShown: false, statusBarColor: Colors.primary}}>
       <Stack.Screen name={GUEST_NAVIGATION.LOGIN} component={LoginScreen} />
       <Stack.Screen name={GUEST_NAVIGATION.REGISTER} component={RegisterScreen} />
+      <Stack.Screen name={GUEST_NAVIGATION.CATEGORY} component={CategoryScreen} />
     </Stack.Navigator>
   );
 };

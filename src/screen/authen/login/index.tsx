@@ -30,9 +30,9 @@ const LogInComponent = (props: Props) => {
   const { navigation } = props;
 
   const goToRegister = () => {
-
     // navigateToPage(GUEST_NAVIGATION.REGISTER);
-    navigateToPage(APP_NAVIGATION.ROOT);
+    navigateToPage(GUEST_NAVIGATION.CATEGORY);
+    // navigateToPage(APP_NAVIGATION.ROOT);
   };
 
   const onLogin = async () => {
