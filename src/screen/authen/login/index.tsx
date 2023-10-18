@@ -2,8 +2,8 @@ import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import useToast from '@src/hooks/useToast';
 import {GuestStackParam} from '@src/navigations/GuestNavigation/stackParam';
-import {GUEST_NAVIGATION} from '@src/navigations/routes';
-import {navigateToPage} from '@src/navigations/services';
+import {APP_NAVIGATION, GUEST_NAVIGATION, MENU_NAVIGATION} from '@src/navigations/routes';
+import {navigateToPage, pushToPage} from '@src/navigations/services';
 import R from '@src/res';
 import AccountService from '@src/services/account';
 import React, {useRef, useState} from 'react';
@@ -14,6 +14,7 @@ import BaseInput from '@src/containers/components/Base/BaseInput';
 import {StatusBar} from 'react-native';
 import {vs} from '@src/styles/scalingUtils';
 import {BaseButton} from '@src/containers/components/Base';
+
 
 interface Props {
   navigation: NativeStackNavigationProp<GuestStackParam>;
@@ -26,8 +27,12 @@ const LogInComponent = (props: Props) => {
   const [text, setText] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
+  const { navigation } = props;
+
   const goToRegister = () => {
-    navigateToPage(GUEST_NAVIGATION.REGISTER);
+    // navigateToPage(GUEST_NAVIGATION.REGISTER);
+    navigateToPage(GUEST_NAVIGATION.CATEGORY);
+    // navigateToPage(APP_NAVIGATION.ROOT);
   };
 
   const onLogin = async () => {

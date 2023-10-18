@@ -9,7 +9,7 @@ export const RESPONSE_STATUS = {
   INTERVAL_SERVER: 500,
   FORBIDDEN: 403,
   BAD_REQUEST: 400,
-};
+};    
 
 export const INVALID_TOKEN = 'INVALID_TOKEN';
 
