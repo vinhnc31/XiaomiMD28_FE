@@ -42,7 +42,9 @@ const NavigationComponent = () => {
 
   return (
     <NavigationContainer ref={navigationRef}>
-      <RootStack.Navigator>{chooseScreen}</RootStack.Navigator>
+      <RootStack.Navigator>
+        <RootStack.Screen name={ROUTES.APP_NAVIGATION} component={AppNavigationScreen} options={{headerShown: false}} />
+      </RootStack.Navigator>
     </NavigationContainer>
   );
 };
