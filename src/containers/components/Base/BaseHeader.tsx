@@ -31,14 +31,14 @@ const BaseHeader = ({ title, onBackPress, onCartPress }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    height: 60,
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
     backgroundColor: 'white',
   },
   icon: {
     width: 30,
-    height: 30,
+    height:30,
   },
   title: {
     fontSize: 22,

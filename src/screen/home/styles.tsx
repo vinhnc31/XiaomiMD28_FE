@@ -36,6 +36,7 @@ export default StyleSheet.create({
   mainContainer: {
     flexDirection: 'row',
     height: vs(60),
+    paddingHorizontal: 8, 
   },
   inputContainer: {
     flex: 9,
@@ -51,7 +52,7 @@ export default StyleSheet.create({
     backgroundColor: '#F0F0F0',
   },
   buttonContainer: {
-    flex: 1.7,
+    flex: 1.5,
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
@@ -68,7 +69,7 @@ export default StyleSheet.create({
     marginBottom: 8,
     height: vs(140),
     backgroundColor: 'white',
-    paddingHorizontal: 8,
+    marginHorizontal: 16
   },
 
   contentWrapper: {
@@ -155,6 +156,7 @@ export default StyleSheet.create({
   },
   item: {
     flex:1,
+    width: Dimensions.get('window').width,
     height: 168, 
     marginTop: 8,
     marginBottom: 10,
@@ -200,7 +202,7 @@ export default StyleSheet.create({
   suggestItem: {
     flex: 1,
     flexDirection: 'column',
-    width: Dimensions.get('window').width / 2 - 24,
+    width: Dimensions.get('window').width / 2 - 32,
     height: 256,
     borderColor: '#F6F8F6',
     borderWidth: 1,
@@ -253,8 +255,7 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 20,
-    backgroundColor: 'blue'
+    borderRadius: 50,
   },
   
   image1: {

@@ -6,6 +6,8 @@ import { GUEST_NAVIGATION } from "@src/navigations/routes";
 import React, { useEffect, useState } from "react";
 import { Text, SafeAreaView, View, FlatList, TouchableWithoutFeedback, Image, TouchableOpacity } from "react-native";
 import styles from "./styles"
+import { navigateToPage } from "@src/navigations/services";
+import TouchableScale from 'react-native-touchable-scale';
 
 interface Props {
   navigation: NativeStackNavigationProp<GuestStackParam>;
@@ -26,11 +28,16 @@ const CategoryScreen = (props: Props) => {
 
   const handleBackPress = () => {
     // Xử lý khi nút back được nhấn
+    navigateToPage(GUEST_NAVIGATION.LOGIN)
   };
 
   const handleCartPress = () => {
     // Xử lý khi nút giỏ hàng được nhấn
   };
+
+  useEffect(() => {
+    fetchData()
+  })
 
   const fetchData = async () => {
     try {
@@ -49,16 +56,14 @@ const CategoryScreen = (props: Props) => {
     }
   };
 
-  useEffect(() => {
-    fetchData()
-  })
+
 
   return (
     <SafeAreaView style={{ flex: 1, flexDirection: 'column', backgroundColor: 'white' }}>
       <View>
         <BaseHeader
           title="Danh mục"
-          onBackPress={handleBackPress}
+          onBackPress={null}
           onCartPress={handleCartPress}
         />
       </View>
@@ -69,7 +74,7 @@ const CategoryScreen = (props: Props) => {
           keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
-            <TouchableWithoutFeedback onPress={() => console.log("code Xem chi tiet data: ", item.name)}>
+            <TouchableScale onPress={() => console.log("code Xem chi tiet data: ", item.name)} activeScale={0.9} friction={9} tension={100}>
               <View style={styles.viewItemCategory}>
                 <View style={{ flex: 2 }}>
                   <Image
@@ -85,7 +90,7 @@ const CategoryScreen = (props: Props) => {
                   </View>
                 </View>
 
-                <View style={{position: 'absolute', right: -17, bottom: 30}}>
+                <View style={{position: 'absolute', right: -17, bottom: 25}}>
                   <TouchableOpacity onPress={() => console.log("alo")}>
                     <Image
                       style={{ width: 35, height: 35 }}
@@ -95,7 +100,7 @@ const CategoryScreen = (props: Props) => {
                 </View>
               </View>
 
-            </TouchableWithoutFeedback>
+            </TouchableScale>
           )}
         />
       </View>
