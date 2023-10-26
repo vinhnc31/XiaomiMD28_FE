@@ -8,5 +8,4 @@ export type MenuStackParam = {
   FAVORITE: undefined;
   NOTIFICATIONS: undefined;
   ACCOUNT: undefined;
-  CATEGORY: undefined;
 };

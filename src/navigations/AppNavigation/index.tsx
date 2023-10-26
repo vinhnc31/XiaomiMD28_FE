@@ -8,6 +8,7 @@ import RootScreen from './root';
 import {AppStackParam} from './stackParam';
 
 
+
 const Stack = createNativeStackNavigator<AppStackParam>();
 
 const AppNavigationScreen = () => {
@@ -53,6 +54,7 @@ const AppNavigationScreen = () => {
       initialRouteName={APP_NAVIGATION.ROOT}
       screenOptions={{tabBarStyle: {display: 'none'}, headerShown: false, statusBarColor: Colors.primary}}>
       <Stack.Screen name={APP_NAVIGATION.ROOT} component={RootScreen} />
+      
     </Stack.Navigator>
   );
 };
