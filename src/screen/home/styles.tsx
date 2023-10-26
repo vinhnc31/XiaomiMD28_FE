@@ -30,8 +30,6 @@ export default StyleSheet.create({
   imgStar: {width: 12, height: 12},
   //
 
-
-
   //search
   mainContainer: {
     flexDirection: 'row',
@@ -197,12 +195,12 @@ export default StyleSheet.create({
 
   //Gợi ý hôm nay
   flatListSuggestContainer: {
-    // padding: 8, 
+    justifyContent: 'space-between',
   },
+
   suggestItem: {
-    flex: 1,
-    flexDirection: 'column',
-    width: Dimensions.get('window').width / 2 - 32,
+    width: Dimensions.get('window').width / 2 - 32 ,
+    // width: 170,
     height: 256,
     borderColor: '#F6F8F6',
     borderWidth: 1,
@@ -212,11 +210,11 @@ export default StyleSheet.create({
     borderRadius: 20,
     backgroundColor: '#F8F6F6', 
 
-    elevation: 5, // Độ sâu của đổ bóng (cho Android)
-    shadowColor: '#F8F6F6', // Màu của đổ bóng (cho iOS)
-    shadowOffset: { width: 0, height: 2 }, // Độ dài và độ rộng của đổ bóng (cho iOS)
-    shadowOpacity: 0.2, // Độ trong suốt của đổ bóng (cho iOS)
-    shadowRadius: 2, // Bán kính của đổ bóng (cho iOS)
+    elevation: 5, 
+    shadowColor: '#817F7F', 
+    shadowOffset: { width: 0, height: 2 }, 
+    shadowOpacity: 0.2, 
+    shadowRadius: 2, 
   }, 
 
   viewSuggestImage: {
@@ -255,12 +253,16 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 50,
+    borderRadius: 20,
+    overflow: 'hidden',
   },
   
   image1: {
     width: '100%',
     height: '100%',
-    borderRadius: 20
+    borderRadius: 20,
+    overflow: 'hidden'
   },
+
+
 });

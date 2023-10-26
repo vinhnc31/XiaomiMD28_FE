@@ -13,6 +13,7 @@ export enum GUEST_NAVIGATION {
 
 export enum APP_NAVIGATION {
   ROOT = 'ROOT',
+  CATEGORY = 'CATEGORY',
 }
 
 export enum MENU_NAVIGATION {

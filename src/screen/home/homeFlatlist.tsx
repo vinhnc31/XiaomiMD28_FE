@@ -1,4 +1,4 @@
-import { Image, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { Dimensions, Image, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import TouchableScale from "react-native-touchable-scale";
 import { navigateToPage } from "@src/navigations/services";
 import styles from "./styles";
@@ -11,10 +11,18 @@ export type Movie = {
 };
 
 
+const numColumns = 2; // Số cột bạn muốn hiển thị
+
+//goi y
 export function ListItemSuggest({ item }: { item: Movie }) {
+  
+  const itemWidth = Dimensions.get('window').width / numColumns;
+  const itemHeight = itemWidth; // Đảm bảo kích thước bằng nhau
+
   return (
     <TouchableScale onPress={() => console.log("da chon 1 item", item.id)} activeScale={0.9} friction={9} tension={100}>
       <View style={styles.suggestItem}>
+      
         <View style={styles.viewSuggestImage}>
           <Image
             source={{ uri: item.image }}

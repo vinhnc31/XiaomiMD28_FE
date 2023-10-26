@@ -7,7 +7,7 @@ const endpoint = {
     profile: '/api/users/profile',
   },
   account: '/api/account',
-  categories: 'v',
+  categories: 'http://10.10.66.115:3000/api',
 };
 
 export default endpoint;

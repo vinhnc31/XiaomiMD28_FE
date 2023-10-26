@@ -8,6 +8,8 @@ import { Text, SafeAreaView, View, FlatList, TouchableWithoutFeedback, Image, To
 import styles from "./styles"
 import { navigateToPage } from "@src/navigations/services";
 import TouchableScale from 'react-native-touchable-scale';
+import CategoryService from "@src/services/category";
+import { CategoryModel } from "@src/services/category/category.model";
 
 interface Props {
   navigation: NativeStackNavigationProp<GuestStackParam>;
@@ -15,16 +17,9 @@ interface Props {
 }
 
 const CategoryScreen = (props: Props) => {
-  const [data, setData] = useState<Category[]>([]);
+  const [data, setData] = useState<CategoryModel[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState('');
-
-  type Category = {
-    id: string;
-    image: string;
-    name: string;
-    quantityCategory: number;
-  };
 
   const handleBackPress = () => {
     // Xử lý khi nút back được nhấn
@@ -33,23 +28,21 @@ const CategoryScreen = (props: Props) => {
 
   const handleCartPress = () => {
     // Xử lý khi nút giỏ hàng được nhấn
+    fetchDataCategory()
+    console.log("eff: ", data.length)
   };
 
   useEffect(() => {
-    fetchData()
-  })
+  }, [])
 
-  const fetchData = async () => {
+  const fetchDataCategory = async () => {
     try {
-      setLoading(true);
-      const response = await fetch('https://6399d10b16b0fdad774a46a6.mockapi.io/facebook');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const result = await response.json();
+      const categoryService = new CategoryService();
+      const result = await categoryService.fetchCategory();
+      // result..forEach(item => item.id = item.id.toString());
+      // console.log(typeof result);
       console.log(result);
-      setData(result);
-      setLoading(false);
+      setData(Object.values(result)); // Cập nhật dữ liệu vào biến dat
     } catch (error) {
       setError("err");
       setLoading(false);
@@ -69,40 +62,19 @@ const CategoryScreen = (props: Props) => {
       </View>
 
       <View style={{ flex: 1, paddingHorizontal: 16 }}>
-        <FlatList
-          data={data}
-          keyExtractor={(item) => item.id}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <TouchableScale onPress={() => console.log("code Xem chi tiet data: ", item.name)} activeScale={0.9} friction={9} tension={100}>
-              <View style={styles.viewItemCategory}>
-                <View style={{ flex: 2 }}>
-                  <Image
-                    source={{ uri: item.image }}
-                    style={styles.imgCategory}
-                  />
-                </View>
-                <View style={styles.viewTextCategory}>
-                  <Text style={styles.textNameCategory}>{item.name}</Text>
-                  <View style={{ flexDirection: 'row' }}>
-                    <Text style={styles.textQuantityCategory}>{item.quantityCategory}</Text>
-                    <Text style={styles.textQuantityCategory}> Sản phẩm</Text>
-                  </View>
-                </View>
-
-                <View style={{position: 'absolute', right: -17, bottom: 25}}>
-                  <TouchableOpacity onPress={() => console.log("alo")}>
-                    <Image
-                      style={{ width: 35, height: 35 }}
-                      source={require('../../assets/images/btnChuyenMan.png')}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-
-            </TouchableScale>
-          )}
-        />
+          <FlatList
+      data={data}
+      keyExtractor={(item) => item.name}
+      showsVerticalScrollIndicator={false}
+      renderItem={({ item }) => (
+        <View >
+        <Image source={{ uri: item.image }}/>
+        <Text>{item.name}</Text>
+        <Text>ID: {item.id}</Text>
+        </View>
+      )}
+    />
+        
       </View>
 
     </SafeAreaView>
