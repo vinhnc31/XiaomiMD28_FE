@@ -9,7 +9,7 @@ import styles from './styles';
 import { goBack } from '@src/navigations/services';
 interface Props {
     navigation: NativeStackNavigationProp<AppStackParam>;
-    route: RouteProp<AppStackParam, GUEST_NAVIGATION.CART>;
+    route: RouteProp<AppStackParam, APP_NAVIGATION.CART>;
 }
 const CartScreen =(props: Props)=> {
     return (
