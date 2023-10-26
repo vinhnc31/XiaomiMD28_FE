@@ -1,6 +1,7 @@
 export type AppStackParam = {
   ROOT: undefined;
   CATEGORY: undefined;
+  CART: undefined;
 };
 
 export type MenuStackParam = {

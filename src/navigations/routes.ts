@@ -5,14 +5,18 @@ export enum ROUTES {
   MENU_NAVIGATION = 'MENU_NAVIGATION',
 }
 
+
 export enum GUEST_NAVIGATION {
   LOGIN = 'LOGIN',
   REGISTER = 'REGISTER',
+  CATEGORY = "CATEGORY",
+  CART = 'CART',
 }
 
 export enum APP_NAVIGATION {
   ROOT = 'ROOT',
   CATEGORY = 'CATEGORY',
+  CART = 'CART',
 }
 
 export enum MENU_NAVIGATION {
