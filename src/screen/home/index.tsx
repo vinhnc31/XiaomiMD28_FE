@@ -50,7 +50,6 @@ const HomeScreen = (props: Props) => {
   };
 
   const goToCategory = () => {
-    // navigateToPage(MENU_NAVIGATION.CATEGORY)
     navigateToPage(APP_NAVIGATION.CATEGORY)
   };
 
