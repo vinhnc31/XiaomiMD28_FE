@@ -6,6 +6,7 @@ import React, {useEffect, useRef} from 'react';
 import {AppState, AppStateStatus} from 'react-native';
 import RootScreen from './root';
 import {AppStackParam} from './stackParam';
+import CategoryScreen from '../../screen/category/index';
 
 
 
@@ -54,6 +55,7 @@ const AppNavigationScreen = () => {
       initialRouteName={APP_NAVIGATION.ROOT}
       screenOptions={{tabBarStyle: {display: 'none'}, headerShown: false, statusBarColor: Colors.primary}}>
       <Stack.Screen name={APP_NAVIGATION.ROOT} component={RootScreen} />
+      <Stack.Screen name={APP_NAVIGATION.CATEGORY} component={CategoryScreen} />
       
     </Stack.Navigator>
   );
