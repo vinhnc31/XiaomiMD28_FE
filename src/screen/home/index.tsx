@@ -87,7 +87,6 @@ const HomeScreen = (props: Props) => {
       setLoading(false);
     }
   };
-
   return (
     <SafeAreaView style={{backgroundColor: 'white', padding: 8}}>
       <View style={styles.mainContainer}>
