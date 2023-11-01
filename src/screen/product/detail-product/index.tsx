@@ -79,7 +79,7 @@ const DetailsScreen = (props: Props) => {
       <View style={styles.container}>
         <View style={{flex: 1, alignItems: 'flex-start'}}>
           <TouchableOpacity onPress={handleBackPress}>
-            <Image source={require('../../assets/images/back.png')} style={styles.icon} />
+            <Image source={require('../../../assets/images/back.png')} style={styles.icon} />
           </TouchableOpacity>
         </View>
       </View>
@@ -93,14 +93,14 @@ const DetailsScreen = (props: Props) => {
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
             <View style={styles.item}>
               <View style={styles.imageContainer}>
-                <Image source={require('../../assets/images/demo.jpg')} style={styles.image} resizeMode="stretch" />
+                <Image source={require('../../../assets/images/demo.jpg')} style={styles.image} resizeMode="stretch" />
                 
               </View>
 
               <View style={styles.overlay}>
                   <View style={{alignItems: 'flex-end', justifyContent: 'center'}}>
                     <TouchableOpacity onPress={() => console.log('code logic button tymm <3')}>
-                      <Image style={styles.imgFavourite} source={require('../../assets/images/heart1.png')} />
+                      <Image style={styles.imgFavourite} source={require('../../../assets/images/heart1.png')} />
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -124,7 +124,7 @@ const DetailsScreen = (props: Props) => {
                 </View>
 
                 <View style={styles.viewStar}>
-                  <Image style={styles.imgStar} source={require('../../assets/images/star4.png')} />
+                  <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
                   <Text style={styles.textStar}>4.9</Text>
                   <Text style={styles.textCmt}>(50)</Text>
                   <Text style={styles.textSell}>| Đã bán : </Text>
@@ -141,12 +141,12 @@ const DetailsScreen = (props: Props) => {
                   biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị chip
                   Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
                 </Text>
-                <Image style={styles.descriptionImage} source={require('../../assets/images/demo.jpg')} />
+                <Image style={styles.descriptionImage} source={require('../../../assets/images/demo.jpg')} />
 
                 <TouchableOpacity onPress={() => console.log('code logic xem thêm mô tả sp')}>
                   <View style={styles.seeMore}>
                     <Text style={styles.seeMoreText}>Xem thêm</Text>
-                    <Image style={styles.imgPlus} source={require('../../assets/images/plus.png')} />
+                    <Image style={styles.imgPlus} source={require('../../../assets/images/plus.png')} />
                   </View>
                 </TouchableOpacity>
               </View>
@@ -173,18 +173,18 @@ const DetailsScreen = (props: Props) => {
                           <Text style={styles.pointText}>4.9</Text>
                           <Text style={styles.pointText}> / 5 </Text>
                           <View style={{marginLeft: 5, flexDirection: 'row', alignItems: 'center'}}>
-                            <Image style={styles.imgStar} source={require('../../assets/images/star4.png')} />
-                            <Image style={styles.imgStar} source={require('../../assets/images/star4.png')} />
-                            <Image style={styles.imgStar} source={require('../../assets/images/star4.png')} />
-                            <Image style={styles.imgStar} source={require('../../assets/images/star4.png')} />
-                            <Image style={styles.imgStar} source={require('../../assets/images/star4.png')} />
+                            <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
+                            <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
+                            <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
+                            <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
+                            <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
                           </View>
                         </View>
                       </View>
 
                       <View style={styles.seeMoreReviews}>
                         <Text style={styles.seeMoreReviewsText}>Xem thêm</Text>
-                        <Image style={styles.imgNext} source={require('../../assets/images/nextD.png')} />
+                        <Image style={styles.imgNext} source={require('../../../assets/images/nextD.png')} />
                       </View>
                     </View>
                   </View>
@@ -208,7 +208,7 @@ const DetailsScreen = (props: Props) => {
                     <View>
                       <View>
                         <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 15, marginBottom: 8}}>
-                          <Image style={{width: 20, height: 20}} source={require('../../assets/images/plus.png')} />
+                          <Image style={{width: 20, height: 20}} source={require('../../../assets/images/plus.png')} />
                           <Text
                             style={{
                               color: '#2A2A2A',
@@ -221,11 +221,11 @@ const DetailsScreen = (props: Props) => {
                           </Text>
                         </View>
                         <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 8}}>
-                          <Image style={styles.imgStar} source={require('../../assets/images/star4.png')} />
-                          <Image style={styles.imgStar} source={require('../../assets/images/star4.png')} />
-                          <Image style={styles.imgStar} source={require('../../assets/images/star4.png')} />
-                          <Image style={styles.imgStar} source={require('../../assets/images/star4.png')} />
-                          <Image style={styles.imgStar} source={require('../../assets/images/star4.png')} />
+                          <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
+                          <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
+                          <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
+                          <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
+                          <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
                         </View>
                       </View>
 
@@ -246,7 +246,7 @@ const DetailsScreen = (props: Props) => {
                             height: 200,
                             marginBottom: 15,
                           }}
-                          source={require('../../assets/images/demo.jpg')}
+                          source={require('../../../assets/images/demo.jpg')}
                         />
                       </View>
                     </View>
@@ -262,11 +262,11 @@ const DetailsScreen = (props: Props) => {
 
             <View style={styles.leftContainerStyle}>
               <TouchableOpacity>
-                <Image style={styles.imageStyle} source={require('../../assets/images/chat.png')} />
+                <Image style={styles.imageStyle} source={require('../../../assets/images/chat.png')} />
               </TouchableOpacity>
               <Text style={{ height: 35, borderLeftWidth: 1, borderColor: '#727272', marginHorizontal: 20,}}></Text>
               <TouchableOpacity>
-                <Image style={styles.imageStyle} source={require('../../assets/images/addToCart.png')} />
+                <Image style={styles.imageStyle} source={require('../../../assets/images/addToCart.png')} />
               </TouchableOpacity>
             </View>
 
