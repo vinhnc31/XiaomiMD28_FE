@@ -1,12 +1,13 @@
 const endpoint = {
   csrf: '/api',
-  auth: {
-    register: '/api/auth/signup',
-    login: '/api/auth/login',
-    logout: '/api/auth/logout',
+  account: {
+    default: '/api/account',
+    register: '/api/account/register',
+    login: '/api/account/login',
+    logout: '/api/account/logout',
     profile: '/api/users/profile',
   },
-  account: '/api/account',
+
   categories: 'v',
 };
 

@@ -18,12 +18,14 @@ export interface IAccount {
 export type AuthStatus = 'idle' | 'pending' | 'resolved' | 'rejected';
 
 export interface ILoginData {
-  phone: string;
+  email: string;
+  password: string;
 }
 
 export interface IRegisterData {
-  Email: string;
-  Password: string;
+  email: string;
+  password: string;
+  name: string;
 }
 
 export interface IChangePassReq {
