@@ -10,8 +10,6 @@ const http = Axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
-    apptype: 'CUSTOMER',
-    lang: 'vi',
   },
   timeout: REQ_TIMEOUT,
   withCredentials: true,
@@ -25,7 +23,7 @@ http.interceptors.request.use((config: any) => requestHandler(config));
 
 const requestHandler = (request: any) => {
   // if (__DEV__) {
-  //   console.log(`Request API: ${request.method?.toUpperCase()} - ${request.url}`, request.params, request.data);
+  console.log(`Request API: ${request.method?.toUpperCase()} - ${request.url}`, request.params, request.data);
   // }
   const accessToken = StorageUtils.get(StorageKey.AccessToken);
   const refreshToken = StorageUtils.get(StorageKey.RefressToken);
@@ -63,7 +61,7 @@ const errorHandler = async (error: any) => {
   const methodNotAllow = error?.response?.data?.statusCode === 405;
   const originalRequest = error.config;
 
-  if (isInvalidToken || !originalRequest || (methodNotAllow && originalRequest?.url !== endpoint.auth.logout)) {
+  if (isInvalidToken || !originalRequest || (methodNotAllow && originalRequest?.url !== endpoint.account.logout)) {
     EventBus.getInstance().post({
       type: EventBusName.INVALID_TOKEN,
     });
