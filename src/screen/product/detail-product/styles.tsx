@@ -164,7 +164,7 @@ export default StyleSheet.create({
     width: '100%',
     height: vs(70),
   },
-  reviewsContainer2:{
+  reviewsContainer2: {
     flex: 1, //
     flexDirection: 'row',
     justifyContent: 'space-between', // Để căn chỉnh phần tử bên trong
@@ -172,16 +172,14 @@ export default StyleSheet.create({
     marginTop: 8,
   },
   // tiêu đề và số lượng đánh giá
-  reviewsTitle: {
-
-  },
+  reviewsTitle: {},
   reviewTitleText: {
     color: '#2A2A2A',
     fontWeight: '400',
     fontSize: 18,
     fontFamily: 'LibreBaskerville-Bold',
   },
-  numberReviews:{
+  numberReviews: {
     color: '#2A2A2A',
     fontWeight: '400',
     fontSize: 16,
@@ -205,8 +203,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center', // Để căn chỉnh phần tử bên trong
     alignItems: 'center',
-    alignSelf:'center',
-
+    alignSelf: 'center',
   },
   seeMoreReviewsText: {
     color: '#858383',
@@ -224,11 +221,10 @@ export default StyleSheet.create({
   flatListContainer: {
     flex: 1,
     flexDirection: 'column', // Chia đều theo chiều dọc
-    
   },
 
   // mua hang vv
-  containerStyle:{
+  containerStyle: {
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
@@ -242,19 +238,31 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  imageBtn: {
+    width: vs(100),
+    alignItems: 'center',
+  },
+
   imageStyle: {
     width: 50,
     height: 50,
   },
-  rightContainerStyle:{
+  lineverticalLines: {
+    height: 35,
+    borderLeftWidth: 0.8,
+    borderColor: '#727272',
+  },
+  rightContainerStyle: {
     backgroundColor: '#FF6900',
     width: '50%',
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  
+
   textLabelStyle: {
+    paddingHorizontal: '19%',
+    paddingVertical: '9%',
     color: '#FFFFFF',
     fontWeight: '400',
     fontSize: 25,

@@ -20,7 +20,7 @@ import {BaseLoading} from '@src/containers/components/Base/BaseLoading';
 
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
-  route: RouteProp<AppStackParam, APP_NAVIGATION.DETAILS>;
+  route: RouteProp<AppStackParam, APP_NAVIGATION.DETAILSPRODUCT>;
 }
 
 const DetailsScreen = (props: Props) => {
@@ -82,6 +82,7 @@ const DetailsScreen = (props: Props) => {
             <Image source={require('../../../assets/images/back.png')} style={styles.icon} />
           </TouchableOpacity>
         </View>
+        <View style={{borderColor: '#D9D9D9', borderWidth: 1.5}} />
       </View>
       {loading ? (
         <BaseLoading size={20} top={100} loading={true} />
@@ -94,16 +95,15 @@ const DetailsScreen = (props: Props) => {
             <View style={styles.item}>
               <View style={styles.imageContainer}>
                 <Image source={require('../../../assets/images/demo.jpg')} style={styles.image} resizeMode="stretch" />
-                
               </View>
 
               <View style={styles.overlay}>
-                  <View style={{alignItems: 'flex-end', justifyContent: 'center'}}>
-                    <TouchableOpacity onPress={() => console.log('code logic button tymm <3')}>
-                      <Image style={styles.imgFavourite} source={require('../../../assets/images/heart1.png')} />
-                    </TouchableOpacity>
-                  </View>
+                <View style={{alignItems: 'flex-end', justifyContent: 'center'}}>
+                  <TouchableOpacity onPress={() => console.log('code logic button tymm <3')}>
+                    <Image style={styles.imgFavourite} source={require('../../../assets/images/heart1.png')} />
+                  </TouchableOpacity>
                 </View>
+              </View>
 
               <View
                 style={{
@@ -114,7 +114,6 @@ const DetailsScreen = (props: Props) => {
                   1.000.000
                   <Text style={{textDecorationLine: 'underline', marginLeft: 2}}>đ</Text>
                 </Text>
-                
 
                 <View style={{flex: 1, justifyContent: 'center', marginBottom: 8}}>
                   <Text style={styles.textName}>
@@ -133,6 +132,7 @@ const DetailsScreen = (props: Props) => {
               </View>
             </View>
 
+            <View style={{flex: 1, paddingHorizontal: 16}}></View>
             <View style={{flex: 1, backgroundColor: '#FFFFFF', marginBottom: 20}}>
               <View style={styles.descriptionContainer}>
                 <Text style={styles.descriptionTitle}>Mô tả về sản phẩm</Text>
@@ -259,14 +259,17 @@ const DetailsScreen = (props: Props) => {
           </ScrollView>
 
           <View style={styles.containerStyle}>
-
             <View style={styles.leftContainerStyle}>
               <TouchableOpacity>
-                <Image style={styles.imageStyle} source={require('../../../assets/images/chat.png')} />
+                <View style={styles.imageBtn}>
+                  <Image style={styles.imageStyle} source={require('../../../assets/images/chat.png')} />
+                </View>
               </TouchableOpacity>
-              <Text style={{ height: 35, borderLeftWidth: 1, borderColor: '#727272', marginHorizontal: 20,}}></Text>
+              <Text style={styles.lineverticalLines}></Text>
               <TouchableOpacity>
-                <Image style={styles.imageStyle} source={require('../../../assets/images/addToCart.png')} />
+                <View style={styles.imageBtn}>
+                  <Image style={styles.imageStyle} source={require('../../../assets/images/addToCart.png')} />
+                </View>
               </TouchableOpacity>
             </View>
 
@@ -275,7 +278,6 @@ const DetailsScreen = (props: Props) => {
                 <Text style={styles.textLabelStyle}>Mua ngay</Text>
               </TouchableOpacity>
             </View>
-
           </View>
         </View>
       )}

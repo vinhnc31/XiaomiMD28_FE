@@ -80,7 +80,7 @@ const FavoriteScreen = (props: Props) => {
   };
 
   const goToDetails = () => {
-    navigateToPage(APP_NAVIGATION.DETAILS);
+    navigateToPage(APP_NAVIGATION.DETAILSPRODUCT);
   };
 
   return (
