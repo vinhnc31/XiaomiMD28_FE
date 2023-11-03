@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { RouteProp, useNavigation } from '@react-navigation/native';
+import {RouteProp, useNavigation} from '@react-navigation/native';
 import styles from './styles';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { MenuStackParam } from '@src/navigations/AppNavigation/stackParam';
@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Text, ScrollView, View, TouchableOpacity, Image, TouchableWithoutFeedback, FlatList, RefreshControl, SectionList, Dimensions } from 'react-native';
 import { BaseButton } from '@src/containers/components/Base';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { BaseLoading } from '@src/containers/components/Base/BaseLoading';
+import {BaseLoading} from '@src/containers/components/Base/BaseLoading';
 import Swiper from 'react-native-swiper';
 import { navigateToPage } from '@src/navigations/services';
 
@@ -16,7 +16,6 @@ import { Movie } from './homeFlatlist';
 import TouchableScale from 'react-native-touchable-scale';
 import CategoryService from '@src/services/category';
 import { CategoryModel } from '@src/services/category/category.model';
-
 
 interface Props {
   navigation: BottomTabNavigationProp<MenuStackParam>;
@@ -41,8 +40,11 @@ const HomeScreen = (props: Props) => {
   useEffect(() => {
     if (refreshing) {
       setRefreshing(false); // Đặt refreshing thành false trước khi tải lại để tránh tác động lặp
-      fetchData()
-        .then(() => fetchDataCategory())
+      // fetchData()
+      fetchDataCategory()
+      // fetchDataTogether()
+        // .then(() => fetchDataCategory())
+        .then(() => fetchData())
         .then(() => setRefreshing(false))
         .catch(() => setRefreshing(false));
     } else {
@@ -65,30 +67,35 @@ const HomeScreen = (props: Props) => {
 
   const fetchData = async () => {
     try {
-      setLoading(true);
       const response = await fetch('https://6399d10b16b0fdad774a46a6.mockapi.io/booCar');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const result = await response.json();
       setData(result);
-      setLoading(false);
     } catch (error) {
-      setError("err");
-      setLoading(false);
+      setError('err');
     }
   };
 
   const fetchDataCategory = async () => {
     try {
-      setLoading(true);
       const categoryService = new CategoryService();
       const result = await categoryService.fetchCategory();
       setDataCategory(result.data);
-      setLoading(false);
     } catch (error) {
       setError("err");
-      setLoading(false);
+    }
+  };
+
+
+  const fetchDataTogether = async () => {
+    try {
+      // Sử dụng Promise.all để gọi cả hai hàm cùng nhau và đợi chúng hoàn thành.
+      await Promise.all([fetchData(), fetchDataCategory()]);
+      // Sau khi cả hai hàm hoàn thành, bạn có thể thực hiện bất kỳ hành động tiếp theo ở đây.
+    } catch (error) {
+      // Xử lý lỗi nếu cần.
     }
   };
 
@@ -176,17 +183,14 @@ const HomeScreen = (props: Props) => {
 
 
   return (
-    <SafeAreaView style={{ backgroundColor: 'white', padding: 8 }}>
+    <SafeAreaView style={{backgroundColor: 'white', padding: 8}}>
       <View style={styles.mainContainer}>
-        <TouchableWithoutFeedback onPress={() => console.log("code chuyen man")}>
+        <TouchableWithoutFeedback onPress={() => console.log('code chuyen man')}>
           <View style={styles.inputContainer}>
-            <View style={{ flex: 1.5, height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-              <Image
-                style={{ width: 20, height: 20 }}
-                source={require('../../assets/images/search.png')}
-              />
+            <View style={{flex: 1.5, height: '100%', alignItems: 'center', justifyContent: 'center'}}>
+              <Image style={{width: 20, height: 20}} source={require('../../assets/images/search.png')} />
             </View>
-            <View style={{ flex: 9, height: '100%', justifyContent: 'center' }}>
+            <View style={{flex: 9, height: '100%', justifyContent: 'center'}}>
               <Text style={styles.title}>Search...</Text>
             </View>
           </View>
@@ -194,14 +198,18 @@ const HomeScreen = (props: Props) => {
         <View style={styles.buttonContainer}>
           <BaseButton
             onPress={() => console.log('Press')}
-            renderIcon={<Icon name="shopping-cart" size={30} color="black" style={{ width: 30, marginRight: 2 }} />}
-            style={{ backgroundColor: 'white', marginBottom: 8 }}
+            renderIcon={<Icon name="shopping-cart" size={30} color="black" />}
+            style={{backgroundColor: 'white', marginBottom: 8}}
           />
         </View>
       </View>
 
-      {loading ? <BaseLoading size={20} top={100} loading={true} /> : (
-        <ScrollView indicatorStyle="black" showsVerticalScrollIndicator={false}
+      {loading ? (
+        <BaseLoading size={20} top={100} loading={true} />
+      ) : (
+        <ScrollView
+          indicatorStyle="black"
+          showsVerticalScrollIndicator={false}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
           <View style={{ height: 160, marginTop: 16, borderRadius: 50, marginHorizontal: 16 }}>
             <Swiper showsButtons={false} loop={true} autoplay={true} autoplayTimeout={3} showsPagination={true}>
@@ -223,14 +231,11 @@ const HomeScreen = (props: Props) => {
               <TouchableOpacity onPress={goToCategory}>
                 <View style={styles.viewButton}>
                   <Text style={styles.seeMoreText}>Xem thêm</Text>
-                  <Image
-                    style={styles.rightArrowImage}
-                    source={require('../../assets/images/right-arrow.png')}
-                  />
+                  <Image style={styles.rightArrowImage} source={require('../../assets/images/right-arrow.png')} />
                 </View>
               </TouchableOpacity>
             </View>
-            <View style={{ height: '100%', marginTop: 8 }}>
+            <View style={{height: '100%', marginTop: 8}}>
               <FlatList
                 data={displayedDataCategory}
                 keyExtractor={(item) => item.id.toString()}
@@ -245,7 +250,7 @@ const HomeScreen = (props: Props) => {
             <Text style={styles.titleText}>Yêu thích nhiều nhất</Text>
             <FlatList
               data={displayedData}
-              keyExtractor={(item) => item.id}
+              keyExtractor={item => item.id}
               horizontal={true}
               contentContainerStyle={styles.flatListContainer}
               renderItem={({ item }) => <ListItemFavorite item={item} />}
@@ -268,7 +273,8 @@ const HomeScreen = (props: Props) => {
               renderItem={({ item }) => <ListItemSuggest item={item} />}
             />
           </View>
-        </ScrollView>)}
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };

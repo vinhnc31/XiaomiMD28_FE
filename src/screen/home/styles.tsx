@@ -5,7 +5,7 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 export default StyleSheet.create({
   //dung chung
   titleText: {
-    fontSize: 18,
+    fontSize: vs(18),
     color: '#2A2A2A',
     fontFamily: 'LibreBaskerville-Bold',
   },
@@ -17,35 +17,35 @@ export default StyleSheet.create({
   },
   text: {
     color: '#FF4C4C', // Màu văn bản
-    fontSize: 14,
+    fontSize: vs(14),
     fontFamily: 'LibreBaskerville-Bold',
   },
 
   textCmt: {
     color: '#817F7F', // Màu văn bản
-    fontSize: 14,
+    fontSize: vs(14),
     fontFamily: 'LibreBaskerville-Bold',
   },
 
-  imgStar: {width: 12, height: 12},
+  imgStar: {width: vs(12), height: vs(12)},
   //
 
   //search
   mainContainer: {
     flexDirection: 'row',
     height: vs(60),
-    paddingHorizontal: 8, 
+    paddingHorizontal: vs(8), 
   },
   inputContainer: {
     flex: 9,
-    marginLeft: 8,
+    marginLeft: vs(8),
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
     borderWidth: 1,
     height: vs(48),
     marginVertical: vs(8),
-    borderRadius: 16,
+    borderRadius: vs(16),
     borderColor: '#EEEAEA',
     backgroundColor: '#F0F0F0',
   },
@@ -63,11 +63,11 @@ export default StyleSheet.create({
 
   // danh muc
   categoryView: {
-    marginTop: 16,
-    marginBottom: 8,
+    marginTop: vs(16),
+    marginBottom: vs(8),
     height: vs(140),
     backgroundColor: 'white',
-    marginHorizontal: 16
+    marginHorizontal: vs(16)
   },
 
   contentWrapper: {
@@ -81,7 +81,7 @@ export default StyleSheet.create({
   seeMoreText: {
     color: '#5073EF',
     textDecorationLine: 'underline',
-    marginRight: 4,
+    marginRight: vs(4),
     fontFamily: 'LibreBaskerville-Regular',
     fontSize: vs(14),
   },
@@ -89,7 +89,7 @@ export default StyleSheet.create({
   rightArrowImage: {
     width: vs(12),
     height: vs(12),
-    marginTop: 4,
+    marginTop: vs(4),
   },
 
   categoryItem: {
@@ -104,7 +104,7 @@ export default StyleSheet.create({
     flex: 6,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 16,
+    borderRadius: vs(16),
     backgroundColor: 'white',
 
     elevation: 2, // Độ sâu của đổ bóng (cho Android)
@@ -123,7 +123,7 @@ export default StyleSheet.create({
   categoryImage: {
     width: "100%",
     height: '100%',
-    borderRadius: 16,
+    borderRadius: vs(16),
   },
 
   viewCategoryTextName: {
@@ -144,7 +144,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#FFFFFF',
-    marginTop: 2,
+    marginTop: vs(2),
 
     elevation: 5, // Độ sâu của đổ bóng (cho Android)
     shadowColor: 'black', // Màu của đổ bóng (cho iOS)
@@ -155,10 +155,10 @@ export default StyleSheet.create({
   item: {
     flex:1,
     width: Dimensions.get('window').width,
-    height: 168, 
-    marginTop: 8,
-    marginBottom: 10,
-    borderRadius: 20,
+    height: vs(168), 
+    marginTop: vs(8),
+    marginBottom: vs(10),
+    borderRadius: vs(20),
     // borderWidth: 1,
     borderColor: '#C2C2C2',
 
@@ -172,7 +172,7 @@ export default StyleSheet.create({
     flex: 1,
     height: '100%', // Ảnh sẽ đầy màn hình theo chiều cao
     width: 'auto',
-    borderRadius: 20,
+    borderRadius: vs(20),
   },
   overlay: {
     flex: 1,
@@ -187,10 +187,10 @@ export default StyleSheet.create({
 
 
   imgFavourite: {
-    width: 25,
-    height: 25,
-    marginRight: 10,
-    marginBottom: 6,
+    width: vs(25),
+    height: vs(25),
+    marginRight: vs(10),
+    marginBottom: vs(6),
   },
 
   //Gợi ý hôm nay
@@ -201,13 +201,13 @@ export default StyleSheet.create({
   suggestItem: {
     width: Dimensions.get('window').width / 2 - 32 ,
     // width: 170,
-    height: 256,
+    height: vs(256),
     borderColor: '#F6F8F6',
     borderWidth: 1,
     alignItems: 'center',
-    marginHorizontal: 8,
-    marginVertical: 6,
-    borderRadius: 20,
+    marginHorizontal: vs(8),
+    marginVertical: vs(6),
+    borderRadius: vs(20),
     backgroundColor: '#F8F6F6', 
 
     elevation: 5, 
@@ -221,7 +221,7 @@ export default StyleSheet.create({
     flex: 6, 
     width: '100%',
     height: '100%',
-    borderRadius: 20,
+    borderRadius: vs(20),
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -230,20 +230,20 @@ export default StyleSheet.create({
     flex: 3,
     width: '100%',
     height: '100%',
-    borderRadius: 20,
-    paddingHorizontal: 12,
+    borderRadius: vs(20),
+    paddingHorizontal: vs(12),
     justifyContent: 'space-around',
 
   },
   suggestTextName: {
-    fontSize: 16, 
+    fontSize: vs(16), 
     fontFamily: 'LibreBaskerville-Regular',
     color: '#000000'
   },
 
   suggestTextPrice: {
     color: '#FF4C4C', // Màu văn bản
-    fontSize: 14,
+    fontSize: vs(14),
     fontFamily: 'LibreBaskerville-Bold',
   },
 
@@ -253,14 +253,14 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 20,
+    borderRadius: vs(20),
     overflow: 'hidden',
   },
   
   image1: {
     width: '100%',
     height: '100%',
-    borderRadius: 20,
+    borderRadius: vs(20),
     overflow: 'hidden'
   },
 

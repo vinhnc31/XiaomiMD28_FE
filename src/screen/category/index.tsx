@@ -2,7 +2,6 @@ import { RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import BaseHeader from "@src/containers/components/Base/BaseHeader";
 import { GuestStackParam } from "@src/navigations/GuestNavigation/stackParam";
-import { GUEST_NAVIGATION } from "@src/navigations/routes";
 import React, { useEffect, useState } from "react";
 import { Text, SafeAreaView, View, FlatList, TouchableWithoutFeedback, Image, TouchableOpacity } from "react-native";
 import styles from "./styles"
@@ -10,10 +9,12 @@ import { navigateToPage, goBack } from "@src/navigations/services";
 import TouchableScale from 'react-native-touchable-scale';
 import CategoryService from "@src/services/category";
 import { CategoryModel } from "@src/services/category/category.model";
+import {APP_NAVIGATION, GUEST_NAVIGATION} from '@src/navigations/routes';
+import {AppStackParam} from '@src/navigations/AppNavigation/stackParam';
 
 interface Props {
-  navigation: NativeStackNavigationProp<GuestStackParam>;
-  route: RouteProp<GuestStackParam, GUEST_NAVIGATION.CATEGORY>;
+  navigation: NativeStackNavigationProp<AppStackParam>;
+  route: RouteProp<AppStackParam, APP_NAVIGATION.CATEGORY>;
 }
 
 const CategoryScreen = (props: Props) => {
@@ -34,10 +35,6 @@ const CategoryScreen = (props: Props) => {
     console.log("eff: ", data)
   }, [])
 
-  // useEffect(() => {
-  //   console.log("data has been updated:", data);
-  // }, [data]);
-
   const fetchDataCategory = async () => {
     try {
       const categoryService = new CategoryService();
@@ -45,13 +42,13 @@ const CategoryScreen = (props: Props) => {
       console.log(result.data);
       setData(result.data)
     } catch (error) {
-      setError("err");
+      setError('err');
       setLoading(false);
     }
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, flexDirection: 'column', backgroundColor: 'white' }}>
+    <SafeAreaView style={{flex: 1, flexDirection: 'column', backgroundColor: 'white'}}>
       <View>
         <BaseHeader
           title="Danh mục"
@@ -60,7 +57,7 @@ const CategoryScreen = (props: Props) => {
         />
       </View>
 
-      <View style={{ flex: 1, paddingHorizontal: 16 }}>
+      <View style={{flex: 1, paddingHorizontal: 16}}>
         <FlatList
           data={data}
           keyExtractor={(item) => item.id.toString()}
@@ -96,10 +93,8 @@ const CategoryScreen = (props: Props) => {
           )}
         />
       </View>
-
     </SafeAreaView>
-  )
-
-}
+  );
+};
 
 export default React.memo(CategoryScreen);
