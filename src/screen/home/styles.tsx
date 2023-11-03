@@ -105,7 +105,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 16,
-    padding: 1,
+    backgroundColor: 'white',
 
     elevation: 2, // Độ sâu của đổ bóng (cho Android)
     shadowColor: 'black', // Màu của đổ bóng (cho iOS)
@@ -127,7 +127,7 @@ export default StyleSheet.create({
   },
 
   viewCategoryTextName: {
-    fontSize: vs(12),
+    fontSize: vs(14),
     color: 'black',
     marginTop: vs(6),
     fontFamily: 'LibreBaskerville-Regular',

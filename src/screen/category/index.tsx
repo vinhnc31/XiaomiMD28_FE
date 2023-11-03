@@ -78,7 +78,7 @@ const CategoryScreen = (props: Props) => {
                 <View style={styles.viewTextCategory}>
                   <Text style={styles.textNameCategory}>{item.name}</Text>
                   <View style={{ flexDirection: 'row' }}>
-                    <Text style={styles.textQuantityCategory}>{item.id}</Text>
+                    <Text style={styles.textQuantityCategory}>{item.productCount}</Text>
                     <Text style={styles.textQuantityCategory}> Sản phẩm</Text>
                   </View>
                 </View>
