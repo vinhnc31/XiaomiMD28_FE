@@ -6,6 +6,7 @@ import React, {useEffect, useState} from 'react';
 import {Text, SafeAreaView, View, FlatList, TouchableWithoutFeedback, Image, TouchableOpacity} from 'react-native';
 import styles from './styles';
 import {AppStackParam} from '@src/navigations/AppNavigation/stackParam';
+import { goBack } from '@src/navigations/services';
 
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
@@ -26,10 +27,12 @@ const CategoryScreen = (props: Props) => {
 
   const handleBackPress = () => {
     // Xử lý khi nút back được nhấn
+    goBack()
   };
 
   const handleCartPress = () => {
     // Xử lý khi nút giỏ hàng được nhấn
+
   };
 
   const fetchData = async () => {

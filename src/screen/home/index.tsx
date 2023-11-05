@@ -68,6 +68,9 @@ const HomeScreen = (props: Props) => {
   const goToCategory = () => {
     navigateToPage(APP_NAVIGATION.CATEGORY);
   };
+  const goToCart = () => {
+    navigateToPage(APP_NAVIGATION.CART);
+  };
 
   const fetchData = async () => {
     try {
@@ -84,7 +87,6 @@ const HomeScreen = (props: Props) => {
       setLoading(false);
     }
   };
-
   return (
     <SafeAreaView style={{backgroundColor: 'white', padding: 8}}>
       <View style={styles.mainContainer}>
@@ -100,7 +102,7 @@ const HomeScreen = (props: Props) => {
         </TouchableWithoutFeedback>
         <View style={styles.buttonContainer}>
           <BaseButton
-            onPress={() => console.log('Press')}
+            onPress={goToCart}
             renderIcon={<Icon name="shopping-cart" size={30} color="black" />}
             style={{backgroundColor: 'white', marginBottom: 8}}
           />
