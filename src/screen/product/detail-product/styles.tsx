@@ -179,6 +179,12 @@ export default StyleSheet.create({
     fontSize: 18,
     fontFamily: 'LibreBaskerville-Bold',
   },
+  reviewsTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    alignContent: 'flex-end',
+    alignSelf: 'flex-end',
+  },
   numberReviews: {
     color: '#2A2A2A',
     fontWeight: '400',

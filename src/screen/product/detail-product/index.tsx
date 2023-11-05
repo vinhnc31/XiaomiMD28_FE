@@ -3,6 +3,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import BaseHeader from '@src/containers/components/Base/BaseHeader';
 import {APP_NAVIGATION, GUEST_NAVIGATION} from '@src/navigations/routes';
 import React, {useEffect, useState} from 'react';
+import R from '@src/res';
 import {
   Text,
   SafeAreaView,
@@ -28,6 +29,8 @@ const DetailsScreen = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState('');
   const [refreshing, setRefreshing] = useState(false);
+
+  const [showFullDescription, setShowFullDescription] = useState(false);
 
   type Favorites = {
     id: string;
@@ -133,22 +136,63 @@ const DetailsScreen = (props: Props) => {
             </View>
 
             <View style={{flex: 1, paddingHorizontal: 16}}></View>
+
             <View style={{flex: 1, backgroundColor: '#FFFFFF', marginBottom: 20}}>
               <View style={styles.descriptionContainer}>
                 <Text style={styles.descriptionTitle}>Mô tả về sản phẩm</Text>
-                <Text style={styles.descriptionText}>
-                  - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là cảm
-                  biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị chip
-                  Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
-                </Text>
-                <Image style={styles.descriptionImage} source={require('../../../assets/images/demo.jpg')} />
-
-                <TouchableOpacity onPress={() => console.log('code logic xem thêm mô tả sp')}>
-                  <View style={styles.seeMore}>
-                    <Text style={styles.seeMoreText}>Xem thêm</Text>
-                    <Image style={styles.imgPlus} source={require('../../../assets/images/plus.png')} />
+                {showFullDescription ? (
+                  <View>
+                    <Text style={styles.descriptionText}>
+                      - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
+                      cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
+                      chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
+                    </Text>
+                    <Image style={styles.descriptionImage} source={require('../../../assets/images/demo.jpg')} />
+                    <Text style={styles.descriptionText}>
+                      - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
+                      cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
+                      chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
+                    </Text>
+                    <Image style={styles.descriptionImage} source={require('../../../assets/images/demo.jpg')} />
+                    <Text style={styles.descriptionText}>
+                      - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
+                      cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
+                      chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
+                    </Text>
+                    <Image style={styles.descriptionImage} source={require('../../../assets/images/demo.jpg')} />
+                    <Text style={styles.descriptionText}>
+                      - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
+                      cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
+                      chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
+                    </Text>
+                    <Image style={styles.descriptionImage} source={require('../../../assets/images/demo.jpg')} />
                   </View>
-                </TouchableOpacity>
+                ) : (
+                  <View>
+                    <Text style={styles.descriptionText}>
+                      - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
+                      cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
+                      chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
+                    </Text>
+                    <Image style={styles.descriptionImage} source={require('../../../assets/images/demo.jpg')} />
+                  </View>
+                )}
+
+                {showFullDescription ? (
+                  <TouchableOpacity onPress={() => setShowFullDescription(false)}>
+                    <View style={styles.seeMore}>
+                      <Text style={styles.seeMoreText}>Ẩn bớt</Text>
+                      <Image style={styles.imgPlus} source={R.images.iconMinus} />
+                    </View>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity onPress={() => setShowFullDescription(true)}>
+                    <View style={styles.seeMore}>
+                      <Text style={styles.seeMoreText}>Xem thêm</Text>
+                      <Image style={styles.imgPlus} source={R.images.iconPlus} />
+                    </View>
+                  </TouchableOpacity>
+                )}
               </View>
             </View>
 
@@ -159,12 +203,7 @@ const DetailsScreen = (props: Props) => {
                     <View style={styles.reviewsContainer2}>
                       <View style={styles.reviewsTitle}>
                         <View
-                          style={{
-                            flexDirection: 'row',
-                            alignItems: 'flex-end',
-                            alignContent: 'flex-end',
-                            alignSelf: 'flex-end',
-                          }}>
+                          style={styles.reviewsTitleContainer}>
                           <Text style={styles.reviewTitleText}>Đánh giá của khác hàng</Text>
                           <Text style={styles.numberReviews}>(100)</Text>
                         </View>
