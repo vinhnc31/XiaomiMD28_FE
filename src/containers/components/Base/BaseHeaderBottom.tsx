@@ -6,6 +6,7 @@ import { navigateToPage } from '@src/navigations/services';
 import { APP_NAVIGATION } from '@src/navigations/routes';
 
 const BaseHeaderBottom = ({disabled, value, onValueChange, SumText, check, data}: any) => {
+  console.log(check)
   return (
     <View>
       <View style={{borderColor: '#D9D9D9', borderWidth: 1.5}} />
@@ -20,7 +21,7 @@ const BaseHeaderBottom = ({disabled, value, onValueChange, SumText, check, data}
           <Text style={{marginTop: 5,marginRight:5, color: '#FF0000', fontSize: 16, fontFamily: 'LibreBaskerville-DpdE'}}>
             {SumText}
           </Text>
-          <BaseButton disable={check} onPress={{}} text='Thanh toán' style={{height:40,width: 120,}}/>
+          <BaseButton disable={check} onPress={()=>data()} text='Thanh toán' style={{height:40,width: 120,}}/>
         </View>
       </View>
     </View>

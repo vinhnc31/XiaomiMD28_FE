@@ -9,9 +9,6 @@ export enum ROUTES {
 export enum GUEST_NAVIGATION {
   LOGIN = 'LOGIN',
   REGISTER = 'REGISTER',
-  CATEGORY = "CATEGORY",
-  CART = 'CART',
-  PAYDETAIL='PAYDETAIL',
 }
 
 export enum APP_NAVIGATION {
@@ -19,6 +16,7 @@ export enum APP_NAVIGATION {
   CATEGORY = 'CATEGORY',
   CART = 'CART',
   PAYDETAIL='PAYDETAIL',
+  ADDRESS='ADDRESS',
 }
 
 export enum MENU_NAVIGATION {

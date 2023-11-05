@@ -10,7 +10,6 @@ import {goBack, navigateToPage} from '@src/navigations/services';
 import BaseHeaderNoCart from '@src/containers/components/Base/BaseHeaderNoCart';
 import {BaseLoading} from '@src/containers/components/Base/BaseLoading';
 import BaseHeaderBottom from '@src/containers/components/Base/BaseHeaderBottom';
-import AppNavigation from '@src/navigations/AppNavigation';
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
   route: RouteProp<AppStackParam, APP_NAVIGATION.CART>;
@@ -56,7 +55,7 @@ const CartScreen = (props: Props) => {
     );
   };
   const confirmDelete = (itemId) => {
-    fetch(`https://653b1ae72e42fd0d54d4b17a.mockapi.io/cart/${itemId}`, {
+    fetch(`https://653b1ae72e42fd0d54d4b17a.mockapi.io/data/${itemId}`, {
       method: 'DELETE',
     })
       .then(() => {
@@ -71,7 +70,7 @@ const CartScreen = (props: Props) => {
     const updatedData = data1.map(item => {
       if (item.id === itemId) {
         const updatedQuantity = item.quantity - 1;
-        fetch(`https://653b1ae72e42fd0d54d4b17a.mockapi.io/cart/${item.id}`, {
+        fetch(`https://653b1ae72e42fd0d54d4b17a.mockapi.io/data/${item.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -88,7 +87,7 @@ const CartScreen = (props: Props) => {
     const updatedData = data1.map(item => {
       if (item.id === itemId) {
         const updatedQuantity = item.quantity + 1;
-        fetch(`https://653b1ae72e42fd0d54d4b17a.mockapi.io/cart/${item.id}`, {
+        fetch(`https://653b1ae72e42fd0d54d4b17a.mockapi.io/data/${item.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -104,7 +103,7 @@ const CartScreen = (props: Props) => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await fetch('https://653b1ae72e42fd0d54d4b17a.mockapi.io/cart');
+      const response = await fetch('https://653b1ae72e42fd0d54d4b17a.mockapi.io/data');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -128,6 +127,7 @@ const CartScreen = (props: Props) => {
     }
   };
   const textInput = (id, value) => {
+    console.log(value)
     const updatedData = data1.map(item => {
       if (item.id === id) {
         fetch(`https://653b1ae72e42fd0d54d4b17a.mockapi.io/cart/${item.id}`, {
@@ -135,9 +135,9 @@ const CartScreen = (props: Props) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({quantity: value}),
-        });
-        return {...item, quantity: value};
+          body: JSON.stringify({quantity: !!value?value:1})
+        })
+        return{...item, quantity: !!value?value:1};
       }
       return item;
     });
@@ -152,8 +152,6 @@ const CartScreen = (props: Props) => {
       setToggleCheckBox(newValue)
     }
   };
-
-  console.log(data1.length)
   const allItemsChecked = data1.every(item => !item.checked);
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   useEffect(() => {
@@ -171,7 +169,7 @@ const CartScreen = (props: Props) => {
     goBack();
   };
   const handlePress = () => {
-    
+    navigateToPage(APP_NAVIGATION.PAYDETAIL,data)
   };
   const data = data1
     .filter(item => item.checked)
@@ -211,9 +209,8 @@ const CartScreen = (props: Props) => {
                       </Text>
                       <Text style={styles.textPrice}>{item.price}₫</Text>
                       <View style={styles.viewCount}>
-                        {item.quantity <= 1 ? (
                           <TouchableOpacity
-                            disabled={true}
+                            disabled={item.quantity <= 1 ?true:false}
                             onPress={() => reduceQuantity(item.id)}
                             style={styles.buttomMinus}>
                             <Image
@@ -223,27 +220,14 @@ const CartScreen = (props: Props) => {
                               }}
                             />
                           </TouchableOpacity>
-                        ) : (
-                          <TouchableOpacity
-                            disabled={false}
-                            onPress={() => reduceQuantity(item.id)}
-                            style={styles.buttomMinus}>
-                            <Image
-                              style={styles.imageCount}
-                              source={{
-                                uri: 'https://cdn-icons-png.flaticon.com/128/43/43625.png',
-                              }}
-                            />
-                          </TouchableOpacity>
-                        )}
                         <TextInput
                           style={styles.textInputQuanity}
                           keyboardType="numeric"
                           maxLength={2}
+                          value={item.quantity.toString()}
                           onChangeText={value => {
                             textInput(item.id, value);
                           }}>
-                          {item.quantity}
                         </TextInput>
                         <TouchableOpacity onPress={() => incrementQuantity(item.id)} style={styles.buttomAdd}>
                           <Image
@@ -271,6 +255,7 @@ const CartScreen = (props: Props) => {
         onValueChange={(newValue: any) => toggleAllCheckboxes(newValue)}
         SumText={calculateTotalCost()}
         check={allItemsChecked && !toggleCheckBox}
+        data={handlePress}
       />
     </SafeAreaView>
   );

@@ -3,6 +3,7 @@ export type AppStackParam = {
   CATEGORY: undefined;
   CART: undefined;
   PAYDETAIL: undefined;
+  ADDRESS: undefined;
 };
 
 export type MenuStackParam = {
