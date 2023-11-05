@@ -3,7 +3,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import useToast from '@src/hooks/useToast';
 import {GuestStackParam} from '@src/navigations/GuestNavigation/stackParam';
 import {GUEST_NAVIGATION} from '@src/navigations/routes';
-import {navigateToPage} from '@src/navigations/services';
+import {navigateToPage, resetStack} from '@src/navigations/services';
 import R from '@src/res';
 import AccountService from '@src/services/account';
 import React, {useRef, useState} from 'react';
@@ -35,15 +35,57 @@ const RegisterScreen = (props: Props) => {
   const onRegister = async () => {
     setLoading(true);
 
-    // try {
-    //   const sv = new AccountService();
+    if (name.trim().length == 0) {
+      toast.showError({message: 'Tên không được để trống'});
+      setLoading(false);
+      return;
+    }
 
-    //   setLoading(false);
-    // } catch (error) {
-    //   console.log('error: ', error);
-    //   toast.showThowError(error);
-    //   setLoading(false);
-    // }
+    const nameReg =
+      '^(^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạ ảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹs]+$){1,30}$';
+
+    if (!name.trim().match(nameReg)) {
+      setLoading(false);
+      toast.showError({message: 'Tên không bao gồm ký tự đặc biệt'});
+      return;
+    }
+    const emailRegex = '^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$';
+
+    if (!email.trim().match(emailRegex)) {
+      setLoading(false);
+      toast.showError({message: 'Email không đúng định dạng'});
+      return;
+    }
+
+    if (password.trim().length == 0) {
+      setLoading(false);
+      toast.showError({message: 'Mật khẩu không được để trống'});
+      return;
+    }
+
+    if (password !== rePassword) {
+      setLoading(false);
+      toast.showError({message: 'Mật khẩu không trùng khớp'});
+      return;
+    }
+
+    try {
+      const sv = new AccountService();
+      const res = await sv.register({
+        email,
+        password,
+        name,
+      });
+      setLoading(false);
+      // @ts-ignore
+      toast.showSuccess({messageText: res.message});
+      resetStack(GUEST_NAVIGATION.LOGIN);
+      console.log('res: ', res);
+    } catch (error) {
+      console.log('error: ', error);
+      toast.showThowError(error);
+      setLoading(false);
+    }
   };
 
   const hideKeyboard = () => {

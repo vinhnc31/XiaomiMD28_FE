@@ -145,4 +145,3 @@ export default StyleSheet.create({
     color:'black',
   },
   });
-  

@@ -7,9 +7,10 @@ import {AppState, AppStateStatus} from 'react-native';
 import RootScreen from './root';
 import {AppStackParam} from './stackParam';
 import CategoryScreen from '@src/screen/category/index';
+import AddressPayScreen from '@src/screen/addressPay/index';
+import DetailsScreen from '@src/screen/product/detail-product/index';
 import CartScreen from '@src/screen/cart/index';
 import PayDetailScreen from '@src/screen/paydetail/index';
-import AddressPayScreen from '@src/screen/addressPay/index';
 
 const Stack = createNativeStackNavigator<AppStackParam>();
 
