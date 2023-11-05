@@ -7,6 +7,7 @@ import {AppState, AppStateStatus} from 'react-native';
 import RootScreen from './root';
 import {AppStackParam} from './stackParam';
 import CategoryScreen from '@src/screen/category/index';
+import DetailsScreen from '@src/screen/product/detail-product/index';
 import CartScreen from '@src/screen/cart/index';
 import PayDetailScreen from '@src/screen/paydetail/index';
 
@@ -56,6 +57,7 @@ const AppNavigationScreen = () => {
       screenOptions={{tabBarStyle: {display: 'none'}, headerShown: false, statusBarColor: Colors.primary}}>
       <Stack.Screen name={APP_NAVIGATION.ROOT} component={RootScreen} />
       <Stack.Screen name={APP_NAVIGATION.CATEGORY} component={CategoryScreen} />
+      <Stack.Screen name={APP_NAVIGATION.DETAILSPRODUCT} component={DetailsScreen} />
       <Stack.Screen name={APP_NAVIGATION.CART} component={CartScreen} />
       <Stack.Screen name={APP_NAVIGATION.PAYDETAIL} component={PayDetailScreen} />
     </Stack.Navigator>
