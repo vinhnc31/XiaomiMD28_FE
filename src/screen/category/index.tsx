@@ -11,6 +11,7 @@ import CategoryService from "@src/services/category";
 import { CategoryModel } from "@src/services/category/category.model";
 import {APP_NAVIGATION, GUEST_NAVIGATION} from '@src/navigations/routes';
 import {AppStackParam} from '@src/navigations/AppNavigation/stackParam';
+import { goBack } from '@src/navigations/services';
 
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;

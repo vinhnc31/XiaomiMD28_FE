@@ -14,7 +14,8 @@ import BaseInput from '@src/containers/components/Base/BaseInput';
 import {StatusBar} from 'react-native';
 import {vs} from '@src/styles/scalingUtils';
 import {BaseButton} from '@src/containers/components/Base';
-
+import {useAppDispatch} from '@src/stores';
+import {logInAction} from '@src/stores/auth/auth.actions';
 
 interface Props {
   navigation: NativeStackNavigationProp<GuestStackParam>;
@@ -24,14 +25,14 @@ interface Props {
 const LogInComponent = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const toast = useToast();
-  const [text, setText] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-
-  const { navigation } = props;
+  const dispatch = useAppDispatch();
+  const {navigation} = props;
 
   const goToRegister = () => {
-    // navigateToPage(GUEST_NAVIGATION.REGISTER);
-    navigateToPage(GUEST_NAVIGATION.CATEGORY);
+    navigateToPage(GUEST_NAVIGATION.REGISTER);
+
     // navigateToPage(APP_NAVIGATION.ROOT);
   };
 
@@ -39,15 +40,22 @@ const LogInComponent = (props: Props) => {
     console.log('bem');
     setLoading(true);
 
-    // try {
-    //   const sv = new AccountService();
-
-    //   setLoading(false);
-    // } catch (error) {
-    //   console.log('error: ', error);
-    //   toast.showThowError(error);
-    //   setLoading(false);
-    // }
+    try {
+      const sv = new AccountService();
+      const res = await sv.logIn({
+        email,
+        password,
+      });
+      console.log('res: ', res);
+      // @ts-ignore
+      await dispatch(logInAction(res.data)).unwrap();
+      toast.showSuccess({messageText: 'Đăng nhập thành công'});
+      setLoading(false);
+    } catch (error) {
+      console.log('error: ', error);
+      toast.showThowError(error);
+      setLoading(false);
+    }
   };
 
   const hideKeyboard = () => {
@@ -69,8 +77,8 @@ const LogInComponent = (props: Props) => {
                   <BaseInput
                     leftIcon={'mail-outline'}
                     title="Email"
-                    value={text}
-                    onChangeText={setText}
+                    value={email}
+                    onChangeText={setEmail}
                     borderRadius={40}
                   />
                 </View>

@@ -56,6 +56,9 @@ const HomeScreen = (props: Props) => {
   const goToCategory = () => {
     navigateToPage(APP_NAVIGATION.CATEGORY)
   };
+  const goToCart = () => {
+    navigateToPage(APP_NAVIGATION.CART);
+  };
 
   const gotoListProduct = (id, name) => {
     navigateToPage(APP_NAVIGATION.PRODUCTLIST, { categoryId: id, name: name });
@@ -185,7 +188,7 @@ const HomeScreen = (props: Props) => {
         </TouchableWithoutFeedback>
         <View style={styles.buttonContainer}>
           <BaseButton
-            onPress={() => console.log('Press')}
+            onPress={goToCart}
             renderIcon={<Icon name="shopping-cart" size={30} color="black" />}
             style={{backgroundColor: 'white', marginBottom: 8}}
           />
