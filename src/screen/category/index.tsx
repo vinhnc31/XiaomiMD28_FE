@@ -39,13 +39,20 @@ const CategoryScreen = (props: Props) => {
     try {
       const categoryService = new CategoryService();
       const result = await categoryService.fetchCategory();
-      console.log(result.data);
+      // console.log(result.data);
       setData(result.data)
     } catch (error) {
       setError('err');
       setLoading(false);
     }
   };
+
+  const goToProductListById = (id, name) => {
+    navigateToPage(APP_NAVIGATION.PRODUCTLIST, { categoryId: id, name: name });
+    console.log(id);
+  };
+
+
 
   return (
     <SafeAreaView style={{flex: 1, flexDirection: 'column', backgroundColor: 'white'}}>
@@ -63,7 +70,7 @@ const CategoryScreen = (props: Props) => {
           keyExtractor={(item) => item.id.toString()}
           showsVerticalScrollIndicator={false}
           renderItem={({ item, index }) => (
-            <TouchableScale onPress={() => console.log("code Xem chi tiet data: ", item.name)} activeScale={0.9} friction={9} tension={100}>
+            <TouchableScale onPress={() => goToProductListById(item.id, item.name)} activeScale={0.9} friction={9} tension={100}>
               <View style={styles.viewItemCategory}>
                 <View style={{ flex: 2 }}>
                   {item.image ? (
@@ -81,12 +88,12 @@ const CategoryScreen = (props: Props) => {
                 </View>
 
                 <View style={{ position: 'absolute', right: -17, bottom: 25 }}>
-                  <TouchableOpacity onPress={() => console.log("alo")}>
+                  {/* <TouchableOpacity onPress={() => console.log("alo")}> */}
                     <Image
                       style={{ width: 35, height: 35 }}
                       source={require('../../assets/images/btnChuyenMan.png')}
                     />
-                  </TouchableOpacity>
+                  {/* </TouchableOpacity> */}
                 </View>
               </View>
             </TouchableScale>

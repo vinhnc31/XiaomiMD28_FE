@@ -35,7 +35,7 @@ export default StyleSheet.create({
     paddingLeft: 16,
   },
   textNameCategory: {
-    fontSize: 24,
+    fontSize: 20,
     fontFamily: 'LibreBaskerville-Regular',
     color: '#000000',
   },

@@ -1,5 +1,5 @@
 export interface CategoryModel {
-    data(arg0: string, data: any): unknown;
+    // data(arg0: string, data: any): unknown;
     id: number,
     name: string,
     image: string,

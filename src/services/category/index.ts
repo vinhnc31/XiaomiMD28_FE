@@ -15,4 +15,5 @@ export default class CategoryService extends BaseService<CategoryModel> {
         return data;
     }
 
+
 }

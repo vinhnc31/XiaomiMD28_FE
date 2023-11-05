@@ -40,10 +40,7 @@ const HomeScreen = (props: Props) => {
   useEffect(() => {
     if (refreshing) {
       setRefreshing(false); // Đặt refreshing thành false trước khi tải lại để tránh tác động lặp
-      // fetchData()
       fetchDataCategory()
-      // fetchDataTogether()
-        // .then(() => fetchDataCategory())
         .then(() => fetchData())
         .then(() => setRefreshing(false))
         .catch(() => setRefreshing(false));
@@ -60,10 +57,11 @@ const HomeScreen = (props: Props) => {
     navigateToPage(APP_NAVIGATION.CATEGORY)
   };
 
-  const gotoListProduct = (id) => {
-    navigateToPage(APP_NAVIGATION.PRODUCTLIST, { id: id })
-    console.log("categoryId", id)
+  const gotoListProduct = (id, name) => {
+    navigateToPage(APP_NAVIGATION.PRODUCTLIST, { categoryId: id, name: name });
+    console.log(id);
   }
+
 
   const fetchData = async () => {
     try {
@@ -88,16 +86,6 @@ const HomeScreen = (props: Props) => {
     }
   };
 
-
-  const fetchDataTogether = async () => {
-    try {
-      // Sử dụng Promise.all để gọi cả hai hàm cùng nhau và đợi chúng hoàn thành.
-      await Promise.all([fetchData(), fetchDataCategory()]);
-      // Sau khi cả hai hàm hoàn thành, bạn có thể thực hiện bất kỳ hành động tiếp theo ở đây.
-    } catch (error) {
-      // Xử lý lỗi nếu cần.
-    }
-  };
 
   //Gợi ý hôm nay
   function ListItemSuggest({ item }: { item: Movie }) {
@@ -135,7 +123,7 @@ const HomeScreen = (props: Props) => {
   // danh muc
   function ListItemCategory({ item }: { item: Movie }) {
     return (
-      <TouchableScale onPress={() => gotoListProduct(item.id)} activeScale={0.9} friction={9} tension={100}>
+      <TouchableScale onPress={() => gotoListProduct(item.id, item.name)} activeScale={0.9} friction={9} tension={100}>
         <View style={styles.categoryItem}>
           <View style={styles.viewCategoryImage}>
             <Image
@@ -215,10 +203,9 @@ const HomeScreen = (props: Props) => {
             <Swiper showsButtons={false} loop={true} autoplay={true} autoplayTimeout={3} showsPagination={true}>
               {limitedData.map((item) => (
                 <View style={styles.slide} key={item.id}>
-                  <TouchableWithoutFeedback onPress={() => console.log("da click de xem chi tiet:", item.name)}>
-
+                  {/* <TouchableWithoutFeedback onPress={() => console.log("da click de xem chi tiet:", item.name)}> */}
                     <Image source={{ uri: item.image }} style={styles.image1} />
-                  </TouchableWithoutFeedback>
+                  {/* </TouchableWithoutFeedback> */}
 
                 </View>
               ))}
