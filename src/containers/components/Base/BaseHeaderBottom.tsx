@@ -22,7 +22,6 @@ const BaseHeaderBottom = ({disabled, value, onValueChange, SumText, check, data}
             {SumText}
           </Text>
           <BaseButton disable={check} onPress={()=>data()} text='Thanh toán' style={{height:40,width: 120,}}/>
-          <BaseButton disable={check} onPress={{}} text='Thanh toán' style={{height:40,width: 120,}}/>
         </View>
       </View>
     </View>
