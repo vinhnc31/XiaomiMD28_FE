@@ -9,6 +9,8 @@ const endpoint = {
   },
 
   categories: 'v',
+  favorites: 'http://192.168.1.82:3000/api',
+
 };
 
 export default endpoint;

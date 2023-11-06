@@ -25,17 +25,23 @@ interface Props {
 }
 
 const DetailsScreen = (props: Props) => {
-  const [data, setData] = useState<Favorites[]>([]);
+  const [detailProductData, setDetailProductData] = useState<Producs[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState('');
   const [refreshing, setRefreshing] = useState(false);
 
   const [showFullDescription, setShowFullDescription] = useState(false);
 
-  type Favorites = {
+  type Producs = {
+    images: [string, string, string, string, string, string, string, string];
     id: string;
     name: string;
     image: string;
+    price: string;
+    description: string;
+    quantity: string;
+    categoryId: string;
+    colorProducts: string[];
   };
   useEffect(() => {
     // Chỉ kích hoạt làm mới nếu refreshing đã được đặt thành true
@@ -59,12 +65,12 @@ const DetailsScreen = (props: Props) => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await fetch('https://6399d10b16b0fdad774a46a6.mockapi.io/booCar');
+      const response = await fetch('http://192.168.1.82:3000/api/product/1');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const result = await response.json();
-      setData(result);
+      setDetailProductData(result.data);
       setLoading(false);
     } catch (error) {
       setError('err');
@@ -98,6 +104,7 @@ const DetailsScreen = (props: Props) => {
             <View style={styles.item}>
               <View style={styles.imageContainer}>
                 <Image source={require('../../../assets/images/demo.jpg')} style={styles.image} resizeMode="stretch" />
+                {/* <Image source={{ uri: data.images[0] }} style={styles.image} resizeMode="stretch" /> */}
               </View>
 
               <View style={styles.overlay}>
@@ -142,39 +149,49 @@ const DetailsScreen = (props: Props) => {
                 <Text style={styles.descriptionTitle}>Mô tả về sản phẩm</Text>
                 {showFullDescription ? (
                   <View>
-                    <Text style={styles.descriptionText}>
-                      - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
-                      cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
-                      chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
-                    </Text>
-                    <Image style={styles.descriptionImage} source={require('../../../assets/images/demo.jpg')} />
-                    <Text style={styles.descriptionText}>
-                      - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
-                      cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
-                      chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
-                    </Text>
-                    <Image style={styles.descriptionImage} source={require('../../../assets/images/demo.jpg')} />
-                    <Text style={styles.descriptionText}>
-                      - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
-                      cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
-                      chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
-                    </Text>
-                    <Image style={styles.descriptionImage} source={require('../../../assets/images/demo.jpg')} />
-                    <Text style={styles.descriptionText}>
-                      - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
-                      cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
-                      chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
-                    </Text>
-                    <Image style={styles.descriptionImage} source={require('../../../assets/images/demo.jpg')} />
-                  </View>
+                  <Text style={styles.descriptionText}>
+                    - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
+                    cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
+                    chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
+                    - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
+                    cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
+                    chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
+                    - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
+                    cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
+                    chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
+                    - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
+                    cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
+                    chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
+                    - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
+                    cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
+                    chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
+                    - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
+                    cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
+                    chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
+                    - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
+                    cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
+                    chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
+                  </Text>
+                </View>
                 ) : (
                   <View>
-                    <Text style={styles.descriptionText}>
+                    <Text style={styles.descriptionText}  numberOfLines={10}>
+                      - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
+                      cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
+                      chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
+                      - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
+                      cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
+                      chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
+                      - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
+                      cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
+                      chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
+                      - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
+                      cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
+                      chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
                       - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
                       cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
                       chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
                     </Text>
-                    <Image style={styles.descriptionImage} source={require('../../../assets/images/demo.jpg')} />
                   </View>
                 )}
 
@@ -202,8 +219,7 @@ const DetailsScreen = (props: Props) => {
                   <View style={styles.reviewsContainer}>
                     <View style={styles.reviewsContainer2}>
                       <View style={styles.reviewsTitle}>
-                        <View
-                          style={styles.reviewsTitleContainer}>
+                        <View style={styles.reviewsTitleContainer}>
                           <Text style={styles.reviewTitleText}>Đánh giá của khác hàng</Text>
                           <Text style={styles.numberReviews}>(100)</Text>
                         </View>

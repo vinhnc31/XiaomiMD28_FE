@@ -59,6 +59,7 @@ const AppNavigationScreen = () => {
       <Stack.Screen name={APP_NAVIGATION.ROOT} component={RootScreen} />
       <Stack.Screen name={APP_NAVIGATION.CATEGORY} component={CategoryScreen} />
       <Stack.Screen name={APP_NAVIGATION.CART} component={CartScreen} />
+      <Stack.Screen name={APP_NAVIGATION.DETAILSPRODUCT} component={DetailsScreen} />
       <Stack.Screen name={APP_NAVIGATION.PAYDETAIL} component={PayDetailScreen} />
       <Stack.Screen name={APP_NAVIGATION.ADDRESS} component={AddressPayScreen} />
     </Stack.Navigator>
