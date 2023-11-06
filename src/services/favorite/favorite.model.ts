@@ -1,5 +1,5 @@
 export interface FavoriteModel {
     id: number,
-    productId: string,
-    userId: string,
+    productId: number,
+    accountId: number,
 }

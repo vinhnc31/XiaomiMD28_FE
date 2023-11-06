@@ -10,8 +10,8 @@ export default class FavoriteService extends BaseService<FavoriteModel> {
         super(url);
     }
 
-    public async fetchCategory() {
-        const {data} = await http.get<FavoriteModel>(`${url}/favorite`);
+    public async fetchFavorite(accountId: number, productId: number) {
+        const {data} = await http.get<FavoriteModel>(`${url}/favorite/${accountId}&${productId}`);
         return data;
     }
 

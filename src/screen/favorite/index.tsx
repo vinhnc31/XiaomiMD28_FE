@@ -22,6 +22,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {BaseLoading} from '@src/containers/components/Base/BaseLoading';
 import {navigateToPage} from '@src/navigations/services';
 import TouchableScale from 'react-native-touchable-scale';
+import FavoriteService from '@src/services/favorite';
+import {FavoriteModel} from '@src/services/favorite/favorite.model';
 
 type ScreenNavigationProps = CompositeNavigationProp<
   BottomTabNavigationProp<MenuStackParam, MENU_NAVIGATION.FAVORITE>,
@@ -34,50 +36,33 @@ interface Props {
 }
 
 const FavoriteScreen = (props: Props) => {
-  const [data, setData] = useState<Favorites[]>([]);
+  const [favorites, setFavorites] = useState<FavoriteModel[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState('');
-  const [refreshing, setRefreshing] = useState(false);
 
-  type Favorites = {
-    id: string;
-    name: string;
-    image: string;
-  };
-  useEffect(() => {
-    // Chỉ kích hoạt làm mới nếu refreshing đã được đặt thành true
-    setLoading(false);
-    if (refreshing) {
-      fetchData()
-        .then(() => setRefreshing(false))
-        .catch(() => setRefreshing(false));
-    } else {
-      fetchData();
-    }
-  }, [refreshing]); // Sử dụng mảng phụ thuộc để chỉ kích hoạt khi refreshing thay đổi
+  const route = props.route;
+  const accountId = route.params?.accountId;
+  const productId =  route.params?.productId;
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    fetchData()
-      .then(() => setRefreshing(false))
-      .catch(() => setRefreshing(false));
-  };
-
-  const fetchData = async () => {
+  const fetchDataFavorite = async () => {
     try {
       setLoading(true);
-      const response = await fetch('https://6399d10b16b0fdad774a46a6.mockapi.io/booCar');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const result = await response.json();
-      setData(result);
+      const favoriteService = new FavoriteService();
+
+      const result = await favoriteService.fetchFavorite(accountId, productId);
+      console.log("Product: ", result.data.length);
+      setFavorites(result.data);
       setLoading(false);
     } catch (error) {
       setError('err');
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    console.log("id user: ", accountId, " product: ", productId);
+    fetchDataFavorite();
+  }, [accountId, productId]);
 
   const goToDetails = () => {
     navigateToPage(APP_NAVIGATION.DETAILSPRODUCT);
@@ -111,7 +96,7 @@ const FavoriteScreen = (props: Props) => {
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
           <View style={{width: '100%', marginTop: 14, marginBottom: 5}}>
             <FlatList
-              data={data}
+              data={favorites}
               keyExtractor={item => item.id}
               horizontal={true}
               contentContainerStyle={styles.flatListContainer}
