@@ -12,6 +12,7 @@ import FavoriteScreen from '@src/screen/favorite';
 import NotificationsScreen from '@src/screen/notifications';
 import AccountScreen from '@src/screen/account';
 const Tab = createBottomTabNavigator<MenuStackParam>();
+import CategoryScreen from '@src/screen/category';
 
 const RootScreen = () => {
   return (
@@ -62,6 +63,7 @@ const RootScreen = () => {
           tabBarIcon: ({color, size}) => <BaseIcon name="person-circle-outline" color={color} size={size} />,
         }}
       />
+    
     </Tab.Navigator>
   );
 };

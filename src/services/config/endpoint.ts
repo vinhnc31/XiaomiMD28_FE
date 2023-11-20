@@ -7,8 +7,16 @@ const endpoint = {
     logout: '/api/logout',
     profile: '/api/users/profile',
   },
-
-  categories: 'v',
+  categories: {
+    default: '/api/category',
+    getCategory: '/api/category',
+  },
+ 
+  products: {
+    default: '/api/products',
+    getProduct: '/api/product',
+    getProductByIdCategory: '/api/product/category'
+  }
 };
 
 export default endpoint;

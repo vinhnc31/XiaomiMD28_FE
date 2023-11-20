@@ -5,7 +5,7 @@ import http from './config/http';
 export class BaseService<T> {
   private url: string;
 
-  constructor(_url: string = endpoints.categories) {
+  constructor(_url: string = endpoints.csrf) {
     this.url = _url;
   }
 
