@@ -48,6 +48,7 @@ target 'XiaomiMD28_FE' do
   target 'XiaomiMD28_FETests' do
     inherit! :complete
     # Pods for testing
+
   end
 
   post_install do |installer|

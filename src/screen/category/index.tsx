@@ -11,7 +11,6 @@ import CategoryService from "@src/services/category";
 import { CategoryModel } from "@src/services/category/category.model";
 import {APP_NAVIGATION, GUEST_NAVIGATION} from '@src/navigations/routes';
 import {AppStackParam} from '@src/navigations/AppNavigation/stackParam';
-import { goBack } from '@src/navigations/services';
 
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
@@ -28,11 +27,12 @@ const CategoryScreen = (props: Props) => {
   };
 
   const handleCartPress = () => {
-    fetchDataCategory()
+    // fetchDataCategory()
   };
 
   useEffect(() => {
-    fetchDataCategory()
+    // fetchDataCategory()
+    fetchData()
     console.log("eff: ", data)
   }, [])
 
@@ -48,15 +48,26 @@ const CategoryScreen = (props: Props) => {
     }
   };
 
+  const fetchData = async () => {
+    try {
+      const response = await fetch('https://6399d10b16b0fdad774a46a6.mockapi.io/booCar');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const result = await response.json();
+      setData(result);
+    } catch (error) {
+      setError('err');
+    }
+  };
+
   const goToProductListById = (id, name) => {
     navigateToPage(APP_NAVIGATION.PRODUCTLIST, { categoryId: id, name: name });
     console.log(id);
   };
 
-
-
   return (
-    <SafeAreaView style={{flex: 1, flexDirection: 'column', backgroundColor: 'white'}}>
+    <SafeAreaView style={{flex: 1, flexDirection: 'column', backgroundColor: '#FBEFE5'}}>
       <View>
         <BaseHeader
           title="Danh mục"
@@ -74,11 +85,11 @@ const CategoryScreen = (props: Props) => {
             <TouchableScale onPress={() => goToProductListById(item.id, item.name)} activeScale={0.9} friction={9} tension={100}>
               <View style={styles.viewItemCategory}>
                 <View style={{ flex: 2 }}>
-                  {item.image ? (
+                  {/* {item.image ? ( */}
                     <Image source={{ uri: item.image }} style={styles.imgCategory} />
-                  ) : (
+                  {/* ) : (
                     <Text>No Image</Text>
-                  )}
+                  )} */}
                 </View>
                 <View style={styles.viewTextCategory}>
                   <Text style={styles.textNameCategory}>{item.name}</Text>

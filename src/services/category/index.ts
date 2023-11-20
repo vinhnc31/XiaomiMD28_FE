@@ -7,11 +7,11 @@ const url = endpoints.categories;
 // http://10.10.66.115:3000/api/category/category
 export default class CategoryService extends BaseService<CategoryModel> {
     constructor() {
-        super(url);
+        super(url.default);
     }
 
     public async fetchCategory() {
-        const {data} = await http.get<CategoryModel>(`${url}/category`);
+        const {data} = await http.get<CategoryModel>(url.getCategory);
         return data;
     }
 

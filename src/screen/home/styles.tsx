@@ -34,24 +34,27 @@ export default StyleSheet.create({
   mainContainer: {
     flexDirection: 'row',
     height: vs(60),
-    paddingHorizontal: vs(8), 
+    alignItems: 'center',
+    backgroundColor: '#FF6900',
+    backgroundImage: 'linear-gradient(to bottom, #FF6900, #FFA500)',
   },
+
+
   inputContainer: {
-    flex: 9,
-    marginLeft: vs(8),
+    flex: 8,
+    marginLeft: vs(16),
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
     borderWidth: 1,
-    height: vs(48),
+    height: vs(46),
     marginVertical: vs(8),
-    borderRadius: vs(16),
+    borderRadius: vs(10),
     borderColor: '#EEEAEA',
     backgroundColor: '#F0F0F0',
   },
   buttonContainer: {
-    flex: 1.5,
-    backgroundColor: 'white',
+    flex: 1.3,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -63,10 +66,9 @@ export default StyleSheet.create({
 
   // danh muc
   categoryView: {
-    marginTop: vs(16),
+    marginTop: vs(8),
     marginBottom: vs(8),
     height: vs(140),
-    backgroundColor: 'white',
     marginHorizontal: vs(16)
   },
 
@@ -199,7 +201,7 @@ export default StyleSheet.create({
   },
 
   suggestItem: {
-    width: Dimensions.get('window').width / 2 - 32 ,
+    width: Dimensions.get('window').width / 2 - 24 ,
     // width: 170,
     height: vs(256),
     borderColor: '#F6F8F6',
@@ -263,6 +265,5 @@ export default StyleSheet.create({
     borderRadius: vs(20),
     overflow: 'hidden'
   },
-
 
 });

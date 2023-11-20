@@ -7,9 +7,16 @@ const endpoint = {
     logout: '/api/logout',
     profile: '/api/users/profile',
   },
-  // categories: '/api',
-  categories: 'http://192.168.0.197:3000/api',
-  products: 'http://10.10.66.87:3000/api',
+  categories: {
+    default: '/api/category',
+    getCategory: '/api/category',
+  },
+ 
+  products: {
+    default: '/api/products',
+    getProduct: '/api/product',
+    getProductByIdCategory: '/api/product/category'
+  }
 };
 
 export default endpoint;

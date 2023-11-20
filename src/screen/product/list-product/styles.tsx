@@ -6,7 +6,7 @@ export default StyleSheet.create({
   mainContainer: {
     flexDirection: 'row',
     height: vs(60),
-    paddingHorizontal: vs(8), 
+    paddingHorizontal: vs(8),
   },
   inputContainer: {
     flex: 9,
@@ -33,14 +33,13 @@ export default StyleSheet.create({
     color: '#7F7D7D',
   },
 
-
   //Gợi ý hôm nay
   flatListSuggestContainer: {
     justifyContent: 'space-between',
   },
 
   suggestItem: {
-    width: Dimensions.get('window').width / 2 - 32 ,
+    width: Dimensions.get('window').width / 2 - 32,
     // width: 170,
     height: vs(256),
     borderColor: '#F6F8F6',
@@ -49,17 +48,17 @@ export default StyleSheet.create({
     marginHorizontal: vs(8),
     marginVertical: vs(6),
     borderRadius: vs(20),
-    backgroundColor: '#F8F6F6', 
+    backgroundColor: '#F8F6F6',
 
-    elevation: 5, 
-    shadowColor: '#817F7F', 
-    shadowOffset: { width: 0, height: 2 }, 
-    shadowOpacity: 0.2, 
-    shadowRadius: 2, 
-  }, 
+    elevation: 5,
+    shadowColor: '#817F7F',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+  },
 
   viewSuggestImage: {
-    flex: 6, 
+    flex: 6,
     width: '100%',
     height: '100%',
     borderRadius: vs(20),
@@ -74,12 +73,11 @@ export default StyleSheet.create({
     borderRadius: vs(20),
     paddingHorizontal: vs(12),
     justifyContent: 'space-around',
-
   },
   suggestTextName: {
-    fontSize: vs(16), 
+    fontSize: vs(16),
     fontFamily: 'LibreBaskerville-Regular',
-    color: '#000000'
+    color: '#000000',
   },
 
   suggestTextPrice: {
@@ -94,8 +92,8 @@ export default StyleSheet.create({
     fontFamily: 'LibreBaskerville-Bold',
   },
   viewStar: {
-    flexDirection: 'row', 
-    alignItems: 'center'
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   imgStar: {width: vs(12), height: vs(12)},
   textCmt: {
@@ -104,19 +102,17 @@ export default StyleSheet.create({
     fontFamily: 'LibreBaskerville-Bold',
   },
 
-
-
   //modal
   popup: {
     width: vs(300),
     borderRadius: 8,
     borderColor: '#333',
     borderWidth: 1,
-    backgroundColor: 'yellow',
+    backgroundColor: 'white',
     paddingHorizontal: 10,
     position: 'absolute',
-    top: 130,
-    right: 30,
+    top: 155,
+    right: 50,
   },
 
   option: {
@@ -124,7 +120,23 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 7,
-    borderBottomColor: '#ccc'
+    borderBottomColor: '#ccc',
+  },
 
-  }
+  viewFilter: {
+    width: '100%',
+    height: 100,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#D9D9D9',
+    backgroundColor: 'white',
+    padding: 8,
+    elevation: 2,
+    shadowColor: '#817F7F',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    marginTop: 12,
+    marginBottom: 12
+  },
 });

@@ -8,6 +8,5 @@ export interface ProductModel {
     CategoryId: number,
     createdAt: Date, // Sửa kiểu dữ liệu thành Date
     updatedAt: Date, // Sửa kiểu dữ liệu thành Date
-
 }
 
