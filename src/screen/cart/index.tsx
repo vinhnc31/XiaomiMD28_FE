@@ -168,15 +168,15 @@ const CartScreen = (props: Props) => {
   const handleBackPress = () => {
     goBack();
   };
-  const handlePress = () => {
-    navigateToPage(APP_NAVIGATION.PAYDETAIL,data)
-  };
-  const data = data1
-    .filter(item => item.checked)
-    .map(item => {
-      const totalCost = Number(item.price.replace('.', '')) * item.quantity;
-      return {...item, totalCost};
-    });
+    const handlePress = () => {
+      navigateToPage(APP_NAVIGATION.PAYDETAIL,data)
+    };
+    const data = data1
+      .filter(item => item.checked)
+      .map(item => {
+        const totalCost = Number(item.price.replace('.', '')) * item.quantity;
+        return {...item, totalCost};
+      });
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white', flexDirection: 'column'}}>
       <BaseHeaderNoCart title="Giỏ hàng" onBackPress={handleBackPress} />

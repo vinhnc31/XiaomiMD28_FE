@@ -11,6 +11,7 @@ import AddressPayScreen from '@src/screen/addressPay/index';
 import DetailsScreen from '@src/screen/product/detail-product/index';
 import CartScreen from '@src/screen/cart/index';
 import PayDetailScreen from '@src/screen/paydetail/index';
+import VouCherScreen from '@src/screen/voucher/index';
 
 const Stack = createNativeStackNavigator<AppStackParam>();
 
@@ -61,6 +62,7 @@ const AppNavigationScreen = () => {
       <Stack.Screen name={APP_NAVIGATION.CART} component={CartScreen} />
       <Stack.Screen name={APP_NAVIGATION.PAYDETAIL} component={PayDetailScreen} />
       <Stack.Screen name={APP_NAVIGATION.ADDRESS} component={AddressPayScreen} />
+      <Stack.Screen name={APP_NAVIGATION.VouCherScreen} component={VouCherScreen} />
     </Stack.Navigator>
   );
 };

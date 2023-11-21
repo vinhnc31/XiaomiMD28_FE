@@ -12,6 +12,7 @@ export enum GUEST_NAVIGATION {
   CATEGORY = "CATEGORY",
   CART = 'CART',
   PAYDETAIL='PAYDETAIL',
+  VouCherScreen='VouCherScreen',
 }
 
 export enum APP_NAVIGATION {
@@ -21,6 +22,7 @@ export enum APP_NAVIGATION {
   DETAILSPRODUCT = 'DETAILSPRODUCT',
   CART = 'CART',
   PAYDETAIL='PAYDETAIL',
+  VouCherScreen='VouCherScreen',
 }
 
 export enum MENU_NAVIGATION {
