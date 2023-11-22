@@ -81,7 +81,8 @@ export default StyleSheet.create({
     alignItems:'center',
     flex:1,
     flexDirection:'row',
-    marginHorizontal:10,
+    marginBottom:10,
+    marginHorizontal:10
   },
   textVoucher:{
     marginTop:5,

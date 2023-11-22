@@ -5,26 +5,15 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 export default StyleSheet.create({
   viewText: {
     flex: 1,
-    margin: 10,
     justifyContent: 'center',
   },
   styleText: {
     fontSize: 19,
     fontWeight: 'bold',
   },
-  viewImageVocher: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: ms(8),
-    height: vs(100),
-    width: hs(100),
-    backgroundColor: 'orange',
-    borderRadius: 10,
-  },
   item: {
     backgroundColor: 'white',
-    margin: 10,
+    margin: 5,
     borderRadius: 10,
     borderWidth: 0.5,
     flexDirection: 'row',
@@ -34,14 +23,19 @@ export default StyleSheet.create({
   },
   image: {
     margin: ms(8),
-    height: vs(40),
-    width: hs(40),
+    height: vs(80),
+    width: hs(80),
   },
   text: {
-    color: '#000000', // Màu văn bản
-    fontSize: 20,
-    fontFamily: 'LibreBaskerville-Bold',
+    fontSize: 15,
+    fontFamily: 'LibreBaskerville-DpdE',
     width: hs(200),
+  },
+  textStatus: {
+    fontSize: 15,
+    fontFamily: 'LibreBaskerville-DpdE',
+    width: hs(200),
+    color:'#FF0000'
   },
   textPrice: {
     marginRight: 10,
@@ -55,7 +49,10 @@ export default StyleSheet.create({
     fontFamily: 'LibreBaskerville-DpdE',
   },
   viewItem: {
+    justifyContent:'space-around',
+    paddingHorizontal:10,
     flexDirection: 'column',
+    paddingVertical:5
   },
   buttonText: {
     margin: 10,
@@ -66,4 +63,9 @@ export default StyleSheet.create({
     margin:10,
     flexDirection: 'column', 
   },
+  viewTextTotal:{
+    flexDirection:'row',marginHorizontal:15,marginVertical:10,justifyContent:'space-between'
+  },
+  textQuantity:{color:'#6D6D6D',fontSize:16},
+  buttonCancer:{backgroundColor:'#FF6900',width: 80,height: 40,}
 });

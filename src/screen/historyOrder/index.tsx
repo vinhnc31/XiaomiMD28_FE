@@ -23,32 +23,44 @@ import {Dropdown} from 'react-native-element-dropdown';
 import BaseButtonPay from '@src/containers/components/Base/BaseButtonPay';
 import {BaseButton} from '@src/containers/components/Base/BaseButton';
 import CustomRadioButton from '@src/containers/components/Base/BaseRadioButton';
-import { BaseLoading } from '@src/containers/components/Base/BaseLoading';
+import {BaseLoading} from '@src/containers/components/Base/BaseLoading';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+const MaterialTopTabs = createMaterialTopTabNavigator();
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
   route: RouteProp<AppStackParam, APP_NAVIGATION.HISTORYORDER>;
 }
-type Voucher = {
+type HISTORYORDER = {
   id: string;
-  title: string;
-  imageVoucher: string;
-  titleVoucher: string;
-  describe: string;
+  nameProduct: string;
+  priceProduct: number;
+  statusOrder: string;
+  quantityProduct: number;
+  createAt: string;
+  colorProduct: string;
+  imageProduct: string;
+  saleProduct: string;
+  totalProduct: number;
+  paymentMethods: string;
+  confirmationTime: string;
+  deliveryTime: string;
+  addressUser: {
+    name: string;
+    phone: string;
+    note: string;
+    address: string;
+  };
 };
 
-const VouCherScreen = (props: Props) => {
-  const [selectedVouchers, setSelectedVouchers] = useState<Voucher[]>([]);
-  const [error, setError] = useState('');
-  const [data1, setData] = useState<Voucher[]>([]);
+const HistoryOrderScreen = (props: Props) => {
+  const [selectedVouchers, setSelectedVouchers] = useState<HISTORYORDER[]>([]);
+  const [data1, setData] = useState<HISTORYORDER[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [refreshing, setRefreshing] = useState(false);
-  const [value, setValue] = useState('1');
-  const [isFocus, setIsFocus] = useState(false);
   const [selectedVoucher, setSelectedVoucher] = useState(null);
   const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await fetch('https://653b1ae72e42fd0d54d4b17a.mockapi.io/voucher');
+      const response = await fetch('https://655c63b225b76d9884fd1f63.mockapi.io/historyOrder');
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -56,72 +68,98 @@ const VouCherScreen = (props: Props) => {
       setData(result);
       setLoading(false);
     } catch (error) {
-      setError('err');
       setLoading(false);
     }
   };
   useEffect(() => {
     fetchData();
-  },[]);
-  const handleRadioButtonPress = voucherId => {
-    setSelectedVoucher(voucherId);
-  };
+  }, []);
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white', flexDirection: 'column'}}>
-      <BaseHeaderNoCart title="Voucher" onBackPress={goBack} />
-      {loading ? (
-          <BaseLoading size={20} top={100} loading={true} />
-        ) : data1.length === 0 ? (
-          <View style={styles.flatListContainer}>
-            <View style={{alignItems:'center',marginTop:100}}>
-              <Image
-                source={require('../../assets/images/group84.png')}
-                style={{width: 170, height: 170}}></Image>
-            </View>
-          </View>
-        ) : (
-      <ScrollView  showsVerticalScrollIndicator={false}>
-        <View style={styles.viewText}>
-          <Text style={styles.styleText}>Mã giảm giá</Text>
-          <Text>Có thể chọn 1 Voucher</Text>
+      <BaseHeaderNoCart title="Lịch sử mua hàng" onBackPress={goBack} />
+      <MaterialTopTabs.Navigator
+        screenOptions={{
+          tabBarLabelStyle: {fontSize: 15, textTransform: 'none'},
+          tabBarScrollEnabled: true,
+          tabBarAndroidRipple: {borderless: false},
+        }}>
+        <MaterialTopTabs.Screen name="Tab1" options={{title: 'Chưa xác nhận'}}>
+          {props => <HistoryOrderTab {...props} data={data1} loading={loading} />}
+        </MaterialTopTabs.Screen>
+        <MaterialTopTabs.Screen name="Tab2" options={{title: 'Đang vận chuyển'}}>
+          {props => <HistoryOrderTab {...props} data={data1} loading={loading} />}
+        </MaterialTopTabs.Screen>
+        <MaterialTopTabs.Screen name="Tab3" options={{title: 'Chờ nhận hàng'}}>
+          {props => <HistoryOrderTab {...props} data={data1} loading={loading} />}
+        </MaterialTopTabs.Screen>
+        <MaterialTopTabs.Screen name="Tab4" options={{title: 'Đã nhận'}}>
+          {props => <HistoryOrderTab {...props} data={data1} loading={loading} />}
+        </MaterialTopTabs.Screen>
+        <MaterialTopTabs.Screen name="Tab5" options={{title: 'Đã hủy'}}>
+          {props => <HistoryOrderTab {...props} data={data1} loading={loading} />}
+        </MaterialTopTabs.Screen>
+      </MaterialTopTabs.Navigator>
+    </SafeAreaView>
+  );
+};
+const HistoryOrderTab = ({data, loading}: {data: HISTORYORDER[]; loading: boolean}) => (
+  <View>
+    {loading ? (
+      <BaseLoading size={20} top={100} loading={true} />
+    ) : data.length === 0 ? (
+      <View style={styles.flatListContainer}>
+        <View style={{alignItems: 'center', marginTop: 100}}>
+          <Image source={require('../../assets/images/group84.png')} style={{width: 170, height: 170}}></Image>
         </View>
-        <View style={{height: 1, backgroundColor: '#D9D9D9'}}></View>
-       
+      </View>
+    ) : (
+      <ScrollView showsVerticalScrollIndicator={false}>
         <FlatList
-          data={data1}
+          data={data}
           keyExtractor={item => item.id}
           horizontal={false}
           scrollEnabled={false}
           showsVerticalScrollIndicator={false}
           renderItem={({item}) => (
-            <TouchableOpacity onPress={() => handleRadioButtonPress(item.id)}>
+            <View style={{backgroundColor:'white'}}>
+            <TouchableOpacity onPress={() => {}}>
               <View style={styles.viewItem}>
                 <View style={styles.item}>
-                  <View style={styles.viewImageVocher}>
-                    <Image source={{uri: item.imageVoucher}} style={styles.image} resizeMode="stretch" />
-                    <Text style={{color: 'white'}}>{item.titleVoucher}</Text>
-                  </View>
-                  <View style={styles.viewText}>
-                    <Text ellipsizeMode="tail" numberOfLines={1} style={styles.text}>
-                      {item.title}
+                  <Image source={{uri: item.imageProduct}} style={styles.image} resizeMode="stretch" />
+                  <View style={styles.viewItem}>
+                    <Text style={{color: 'black', fontSize: 18, width: '50%'}} numberOfLines={1} ellipsizeMode="tail">
+                      {item.nameProduct}
                     </Text>
-                    <Text style={styles.textColor}>{item.describe}</Text>
-                  </View>
-                  <View style={{justifyContent:'center',marginRight:10}}>
-                    <CustomRadioButton selected={selectedVoucher === item.id} />
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                      <Text ellipsizeMode="tail" numberOfLines={1} style={styles.text}>
+                        Màu sắc: {item.colorProduct}
+                      </Text>
+                      <Text style={styles.text}>x {item.quantityProduct}</Text>
+                    </View>
+                    <Text style={styles.textStatus}>
+                        {item.statusOrder}</Text>
                   </View>
                 </View>
               </View>
-            </TouchableOpacity>
+              </TouchableOpacity>
+              <View style={{height: 1,width: "100%", backgroundColor:'#D9D9D9',}}/>
+              <View style={styles.viewTextTotal} >
+                <Text style={styles.textQuantity}>{item.quantityProduct} sản phẩm</Text>
+                <View style={{flexDirection:'row'}}>
+                  <Text style={{fontSize:16}}>Thành tiền :</Text>
+                  <Text style={{color:'red',fontSize:16}}>{item.totalProduct}₫</Text>
+                </View>
+              </View>
+              <View style={{height: 1,width: "100%", backgroundColor:'#D9D9D9',}}/>
+              <View style={{alignSelf:'flex-end',marginHorizontal:10}}>
+              <BaseButton onPress={()=>{}} text='Hủy' style={styles.buttonCancer}/>
+              </View>
+              <View style={{height: 10,width: '100%',backgroundColor:'#F1F1F1',marginTop:10}}></View>
+            </View>
           )}
         />
       </ScrollView>
-       )}
-        <BaseButton text="Đồng ý" style={styles.buttonText}  onPress={()=>{goBack();
-      const selectedVoucherData =data1.find((voucher) => voucher.id === selectedVoucher);
-          const onVoucherSelect = props.route.params?.onVoucherSelect;
-          onVoucherSelect && onVoucherSelect(selectedVoucherData);}}/>
-    </SafeAreaView>
-  );
-};
-export default React.memo(VouCherScreen);
+    )}
+  </View>
+);
+export default React.memo(HistoryOrderScreen);

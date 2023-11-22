@@ -57,7 +57,6 @@ const LogInComponent = (props: Props) => {
       setLoading(false);
     }
   };
-
   const hideKeyboard = () => {
     Keyboard.dismiss();
   };

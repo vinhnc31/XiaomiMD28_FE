@@ -3,7 +3,7 @@ import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {MenuStackParam} from '@src/navigations/AppNavigation/stackParam';
 import {GuestStackParam} from '@src/navigations/GuestNavigation/stackParam';
-import {MENU_NAVIGATION} from '@src/navigations/routes';
+import {APP_NAVIGATION, MENU_NAVIGATION} from '@src/navigations/routes';
 import React, {useState} from 'react';
 import {Modal, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
@@ -44,7 +44,7 @@ const listMenu: IMenu[] = [
   },
   {
     name: 'Lịch sử mua hàng',
-    navigate: '',
+    navigate: APP_NAVIGATION.HISTORYORDER,
     icon: 'document-text',
   },
   {

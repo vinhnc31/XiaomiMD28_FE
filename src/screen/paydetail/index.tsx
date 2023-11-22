@@ -106,7 +106,7 @@ import boot from '@src/navigations/boot';
     };
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: 'white', flexDirection: 'column'}}>
-        <BaseHeaderNoCart title="Chi tiết đơn hàng" onBackPress={goBack} />
+        <BaseHeaderNoCart title="Chi tiết thanh toán" onBackPress={goBack} />
         <ScrollView indicatorStyle="black" showsVerticalScrollIndicator={false}>
           <View style={{flexDirection: 'row', margin: 10}}>
             <Image source={require('../../assets/images/placeholder.png')} style={{width: 25, height: 25}} />
@@ -156,21 +156,6 @@ import boot from '@src/navigations/boot';
                     </View>
                   </View>
                 </View>
-                <View style={styles.viewNote}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      marginHorizontal: 10,
-                      alignItems: 'center',
-                    }}>
-                    <Text style={styles.textNote}>Tin nhắn: </Text>
-                    <TextInput
-                      style={styles.textInput}
-                      placeholder="Lưu ý cho cửa hàng..."
-                      placeholderTextColor={'#6D6D6D'}></TextInput>
-                  </View>
-                </View>
                 <View style={styles.viewSumPrice}>
                   <View style={{flexDirection: 'row'}}>
                     <Text style={styles.textNote}>Tổng số tiền</Text>
@@ -184,7 +169,7 @@ import boot from '@src/navigations/boot';
           />
           <TouchableOpacity
             onPress={() => {
-              navigateToPage(APP_NAVIGATION.VouCherScreen, {
+              navigateToPage(APP_NAVIGATION.VOUCHER, {
                 onVoucherSelect: selectedVoucher => {
                   setSelectedVoucherData(selectedVoucher);
                 }
@@ -202,6 +187,21 @@ import boot from '@src/navigations/boot';
               </View>
             </View>
           </TouchableOpacity>
+          <View style={styles.viewNote}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      marginHorizontal: 10,
+                      alignItems: 'center',
+                    }}>
+                    <Text style={styles.textNote}>Tin nhắn: </Text>
+                    <TextInput
+                      style={styles.textInput}
+                      placeholder="Lưu ý cho cửa hàng..."
+                      placeholderTextColor={'#6D6D6D'}></TextInput>
+                  </View>
+                </View>
           <View style={{height: 10, backgroundColor: '#EEEEEE', marginVertical: 10}}></View>
           <View style={styles.viewPaymentMethods}>
             <View style={{flexDirection: 'row'}}>
