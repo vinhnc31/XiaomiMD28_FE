@@ -26,7 +26,7 @@ import CustomRadioButton from '@src/containers/components/Base/BaseRadioButton';
 import { BaseLoading } from '@src/containers/components/Base/BaseLoading';
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
-  route: RouteProp<AppStackParam, APP_NAVIGATION.VOUCHER>;
+  route: RouteProp<AppStackParam, APP_NAVIGATION.HISTORYORDER>;
 }
 type Voucher = {
   id: string;
