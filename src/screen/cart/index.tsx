@@ -10,49 +10,92 @@ import {goBack, navigateToPage} from '@src/navigations/services';
 import BaseHeaderNoCart from '@src/containers/components/Base/BaseHeaderNoCart';
 import {BaseLoading} from '@src/containers/components/Base/BaseLoading';
 import BaseHeaderBottom from '@src/containers/components/Base/BaseHeaderBottom';
+import CartService from '@src/services/cart';
+import {CartModel} from '@src/services/cart/cart.model';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
   route: RouteProp<AppStackParam, APP_NAVIGATION.CART>;
 }
-type Cart = {
-  checked: boolean;
-  id: string;
-  name: string;
-  image: string;
-  price: string;
-  quantity: number;
-};
-
-const url = 'http://192.168.0.102:3000/api/cart/1';
 const CartScreen = (props: Props) => {
   const [error, setError] = useState('');
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<CartModel[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState(false);
-  const incrementQuantity = () => {
-    const updatedQuantity = item.quantity + 1;
-    fetch(`https://653b1ae72e42fd0d54d4b17a.mockapi.io/data/${item.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({quantity: updatedQuantity}),
-    });
-  };
+  const [quantityValues, setQuantityValues] = useState<{[key: string]: string}>({});
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await fetch(url);
-      const data = await response.json();
-      setData(data.data.data);
+      const cartService = new CartService();
+      const result = await cartService.fetchCart();
+      const latestData = result.data.data;
+      const savedData = await AsyncStorage.getItem('cartData');
+      const isDataChanged = JSON.stringify(latestData) !== savedData;
+    if (isDataChanged) {
+      setData(latestData);
+      await AsyncStorage.setItem('cartData', JSON.stringify(latestData));
+    }
+    setData(latestData);
       setLoading(false);
     } catch (error) {
-      setError('err');
+      console.error('Lỗi khi tải dữ liệu', error);
       setLoading(false);
     }
   };
+ 
+  const updateQuantity = async (itemId: number, newQuantity: number) => {
+    try {
+      const savedData = await AsyncStorage.getItem('cartData');
+      if (savedData) {
+        const cartData = JSON.parse(savedData);
+        const updatedCartData = cartData.map((item: CartModel) => {
+          if (item.id === itemId) {
+            return {
+              ...item,
+              quantity: newQuantity,
+            };
+          }
+          return item;
+        });
+        await AsyncStorage.setItem('cartData', JSON.stringify(updatedCartData));
+        setData(updatedCartData);
+      }
+    } catch (error) {
+      console.error('Error updating quantity in AsyncStorage', error);
+    }
+  };
+  
+  const incrementQuantity = async (itemId: number, newQuantity: number) => {
+    await updateQuantity(itemId, newQuantity + 1);
+  };
+  
+  const minusQuantity = async (itemId: number, newQuantity: number) => {
+    await updateQuantity(itemId, newQuantity - 1);
+  };
+  
+  const textInput = async (itemId: number, newQuantity: number) => {
+    await updateQuantity(itemId, newQuantity);
+  };
+  const toggleCheckbox = (itemId: number) => {
+    const isSelected = selectedItems.includes(itemId);
+    if (isSelected) {
+      setSelectedItems(selectedItems.filter((id) => id !== itemId));
+    } else {
+      setSelectedItems([...selectedItems, itemId]);
+    }
+  };
+  const selectAllItems = () => {
+    const allItemIds = data.map((item) => item.id);
+    const allSelected = allItemIds.every((id) => selectedItems.includes(id));
+    if (allSelected) {
+      setSelectedItems([]);
+    } else {
+      setSelectedItems(allItemIds);
+    }
+  };
   useEffect(() => {
-    setLoading(false);
+    setLoading(true);
     if (refreshing) {
       fetchData()
         .then(() => setRefreshing(false))
@@ -86,18 +129,23 @@ const CartScreen = (props: Props) => {
               contentContainerStyle={styles.flatListContainer}
               renderItem={({item}) => (
                 <View style={styles.item}>
-                  {/* <Checkbox disabled={false} value={item.checked} onValueChange={() =>{}} /> */}
+                   <Checkbox
+                      value={selectedItems.includes(item.id)}
+                      onValueChange={() => toggleCheckbox(item.id)}
+                    />
                   <View style={styles.view}>
-                    <Image source={{uri: item['Product']['images']}} style={styles.image} resizeMode="stretch" />
+                    <Image source={{uri: item.Product['images']}} style={styles.image} resizeMode="stretch" />
                     <View style={styles.viewText}>
                       <Text ellipsizeMode="tail" numberOfLines={1} style={styles.text}>
-                        {item['Product']['name']}
+                        {item.Product['name']}
                       </Text>
-                      <Text style={styles.textPrice}>{item['Product']['price']}₫</Text>
+                      <Text style={styles.textPrice}>{item.Product['price']}₫</Text>
                       <View style={styles.viewCount}>
                         <TouchableOpacity
-                          disabled={item['quantity'] <= 1 ? true : false}
-                          onPress={() => {}}
+                          disabled={item.quantity <= 1 ? true : false}
+                          onPress={() => {
+                            minusQuantity(item.id, item.quantity);
+                          }}
                           style={styles.buttomMinus}>
                           <Image
                             style={styles.imageCount}
@@ -110,11 +158,17 @@ const CartScreen = (props: Props) => {
                           style={styles.textInputQuanity}
                           keyboardType="numeric"
                           maxLength={2}
-                          value={item['quantity'].toString()}
-                          onChangeText={value => {}}>
-                          {}
-                        </TextInput>
-                        <TouchableOpacity onPress={() => {}} style={styles.buttomAdd}>
+                          value={item.quantity.toString()}
+                          onChangeText={(value) => {
+                            const newQuantity = parseInt(value, 10) || 0;
+                              textInput(item.id, newQuantity);
+                          }}
+                          />
+                        <TouchableOpacity
+                          onPress={() => {
+                            incrementQuantity(item.id, item.quantity);
+                          }}
+                          style={styles.buttomAdd}>
                           <Image
                             style={styles.imageCount}
                             source={{
@@ -134,14 +188,10 @@ const CartScreen = (props: Props) => {
           </ScrollView>
         )}
       </View>
-      {/* <BaseHeaderBottom
-        disabled={false}
-        value={toggleCheckBox}
-        onValueChange={(newValue: any) => toggleAllCheckboxes(newValue)}
-        SumText={calculateTotalCost()}
-        check={allItemsChecked && !toggleCheckBox}
-        data={handlePress}
-      /> */}
+      <BaseHeaderBottom disabled={false} 
+      value={selectedItems.length === data.length&& data.length > 0}
+      onValueChange={selectAllItems}
+      />
     </SafeAreaView>
   );
 };

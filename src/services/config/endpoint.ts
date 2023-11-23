@@ -9,6 +9,11 @@ const endpoint = {
   },
 
   categories: 'v',
+  cart:{
+    default:"/api/cart/1",
+    getCart:"/api/cart/1",
+    putCart:'/api/cart'
+  }
 };
 
 export default endpoint;
