@@ -4,7 +4,7 @@ export interface ProductModel {
     price: number,
     description: string,
     quantity: number,
-    images: string[],
+    images: string,
     CategoryId: number,
     createdAt: Date, // Sửa kiểu dữ liệu thành Date
     updatedAt: Date, // Sửa kiểu dữ liệu thành Date

@@ -47,9 +47,9 @@ export default StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     borderWidth: 1,
-    height: vs(46),
+    height: vs(41),
     marginVertical: vs(8),
-    borderRadius: vs(10),
+    borderRadius: vs(8),
     borderColor: '#EEEAEA',
     backgroundColor: '#F0F0F0',
   },
@@ -106,7 +106,7 @@ export default StyleSheet.create({
     flex: 6,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: vs(16),
+    borderRadius: vs(10),
     backgroundColor: 'white',
 
     elevation: 2, // Độ sâu của đổ bóng (cho Android)
@@ -157,14 +157,13 @@ export default StyleSheet.create({
   item: {
     flex:1,
     width: Dimensions.get('window').width,
-    height: vs(168), 
-    marginTop: vs(8),
-    marginBottom: vs(10),
-    borderRadius: vs(20),
+    height: vs(160), 
+    marginTop: vs(4),
+    marginBottom: vs(4),
+    borderRadius: vs(10),
     // borderWidth: 1,
     borderColor: '#C2C2C2',
 
-    elevation: 2, // Độ sâu của đổ bóng (cho Android)
     shadowColor: 'black', // Màu của đổ bóng (cho iOS)
     shadowOffset: { width: 0, height: 2 }, // Độ dài và độ rộng của đổ bóng (cho iOS)
     shadowOpacity: 0.2, // Độ trong suốt của đổ bóng (cho iOS)
@@ -174,7 +173,7 @@ export default StyleSheet.create({
     flex: 1,
     height: '100%', // Ảnh sẽ đầy màn hình theo chiều cao
     width: 'auto',
-    borderRadius: vs(20),
+    borderRadius: vs(10),
   },
   overlay: {
     flex: 1,
@@ -203,20 +202,20 @@ export default StyleSheet.create({
   suggestItem: {
     width: Dimensions.get('window').width / 2 - 24 ,
     // width: 170,
-    height: vs(256),
+    height: vs(270),
     borderColor: '#F6F8F6',
     borderWidth: 1,
     alignItems: 'center',
     marginHorizontal: vs(8),
     marginVertical: vs(6),
-    borderRadius: vs(20),
-    backgroundColor: '#F8F6F6', 
+    borderRadius: vs(10),
+    backgroundColor: '#ffffff', 
 
-    elevation: 5, 
+    elevation: 1, 
     shadowColor: '#817F7F', 
-    shadowOffset: { width: 0, height: 2 }, 
+    shadowOffset: { width: 0, height: 1 }, 
     shadowOpacity: 0.2, 
-    shadowRadius: 2, 
+    shadowRadius: 0, 
   }, 
 
   viewSuggestImage: {
