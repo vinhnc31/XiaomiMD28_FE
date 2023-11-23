@@ -14,6 +14,8 @@ import ProductListScreen from '../../screen/product/list-product/index';
 import DetailsScreen from '@src/screen/product/detail-product/index';
 import CartScreen from '@src/screen/cart/index';
 import PayDetailScreen from '@src/screen/paydetail/index';
+import VouCherScreen from '@src/screen/voucher/index';
+import HistoryOrderScreen from '@src/screen/historyOrder/index';
 
 const Stack = createNativeStackNavigator<AppStackParam>();
 
@@ -66,6 +68,8 @@ const AppNavigationScreen = () => {
       <Stack.Screen name={APP_NAVIGATION.CART} component={CartScreen} />
       <Stack.Screen name={APP_NAVIGATION.PAYDETAIL} component={PayDetailScreen} />
       <Stack.Screen name={APP_NAVIGATION.ADDRESS} component={AddressPayScreen} />
+      <Stack.Screen name={APP_NAVIGATION.VOUCHER} component={VouCherScreen} />
+      <Stack.Screen name={APP_NAVIGATION.HISTORYORDER} component={HistoryOrderScreen} />
     </Stack.Navigator>
   );
 };

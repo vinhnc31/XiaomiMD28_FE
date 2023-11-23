@@ -8,12 +8,12 @@ const BaseAddressPay = ({name, phone,note,address, onCartPress}) => {
         <View style={styles.container}>
         <View>
           <View style={{flexDirection: 'row'}}>
-            <Text style={styles.text}>Loc</Text>
+            <Text style={styles.text}>{name}</Text>
             <View style={{height: 20, width: 1, backgroundColor: 'grey',marginHorizontal:10}}></View>
-            <Text style={styles.text}>0393174536</Text>
+            <Text style={styles.text}>{phone}</Text>
           </View>
-            <Text style={styles.textAddress}>Cach hang xong 100m</Text>
-            <Text style={styles.textAddress}>Van con hoai duc</Text>
+            <Text style={styles.textAddress}>{note}</Text>
+            <Text style={styles.textAddress}>{address}</Text>
         </View>
         <Image source={require("../../../assets/images/next.png")}style ={{height:20,width: 20,}}/>
         </View>

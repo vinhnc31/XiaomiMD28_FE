@@ -267,7 +267,6 @@ const HomeScreen = (props: Props) => {
               <View style={{ height: '100%', marginTop: 6 }}>
                 <FlatList
                   data={displayedDataCategory}
-                  keyExtractor={item => item.id.toString()}
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}
                   renderItem={({ item }) => <ListItemCategory item={item} />}

@@ -5,7 +5,8 @@ export type AppStackParam = {
   DETAILSPRODUCT: undefined;
   CART: undefined;
   PAYDETAIL: undefined;
-  PRODUCTLIST: undefined;
+  VOUCHER:undefined;
+  HISTORYORDER:undefined;
 };
 
 export type MenuStackParam = {

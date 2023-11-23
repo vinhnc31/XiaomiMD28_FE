@@ -16,6 +16,13 @@ const endpoint = {
     default: '/api/products',
     getProduct: '/api/product',
     getProductByIdCategory: '/api/product/category'
+
+  },
+  cart:{
+    default:"/api/cart/1",
+    getCart:"/api/cart/1",
+    putCart:'/api/cart',
+    deleteCart:'/api/cart'
   }
 };
 

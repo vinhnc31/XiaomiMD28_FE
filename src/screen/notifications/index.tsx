@@ -8,7 +8,7 @@ import { AppStackParam, MenuStackParam } from '@src/navigations/AppNavigation/st
 import { MENU_NAVIGATION } from '@src/navigations/routes';
 import { BottomPopup } from '../../containers/components/Base/BottomPopup'
 
-import Modal from 'react-native-modal';
+// import Modal from 'react-native-modal';
 
 export type ScreenNavigationProps = CompositeNavigationProp<
   BottomTabNavigationProp<MenuStackParam, MENU_NAVIGATION.NOTIFICATIONS>,
@@ -112,58 +112,7 @@ const NotificationScreen = (props: Props) => {
   return (
 
   <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
-      {filter.map((op, i) => (
-        <View key={i}>
-          <TouchableOpacity
-            onPress={(e) => handleItemPress(op, e.nativeEvent.layout)}
-          >
-            <Text>{op.title}</Text>
-          </TouchableOpacity>
-        </View>
-      ))}
-
-      <Modal
-        isVisible={modalVisible}
-        onBackdropPress={() => setModalVisible(false)}
-        backdropOpacity={0.5}
-        animationIn="slideInUp"
-        animationOut="slideOutDown"
-      >
-        <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-          <View
-            style={{
-              backgroundColor: 'white',
-              padding: 20,
-              borderRadius: 10,
-              borderTopLeftRadius: 0,
-              borderTopRightRadius: 0,
-            }}
-          >
-            {renderOptions()}
-            <TouchableOpacity onPress={() => setModalVisible(false)}>
-              <Text>Hủy</Text>
-            </TouchableOpacity>
-          </View>
-          {/* Render the arrow */}
-          <View
-            style={{
-              position: 'absolute',
-              top: arrowPosition.y - 10,
-              left: arrowPosition.x - 10,
-              width: 0,
-              height: 0,
-              borderLeftWidth: 10,
-              borderRightWidth: 10,
-              borderBottomWidth: 10,
-              borderStyle: 'solid',
-              backgroundColor: 'transparent',
-              borderLeftColor: 'transparent',
-              borderRightColor: 'transparent',
-              borderBottomColor: 'white',
-            }}
-          />
-        </View>
-      </Modal>
+      
     </View>
   );
 };

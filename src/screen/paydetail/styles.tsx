@@ -76,27 +76,30 @@ export default StyleSheet.create({
     fontSize: 18,
     fontFamily: 'LibreBaskerville-DpdE',
   },
-  viewVorcher:{
+  viewVoucher:{
     justifyContent:'space-between',
     alignItems:'center',
     flex:1,
     flexDirection:'row',
-    marginHorizontal:10,
+    marginBottom:10,
+    marginHorizontal:10
   },
-  textVorcher:{
+  textVoucher:{
     marginTop:5,
     marginHorizontal:10,
-    fontSize:18,
+    fontSize:15,
     fontFamily:'LibreBaskerville-DpdE',
     color:'black'
   },
-  textVorcherSale:{
-    fontSize:18,
+  textVoucherSale:{
+    width: 100,
+    fontSize:15,
     fontFamily:'LibreBaskerville-DpdE',
     color:'#F0761E'
   },
-  textVorcherShip:{
-    fontSize:18,
+  textVoucherShip:{
+    marginHorizontal:10,
+    fontSize:15,
     fontFamily:'LibreBaskerville-DpdE',
     color:'#0032E4'
   },
