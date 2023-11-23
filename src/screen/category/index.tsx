@@ -31,8 +31,7 @@ const CategoryScreen = (props: Props) => {
   };
 
   useEffect(() => {
-    // fetchDataCategory()
-    fetchData()
+    fetchDataCategory()
     console.log("eff: ", data)
   }, [])
 
@@ -45,19 +44,6 @@ const CategoryScreen = (props: Props) => {
     } catch (error) {
       setError('err');
       setLoading(false);
-    }
-  };
-
-  const fetchData = async () => {
-    try {
-      const response = await fetch('https://6399d10b16b0fdad774a46a6.mockapi.io/booCar');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const result = await response.json();
-      setData(result);
-    } catch (error) {
-      setError('err');
     }
   };
 
@@ -85,11 +71,11 @@ const CategoryScreen = (props: Props) => {
             <TouchableScale onPress={() => goToProductListById(item.id, item.name)} activeScale={0.9} friction={9} tension={100}>
               <View style={styles.viewItemCategory}>
                 <View style={{ flex: 2 }}>
-                  {/* {item.image ? ( */}
+                  {item.image ? (
                     <Image source={{ uri: item.image }} style={styles.imgCategory} />
-                  {/* ) : (
+                  ) : (
                     <Text>No Image</Text>
-                  )} */}
+                  )} 
                 </View>
                 <View style={styles.viewTextCategory}>
                   <Text style={styles.textNameCategory}>{item.name}</Text>

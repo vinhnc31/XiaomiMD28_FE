@@ -9,4 +9,10 @@ export const images = {
   bgRegister: require('../assets/images/bgRegister.png'),
   iconPlus: require('../assets/images/plus.png'),
   iconMinus: require('../assets/images/minus.png'),
+  iconCart: require('../assets/images/cart111.png'),
+  iconCartBlack: require('../assets/images/cart-black.png'),
+  iconSearch: require('../assets/images/search.png'),
+  iconStar: require('../assets/images/star4.png'),
+  iconRightArrow: require('../assets/images/right-arrow.png'),
+  iconBack: require('../assets/images/back.png'),
 };
