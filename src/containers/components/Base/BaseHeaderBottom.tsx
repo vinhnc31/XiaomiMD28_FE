@@ -13,12 +13,12 @@ const BaseHeaderBottom = ({disabled, value, onValueChange, SumText, check, data}
       <View style={styles.container}>
         <View style={styles.viewSum}>
           <CheckBox disabled={disabled} value={value} onValueChange={onValueChange}></CheckBox>
-          <Text style={{fontSize: 18, fontFamily: 'LibreBaskerville-DpdE', color: 'black', width: 120, marginLeft: 10}}>
+          <Text style={{fontSize: 15, fontFamily: 'LibreBaskerville-DpdE', color: 'black', width: 120, marginLeft: 10}}>
             Tổng thanh toán :
           </Text>
         </View>
         <View style={styles.viewButton}>
-          <Text style={{marginTop: 5,marginRight:5, color: '#FF0000', fontSize: 16, fontFamily: 'LibreBaskerville-DpdE'}}>
+          <Text style={{marginTop: 5,marginRight:5, color: '#FF0000', fontSize: 15, fontFamily: 'LibreBaskerville-DpdE'}}>
             {SumText}
           </Text>
           <BaseButton disable={check} onPress={()=>data()} text='Thanh toán' style={{height:40,width: 120,}}/>
@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    alignSelf:"flex-end",
     backgroundColor: 'white',
     marginRight:10,
   },
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
     height: 30,
   },
   title: {
-    fontSize: 22,
+    fontSize: 15,
     fontFamily: 'LibreBaskerville-Bold',
     color: 'black',
     marginLeft: 20,

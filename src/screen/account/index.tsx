@@ -103,7 +103,7 @@ const AccountScreen = (props: Props) => {
         <BaseIcon name="log-out-outline" color={Colors.white} size={ms(25)} />
       </TouchableOpacity>
 
-      <Modal visible={isVisible} onRequestClose={onHide} transparent animationType="slide">
+      <Modal visible={isVisible} onRequestClose={onHide} transparent animationType="fade">
         <TouchableOpacity onPress={onHide} style={styles.modalWrap}>
           <View style={styles.modalInner}>
             <BaseText fullText={'Trung tâm hỗ trợ'} style={styles.menuName} />

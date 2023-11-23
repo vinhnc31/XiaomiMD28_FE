@@ -67,5 +67,29 @@ export default StyleSheet.create({
     flexDirection:'row',marginHorizontal:15,marginVertical:10,justifyContent:'space-between'
   },
   textQuantity:{color:'#6D6D6D',fontSize:16},
-  buttonCancer:{backgroundColor:'#FF6900',width: 80,height: 40,}
+  buttonCancer:{backgroundColor:'#FF6900',width: 80,height: 40,},
+  modalWrap: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    justifyContent: 'center',
+  },
+  modalInner: {
+    backgroundColor: Colors.white,
+    borderRadius: ms(20),
+    paddingHorizontal: hs(10),
+    paddingVertical: vs(20),
+    marginHorizontal: hs(20),
+    alignItems: 'center',
+    rowGap: vs(16),
+    justifyContent: 'center',
+  },
+  menuName: {
+    fontSize: ms(18),
+    fontFamily: 'LibreBaskerville-DpdE',
+  },
 });

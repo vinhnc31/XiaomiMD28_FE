@@ -22,8 +22,40 @@ const CartScreen = (props: Props) => {
   const [data, setData] = useState<CartModel[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState(false);
-  const [quantityValues, setQuantityValues] = useState<{[key: string]: string}>({});
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const handleDeleteItem = (itemId:number) => {
+    Alert.alert(
+      'Xác nhận xóa',
+      'Bạn có chắc chắn muốn xóa sản phẩm này không?',
+      [
+        {
+          text: 'Hủy',
+          onPress: () => console.log('Hủy xóa'),
+          style: 'cancel',
+        },
+        {
+          text: 'Xóa',
+          onPress: async () => {
+            try {
+              const savedData = await AsyncStorage.getItem('cartData');
+              if (savedData) {
+                const cartData = JSON.parse(savedData);
+                const updatedCartData = cartData.filter((item)=>item.id !== itemId);
+                await AsyncStorage.setItem('cartData', JSON.stringify(updatedCartData));
+                setData(updatedCartData);
+              }
+              const cartService = new CartService();
+              const result = await cartService.deleteCart(itemId);
+            } catch (error) {
+              console.error('Error deleting item from AsyncStorage', error);
+            }
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+  
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -43,7 +75,6 @@ const CartScreen = (props: Props) => {
       setLoading(false);
     }
   };
- 
   const updateQuantity = async (itemId: number, newQuantity: number) => {
     try {
       const savedData = await AsyncStorage.getItem('cartData');
@@ -94,6 +125,17 @@ const CartScreen = (props: Props) => {
       setSelectedItems(allItemIds);
     }
   };
+  const calculateTotalPrice = () => {
+    let totalPrice = 0;
+    selectedItems.forEach((itemId) => {
+      const selectedItem = data.find((item) => item.id === itemId);
+      if (selectedItem) {
+        totalPrice += selectedItem.Product['price'] * selectedItem.quantity;
+      }
+    });
+
+    return totalPrice.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
+  };
   useEffect(() => {
     setLoading(true);
     if (refreshing) {
@@ -105,7 +147,7 @@ const CartScreen = (props: Props) => {
     }
   }, [refreshing]);
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white', flexDirection: 'column'}}>
+    <SafeAreaView style={{flex: 1, flexDirection: 'column'}}>
       <BaseHeaderNoCart
         title="Giỏ hàng"
         onBackPress={() => {
@@ -130,6 +172,7 @@ const CartScreen = (props: Props) => {
               renderItem={({item}) => (
                 <View style={styles.item}>
                    <Checkbox
+                   style={{width: 30,}}
                       value={selectedItems.includes(item.id)}
                       onValueChange={() => toggleCheckbox(item.id)}
                     />
@@ -139,7 +182,7 @@ const CartScreen = (props: Props) => {
                       <Text ellipsizeMode="tail" numberOfLines={1} style={styles.text}>
                         {item.Product['name']}
                       </Text>
-                      <Text style={styles.textPrice}>{item.Product['price']}₫</Text>
+                      <Text style={styles.textPrice}>{item.Product['price'].toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}</Text>
                       <View style={styles.viewCount}>
                         <TouchableOpacity
                           disabled={item.quantity <= 1 ? true : false}
@@ -164,7 +207,10 @@ const CartScreen = (props: Props) => {
                               textInput(item.id, newQuantity);
                           }}
                           />
-                        <TouchableOpacity
+                          <View>
+                            
+                          </View>
+                        <TouchableOpacity 
                           onPress={() => {
                             incrementQuantity(item.id, item.quantity);
                           }}
@@ -179,9 +225,11 @@ const CartScreen = (props: Props) => {
                       </View>
                     </View>
                   </View>
-                  <TouchableOpacity onPress={() => {}}>
+                  <View>
+                  <TouchableOpacity style={{position:'relative',zIndex:1,top:-10,right:-5}} onPress={() => {handleDeleteItem(item.id)}}>
                     <Image style={{width: 25, height: 25}} source={require('../../assets/images/close.png')} />
                   </TouchableOpacity>
+                  </View>
                 </View>
               )}
             />
@@ -191,6 +239,8 @@ const CartScreen = (props: Props) => {
       <BaseHeaderBottom disabled={false} 
       value={selectedItems.length === data.length&& data.length > 0}
       onValueChange={selectAllItems}
+      SumText={calculateTotalPrice()}
+      check={selectedItems.length <= 0}
       />
     </SafeAreaView>
   );
