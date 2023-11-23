@@ -287,7 +287,7 @@ const HomeScreen = (props: Props) => {
               <Text style={styles.titleText}>Yêu thích nhiều nhất</Text>
               <FlatList
                 data={displayedData}
-                keyExtractor={item => item.id.toString()}
+                // keyExtractor={item => item.id.toString()}
                 horizontal={true}
                 contentContainerStyle={styles.flatListContainer}
                 renderItem={({ item }) => <ListItemFavorite item={item} />}
@@ -299,7 +299,7 @@ const HomeScreen = (props: Props) => {
               <Text style={[styles.titleText, { paddingHorizontal: vs(8) }]}>Gợi ý hôm nay</Text>
               <FlatList
                 data={dataProduct}
-                keyExtractor={item => item.id.toString()}
+                // keyExtractor={item => item.id.toString()}
                 columnWrapperStyle={{ justifyContent: 'space-between' }}
                 numColumns={2}
                 horizontal={false}
