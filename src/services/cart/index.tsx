@@ -8,8 +8,8 @@ export default class CartService extends BaseService<CartModel> {
         super(url.default);
     }
 
-    public async fetchCart() {
-        const {data} = await http.get<CartModel>(url.getCart);
+    public async fetchCart(id:number) {
+        const {data} = await http.get<CartModel>(`${url.getCart}/${id}`);
         return data;
     }
     public async putCart(id:number, body:deleteItem) {

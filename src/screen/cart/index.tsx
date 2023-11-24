@@ -13,11 +13,13 @@ import BaseHeaderBottom from '@src/containers/components/Base/BaseHeaderBottom';
 import CartService from '@src/services/cart';
 import {CartModel} from '@src/services/cart/cart.model';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '@src/hooks/useAuth';
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
   route: RouteProp<AppStackParam, APP_NAVIGATION.CART>;
 }
 const CartScreen = (props: Props) => {
+  const {user}=useAuth();
   const [error, setError] = useState('');
   const [data, setData] = useState<CartModel[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -60,7 +62,7 @@ const CartScreen = (props: Props) => {
     try {
       setLoading(true);
       const cartService = new CartService();
-      const result = await cartService.fetchCart();
+      const result = await cartService.fetchCart(user?.id!);
       const latestData = result.data.data;
       const savedData = await AsyncStorage.getItem('cartData');
       const isDataChanged = JSON.stringify(latestData) !== savedData;

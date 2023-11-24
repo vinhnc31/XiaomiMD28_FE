@@ -30,7 +30,7 @@ const authSlice = createSlice({
         state.status = 'resolved';
         state.account = payload;
 
-        payload?.accessToken && StorageUtils.save(StorageKey.AccessToken, payload?.accessToken);
+        payload?.token && StorageUtils.save(StorageKey.AccessToken, payload?.token);
         payload?.refreshToken && StorageUtils.save(StorageKey.RefressToken, payload?.refreshToken);
         StorageUtils.saveObject(StorageKey.User, payload);
       })
