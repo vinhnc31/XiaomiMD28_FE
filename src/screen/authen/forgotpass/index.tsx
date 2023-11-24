@@ -2,57 +2,50 @@ import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import useToast from '@src/hooks/useToast';
 import {GuestStackParam} from '@src/navigations/GuestNavigation/stackParam';
-import {APP_NAVIGATION, GUEST_NAVIGATION, MENU_NAVIGATION} from '@src/navigations/routes';
-import {navigateToPage, pushToPage} from '@src/navigations/services';
+import {GUEST_NAVIGATION} from '@src/navigations/routes';
+import {navigateToPage, resetStack} from '@src/navigations/services';
 import R from '@src/res';
 import AccountService from '@src/services/account';
 import React, {useRef, useState} from 'react';
 import {ActivityIndicator, Image, Keyboard, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
-import styles from './styles';
+import styles from './style';
 import BaseInput from '@src/containers/components/Base/BaseInput';
 import {StatusBar} from 'react-native';
 import {hs, ms, vs} from '@src/styles/scalingUtils';
-import {BaseButton, BaseIcon, BaseImage, BaseText} from '@src/containers/components/Base';
-import {useAppDispatch} from '@src/stores';
-import {logInAction} from '@src/stores/auth/auth.actions';
-import {images} from '@src/res/images';
-import GuestNavigation from '@src/navigations/GuestNavigation';
+import {BaseButton, BaseIcon, BaseText} from '@src/containers/components/Base';
 
 interface Props {
   navigation: NativeStackNavigationProp<GuestStackParam>;
-  route: RouteProp<GuestStackParam, GUEST_NAVIGATION.LOGIN>;
+  route: RouteProp<GuestStackParam, GUEST_NAVIGATION.FORGOTPASS>;
 }
 
-const LogInComponent = (props: Props) => {
+const ForgotScreen = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const toast = useToast();
   const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const dispatch = useAppDispatch();
-  const {navigation} = props;
 
-  const goToRegister = () => {
-    navigateToPage(GUEST_NAVIGATION.REGISTER);
-
-    // navigateToPage(APP_NAVIGATION.ROOT);
+  const goToLogin = () => {
+    navigateToPage(GUEST_NAVIGATION.LOGIN);
   };
 
-  const onLogin = async () => {
-    console.log('bem');
+  const onRegister = async () => {
     setLoading(true);
+    const emailRegex = '^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$';
+
+    if (!email.trim().match(emailRegex)) {
+      setLoading(false);
+      toast.showError({message: 'Email không đúng định dạng'});
+      return;
+    }
 
     try {
       const sv = new AccountService();
-      const res = await sv.logIn({
-        email,
-        password,
-      });
-      console.log('res: ', res);
-      // @ts-ignore
-      await dispatch(logInAction(res.data)).unwrap();
-      toast.showSuccess({messageText: 'Đăng nhập thành công'});
+
       setLoading(false);
+      // @ts-ignore
+
+      resetStack(GUEST_NAVIGATION.LOGIN);
     } catch (error) {
       console.log('error: ', error);
       toast.showThowError(error);
@@ -67,7 +60,7 @@ const LogInComponent = (props: Props) => {
   return (
     <TouchableWithoutFeedback onPress={hideKeyboard}>
       <View style={{flex: 1}}>
-        <FastImage style={styles.container} source={R.images.bgLogin}>
+        <FastImage style={styles.container} source={R.images.bgRegister}>
           <View style={styles.wrap}>
             <View style={styles.header}>
               <Image style={styles.logoImg} source={R.images.logo} />
@@ -84,24 +77,12 @@ const LogInComponent = (props: Props) => {
                     borderRadius={40}
                   />
                 </View>
-                <View>
-                  <BaseInput
-                    leftIcon={'key-outline'}
-                    title="Mật khẩu"
-                    valuePassword={password}
-                    onChangeText={setPassword}
-                    password
-                    borderRadius={40}
-                  />
-                </View>
-                <TouchableOpacity style={{marginVertical: vs(10), alignSelf: 'flex-end'}} onPress={() => navigateToPage(GUEST_NAVIGATION.FORGOTPASS)}>
-                  <Text style={[styles.forgotPass, {textDecorationLine: 'underline'}]}>Quên mật khẩu?</Text>
-                </TouchableOpacity>
+
                 <BaseButton
-                  onPress={onLogin}
+                  onPress={onRegister}
                   style={styles.button}
                   loading={loading}
-                  text={'Đăng nhập'}
+                  text={'Xác nhận'}
                   textStyle={styles.buttonText}
                 />
                 <View
@@ -130,9 +111,9 @@ const LogInComponent = (props: Props) => {
                   <BaseText text="Đăng nhập với Google" color={'white'} />
                 </TouchableOpacity>
                 <View style={styles.bodyFooter}>
-                  <Text style={styles.notAccount}>Bạn chưa có tài khoản? </Text>
-                  <TouchableOpacity onPress={goToRegister}>
-                    <Text style={styles.textSignUp}>Đăng ký</Text>
+                  <Text style={styles.notAccount}>Bạn đã có tài khoản? </Text>
+                  <TouchableOpacity onPress={goToLogin}>
+                    <Text style={styles.textSignUp}>Đăng nhập</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -144,4 +125,4 @@ const LogInComponent = (props: Props) => {
   );
 };
 
-export default React.memo(LogInComponent);
+export default React.memo(ForgotScreen);

@@ -16,4 +16,10 @@ export const images = {
   iconStar: require('../assets/images/star4.png'),
   iconRightArrow: require('../assets/images/right-arrow.png'),
   iconBack: require('../assets/images/back.png'),
+  changepass: require('../assets/images/changepass.png'),
+  user: require('../assets/images/user.png'),
+  location: require('../assets/images/location.png'),
+  history: require('../assets/images/history.png'),
+  support: require('../assets/images/support.png'),
+  signinGG:require('../assets/images/signGG.png'),
 };
