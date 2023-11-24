@@ -19,15 +19,17 @@ export default StyleSheet.create({
     shadowColor: 'black', // Màu của đổ bóng (cho iOS)
     shadowOffset: { width: 0, height: 2 }, // Độ dài và độ rộng của đổ bóng (cho iOS)
     shadowOpacity: 0.2, // Độ trong suốt của đổ bóng (cho iOS)
-    shadowRadius: 2, // Bán kính của đổ bóng (cho iOS)
+    shadowRadius: 2,
   },
   item: {
+    backgroundColor:'white',
     flex:1,
-    marginTop: 8,
+    marginTop: 10,
     marginBottom: 10,
+    marginHorizontal:5,
     borderRadius: 10,
     borderWidth:.5,
-    flexDirection:'row'
+    flexDirection:'row',
   },
   view:{
     flex:1,
@@ -38,7 +40,7 @@ export default StyleSheet.create({
     flexDirection:'column',
   },
   image: {
-    margin:ms(8),
+    margin:ms(5),
     height: vs(120),
     width: hs(120),
   },
@@ -63,7 +65,7 @@ export default StyleSheet.create({
     color: '#000000', // Màu văn bản
     fontSize: 17,
     fontFamily: 'LibreBaskerville-DpdE',
-    width: hs(200),
+    width: hs(180),
   },
   textPrice: {
     marginTop:5,

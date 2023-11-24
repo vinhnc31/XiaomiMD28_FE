@@ -31,6 +31,10 @@ import { Movie } from './homeFlatlist';
 import TouchableScale from 'react-native-touchable-scale';
 import CategoryService from '@src/services/category';
 import { CategoryModel } from '@src/services/category/category.model';
+import ProductService from '@src/services/product';
+import { ProductModel } from '@src/services/product/product.model';
+import R from '@src/res';
+import {vs} from '@src/styles/scalingUtils';
 
 
 interface Props {
@@ -39,34 +43,39 @@ interface Props {
 }
 
 const HomeScreen = (props: Props) => {
-  const [data1, setData] = useState<Movie[]>([]);
+  const [dataProduct, setDataProduct] = useState<ProductModel[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState('');
   const [refreshing, setRefreshing] = useState(false);
 
   const [showAll, setShowAll] = useState(false);
-  const displayedData = showAll ? data1 : data1.slice(0, 3);
+  const displayedData = showAll ? dataProduct : dataProduct.slice(0, 3);
 
   const [dataCategory, setDataCategory] = useState<CategoryModel[]>([]);
   const [showAllCategory, setShowAllCategory] = useState(false);
   const displayedDataCategory = showAllCategory ? dataCategory : dataCategory.slice(0, 5);
 
-  const limitedData = data1.slice(0, 5);
+  const limitedData = dataProduct.slice(0, 5);
   const animatedValues = limitedData.map(() => new Animated.Value(0));
 
   const [activeIndex, setActiveIndex] = useState(0);
 
+  const config = {
+    style: "currency",
+    currency: "VND",
+    maximumFractionDigits: 9,
+  };
+
   useEffect(() => {
     if (refreshing) {
       setRefreshing(false); // Đặt refreshing thành false trước khi tải lại để tránh tác động lặp
-      fetchData();
       fetchDataCategory()
-        .then(() => fetchData())
+      fetchDataProduct()
         .then(() => setRefreshing(false))
         .catch(() => setRefreshing(false));
     } else {
-      fetchData();
       fetchDataCategory();
+      fetchDataProduct()
     }
   }, [refreshing]);
 
@@ -86,18 +95,6 @@ const HomeScreen = (props: Props) => {
     console.log(id);
   };
 
-  const fetchData = async () => {
-    try {
-      const response = await fetch('https://6399d10b16b0fdad774a46a6.mockapi.io/booCar');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const result = await response.json();
-      setData(result);
-    } catch (error) {
-      setError('err');
-    }
-  };
 
   const fetchDataCategory = async () => {
     try {
@@ -110,8 +107,20 @@ const HomeScreen = (props: Props) => {
     }
   };
 
+  const fetchDataProduct = async () => {
+    try {
+      const productService = new ProductService();
+      const result = await productService.getProduct();
+      setDataProduct(result.data);
+      console.log(result.data.length);
+    } catch (error) {
+      setError('err');
+    }
+
+  }
+
   //Gợi ý hôm nay
-  function ListItemSuggest({ item }: { item: Movie }) {
+  function ListItemSuggest({ item }: { item: ProductModel }) {
     return (
       <TouchableScale
         onPress={() => console.log('da chon 1 item', item.id)}
@@ -120,25 +129,24 @@ const HomeScreen = (props: Props) => {
         tension={100}>
         <View style={styles.suggestItem}>
           <View style={styles.viewSuggestImage}>
-            <Image source={{ uri: item.image }} style={{ width: '70%', height: '90%' }} />
+            <Image
+              source={{ uri: item.images }}
+              style={{ width: '90%', height: '100%' }} />
           </View>
           <View style={{ flex: 0.5 }} />
 
-          <Image
-            style={{ width: 30, height: 35, position: 'absolute', left: 16, bottom: 75 }}
-            source={require('../../assets/images/hot2.png')}
-          />
           <View style={styles.viewSuggestText}>
             <Text numberOfLines={1} style={styles.suggestTextName}>
               {item.name}
             </Text>
             <Text style={styles.text}>
-              {item.price}
-              <Text style={{ textDecorationLine: 'underline', color: 'red' }}>đ</Text>
+            {new Intl.NumberFormat("vi-VN", config).format(
+                        item.price
+                      )}
             </Text>
             <View style={styles.viewStar}>
-              <Image style={styles.imgStar} source={require('../../assets/images/star4.png')} />
-              <Text style={styles.text}>4.9</Text>
+              <Image style={styles.imgStar} source={R.images.iconStar} />
+              <Text style={styles.text}>4.9 </Text>
               <Text style={styles.textCmt}>(50)</Text>
             </View>
           </View>
@@ -148,7 +156,7 @@ const HomeScreen = (props: Props) => {
   }
 
   // danh muc
-  function ListItemCategory({ item }: { item: Movie }) {
+  function ListItemCategory({ item }: { item: CategoryModel }) {
     return (
       <TouchableScale onPress={() => gotoListProduct(item.id, item.name)} activeScale={0.9} friction={9} tension={100}>
         <View style={styles.categoryItem}>
@@ -166,14 +174,14 @@ const HomeScreen = (props: Props) => {
   }
 
   //danh sach yeu thich
-  function ListItemFavorite({ item }: { item: Movie }) {
+  function ListItemFavorite({ item }: { item: ProductModel }) {
     return (
       <TouchableWithoutFeedback onPress={() => console.log('code Xem chi tiet data: ', item.name)}>
         <View style={styles.item}>
-          <Image source={{ uri: item.image }} style={styles.image} resizeMode="stretch" />
+          <Image source={{ uri: item.images }} style={styles.image} resizeMode="cover" />
           <View style={styles.overlay}>
             <View style={{ flex: 4 }}></View>
-            <View style={{ flex: 1.5, justifyContent: 'center', paddingHorizontal: 12 }}>
+            <View style={{ flex: 1.5, justifyContent: 'center', paddingHorizontal: vs(12) }}>
               <Text numberOfLines={1} style={styles.text}>
                 {item.name}
               </Text>
@@ -184,16 +192,17 @@ const HomeScreen = (props: Props) => {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                paddingHorizontal: 12,
+                paddingHorizontal: vs(12),
               }}>
               <View style={styles.viewStar}>
-                <Image style={styles.imgStar} source={require('../../assets/images/star4.png')} />
+                <Image style={styles.imgStar} source={R.images.iconStar} />
                 <Text style={styles.text}>4.9</Text>
                 <Text style={styles.textCmt}>(50)</Text>
               </View>
               <Text style={styles.text}>
-                {item.price}
-                <Text style={{ textDecorationLine: 'underline', color: 'red' }}>đ</Text>
+              {new Intl.NumberFormat("vi-VN", config).format(
+                        item.price
+                      )}
               </Text>
             </View>
           </View>
@@ -206,10 +215,10 @@ const HomeScreen = (props: Props) => {
   return (
     <SafeAreaView style={{ flex: 1, flexDirection: 'column' }}>
       <View style={styles.mainContainer}>
-        <TouchableWithoutFeedback onPress={() => console.log('code chuyen man')}>
+        <TouchableWithoutFeedback onPress={() => navigateToPage(APP_NAVIGATION.SEARCH)}>
           <View style={styles.inputContainer}>
             <View style={{ flex: 1.5, height: '100%', alignItems: 'center', justifyContent: 'center' }}>
-              <Image style={{ width: 20, height: 20 }} source={require('../../assets/images/search.png')} />
+              <Image style={{ width: vs(20), height: vs(20) }} source={R.images.iconSearch} />
             </View>
             <View style={{ flex: 9, height: '100%', justifyContent: 'center' }}>
               <Text style={styles.title}>Search...</Text>
@@ -219,8 +228,8 @@ const HomeScreen = (props: Props) => {
         <View style={styles.buttonContainer}>
           <BaseButton
             onPress={goToCart}
-            renderIcon={<Image style={{ width: 30, height: 30 }} source={require('../../assets/images/cart1.png')} />}
-            style={{ marginBottom: 10 }}
+            renderIcon={<Image style={{ width: vs(30), height: vs(30) }} source={R.images.iconCart} />}
+            style={{ marginBottom: vs(10) }}
           />
         </View>
       </View>
@@ -235,7 +244,7 @@ const HomeScreen = (props: Props) => {
             showsVerticalScrollIndicator={false}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
 
-            <View style={{ height: 160, marginTop: 8, borderRadius: 50, marginHorizontal: 12 }}>
+            <View style={{ height: vs(160), marginTop: vs(8), borderRadius: vs(50), marginHorizontal: vs(12) }}>
               <Swiper
                 loop={true}
                 showsButtons={false}
@@ -260,14 +269,13 @@ const HomeScreen = (props: Props) => {
                 <TouchableOpacity onPress={goToCategory}>
                   <View style={styles.viewButton}>
                     <Text style={styles.seeMoreText}>Xem thêm</Text>
-                    <Image style={styles.rightArrowImage} source={require('../../assets/images/right-arrow.png')} />
+                    <Image style={styles.rightArrowImage} source={R.images.iconRightArrow} />
                   </View>
                 </TouchableOpacity>
               </View>
-              <View style={{ height: '100%', marginTop: 6 }}>
+              <View style={{ height: '100%', marginTop: vs(6) }}>
                 <FlatList
                   data={displayedDataCategory}
-                  keyExtractor={item => item.id.toString()}
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}
                   renderItem={({ item }) => <ListItemCategory item={item} />}
@@ -275,11 +283,11 @@ const HomeScreen = (props: Props) => {
               </View>
             </View>
 
-            <View style={{ width: '100%', marginTop: 16, marginBottom: 8, paddingHorizontal: 16 }}>
+            <View style={{ width: '100%', marginTop: vs(16), marginBottom: vs(8), paddingHorizontal: vs(16) }}>
               <Text style={styles.titleText}>Yêu thích nhiều nhất</Text>
               <FlatList
                 data={displayedData}
-                keyExtractor={item => item.id}
+                // keyExtractor={item => item.id.toString()}
                 horizontal={true}
                 contentContainerStyle={styles.flatListContainer}
                 renderItem={({ item }) => <ListItemFavorite item={item} />}
@@ -287,11 +295,11 @@ const HomeScreen = (props: Props) => {
               />
             </View>
 
-            <View style={{ width: '100%', paddingBottom: 30, paddingHorizontal: 8 }}>
-              <Text style={[styles.titleText, { paddingHorizontal: 8 }]}>Gợi ý hôm nay</Text>
+            <View style={{ width: '100%', paddingBottom: vs(30), paddingHorizontal: vs(8) }}>
+              <Text style={[styles.titleText, { paddingHorizontal: vs(8) }]}>Gợi ý hôm nay</Text>
               <FlatList
-                data={data1}
-                keyExtractor={item => item.id}
+                data={dataProduct}
+                // keyExtractor={item => item.id.toString()}
                 columnWrapperStyle={{ justifyContent: 'space-between' }}
                 numColumns={2}
                 horizontal={false}
