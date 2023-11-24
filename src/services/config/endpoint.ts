@@ -19,8 +19,8 @@ const endpoint = {
 
   },
   cart:{
-    default:"/api/cart/1",
-    getCart:"/api/cart/1",
+    default:"/api/cart",
+    getCart:"/api/cart",
     putCart:'/api/cart',
     deleteCart:'/api/cart'
   }
