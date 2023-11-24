@@ -44,7 +44,7 @@ const listMenu: IMenu[] = [
   },
   {
     name: 'Lịch sử mua hàng',
-    navigate: APP_NAVIGATION.HISTORYORDER,
+    navigate: APP_NAVIGATION.ORDERDETAIL,
     icon: 'document-text',
   },
   {
