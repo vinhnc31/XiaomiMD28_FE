@@ -18,6 +18,10 @@ import {
 import styles from './styles';
 import {AppStackParam} from '@src/navigations/AppNavigation/stackParam';
 import {BaseLoading} from '@src/containers/components/Base/BaseLoading';
+import Carousel from './Carousel';
+
+import {ProductModel} from '@src/services/product/product.model';
+import ProductService from '@src/services/product';
 
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
@@ -25,23 +29,25 @@ interface Props {
 }
 
 const DetailsScreen = (props: Props) => {
-  const [detailProductData, setDetailProductData] = useState<Producs[]>([]);
+  const [productData, setProduct] = useState<Products[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState('');
   const [refreshing, setRefreshing] = useState(false);
 
   const [showFullDescription, setShowFullDescription] = useState(false);
 
-  type Producs = {
-    images: [string, string, string, string, string, string, string, string];
+  const productId = 1; 
+
+  type Products = {
+    images: [];
     id: string;
     name: string;
-    image: string;
     price: string;
     description: string;
     quantity: string;
-    categoryId: string;
-    colorProducts: string[];
+    CategoryId: string;
+    createdAt: string;
+    updatedAt: string;
   };
   useEffect(() => {
     // Chỉ kích hoạt làm mới nếu refreshing đã được đặt thành true
@@ -65,12 +71,12 @@ const DetailsScreen = (props: Props) => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://192.168.1.82:3000/api/product/1');
+      const response = await fetch(`https://654b50895b38a59f28eedbb4.mockapi.io/api/product/${productId}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const result = await response.json();
-      setDetailProductData(result.data);
+      setProduct(result);
       setLoading(false);
     } catch (error) {
       setError('err');
@@ -78,33 +84,42 @@ const DetailsScreen = (props: Props) => {
     }
   };
 
+  
+
+  
+
   const handleBackPress = () => {
     // Xử lý khi nút back được nhấn
     props.navigation.goBack();
   };
 
+
+  // 2 dòng dưới vẫn đúng
+  const listImage = productData?.images || [];
+  const imagesData = listImage.map((img, index) => ({
+    id: (index + 1).toString(), // Tạo ID bằng cách sử dụng index
+    image: img,
+  }));
+
   return (
-    <SafeAreaView style={{flex: 1, flexDirection: 'column', backgroundColor: '#F1F1F1'}}>
-      <View style={styles.container}>
-        <View style={{flex: 1, alignItems: 'flex-start'}}>
-          <TouchableOpacity onPress={handleBackPress}>
-            <Image source={require('../../../assets/images/back.png')} style={styles.icon} />
-          </TouchableOpacity>
-        </View>
-        <View style={{borderColor: '#D9D9D9', borderWidth: 1.5}} />
+    <SafeAreaView style={{flex: 1, flexDirection: 'column', backgroundColor: '#F1F1F1', width: '100%'}}>
+      <View style={styles.backContainer}>
+        <TouchableOpacity onPress={handleBackPress}>
+          <Image source={require('../../../assets/images/back.png')} style={styles.icon} />
+        </TouchableOpacity>
       </View>
       {loading ? (
         <BaseLoading size={20} top={100} loading={true} />
       ) : (
-        <View style={{marginBottom: 120}}>
+        <View style={styles.container}>
           <ScrollView
             indicatorStyle="black"
             showsVerticalScrollIndicator={false}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
             <View style={styles.item}>
               <View style={styles.imageContainer}>
-                <Image source={require('../../../assets/images/demo.jpg')} style={styles.image} resizeMode="stretch" />
-                {/* <Image source={{ uri: data.images[0] }} style={styles.image} resizeMode="stretch" /> */}
+                {/* <Image source={require('../../../assets/images/demo.jpg')} style={styles.image} resizeMode="stretch" /> */}
+                <Carousel data={imagesData} />
               </View>
 
               <View style={styles.overlay}>
@@ -121,21 +136,20 @@ const DetailsScreen = (props: Props) => {
                   marginHorizontal: 20,
                 }}>
                 <Text style={styles.priceText}>
-                  1.000.000
+                  {productData?.price || ''}
                   <Text style={{textDecorationLine: 'underline', marginLeft: 2}}>đ</Text>
                 </Text>
 
                 <View style={{flex: 1, justifyContent: 'center', marginBottom: 8}}>
                   <Text style={styles.textName}>
-                    {/* {item.name} */}
-                    namesssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+                    {productData?.name || ''}
                   </Text>
                 </View>
 
                 <View style={styles.viewStar}>
                   <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
                   <Text style={styles.textStar}>4.9</Text>
-                  <Text style={styles.textCmt}>(50)</Text>
+                  <Text style={styles.textCmt}>({productData?.quantity || ''})</Text>
                   <Text style={styles.textSell}>| Đã bán : </Text>
                   <Text style={styles.textSellNumber}>123</Text>
                 </View>
@@ -149,48 +163,14 @@ const DetailsScreen = (props: Props) => {
                 <Text style={styles.descriptionTitle}>Mô tả về sản phẩm</Text>
                 {showFullDescription ? (
                   <View>
-                  <Text style={styles.descriptionText}>
-                    - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
-                    cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
-                    chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
-                    - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
-                    cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
-                    chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
-                    - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
-                    cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
-                    chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
-                    - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
-                    cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
-                    chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
-                    - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
-                    cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
-                    chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
-                    - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
-                    cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
-                    chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
-                    - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
-                    cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
-                    chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
-                  </Text>
-                </View>
+                    <Text style={styles.descriptionText}>
+                      {productData?.description || ''}
+                    </Text>
+                  </View>
                 ) : (
                   <View>
-                    <Text style={styles.descriptionText}  numberOfLines={10}>
-                      - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
-                      cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
-                      chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
-                      - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
-                      cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
-                      chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
-                      - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
-                      cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
-                      chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
-                      - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
-                      cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
-                      chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
-                      - Xiaomi Redmi Note 13 Pro 5G là mẫu điện thoại sở hữu camera thông số 200MP siêu khủng. Đây là
-                      cảm biến camera khủng nhất trên thế giới smartphone hiện nay. Bên cạnh đó, thiết bị được trang bị
-                      chip Dimensity tầm trung mạnh mẽ, màn hình OLED 1 tỷ màu chất lượng cao.
+                    <Text style={styles.descriptionText} numberOfLines={10}>
+                    {productData?.description || ''}
                     </Text>
                   </View>
                 )}

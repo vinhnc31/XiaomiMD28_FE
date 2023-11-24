@@ -1,5 +1,6 @@
 import {ms, vs} from '@src/styles/scalingUtils';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default StyleSheet.create({
   titleContainer: {
@@ -60,14 +61,17 @@ export default StyleSheet.create({
   imageContainer: {
     flex: 4,
     height: 265,
-    marginVertical: vs(15),
+    marginBottom: vs(10),
     backgroundColor: '#EFEFEF',
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 
   image: {
-    flex: 1,
-    height: '100%', // Ảnh sẽ đầy màn hình theo chiều cao
-    width: 'auto',
+    width: SCREEN_WIDTH,
+    height: '100%',
+    resizeMode: 'contain',
+    borderRadius: 5,
   },
   overlay: {
     flex: 1,
@@ -80,8 +84,8 @@ export default StyleSheet.create({
     // backgroundColor: 'rgba(0, 0, 0, 0.2)', // Màu nền cho dòng văn bản (với độ trong suốt)
   },
   imgFavourite: {
-    width: 50,
-    height: 50,
+    width: 80,
+    height: 80,
     marginRight: 10,
     marginBottom: 6,
   },

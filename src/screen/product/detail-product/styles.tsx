@@ -4,11 +4,19 @@ import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 export default StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    backgroundColor: 'white',
+    marginBottom: vs(60),
+  },
+  backContainer: {
+    position: 'absolute',
+    top: 0,
+    zIndex: 1,
+    marginTop: 20,
+    marginLeft: 20,
+  },
+  iconBack: {
+    width: 30,
+    height: 30,
+
   },
   icon: {
     width: 30,
@@ -28,14 +36,13 @@ export default StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   imageContainer: {
-    flex: 4,
     height: 265,
-    marginVertical: vs(15),
+    marginBottom: vs(30),
     backgroundColor: '#EFEFEF',
   },
   image: {
-    flex: 1,
-    height: '100%', // Ảnh sẽ đầy màn hình theo chiều cao
+    // flex: 1,
+    height: 50, 
     width: 'auto',
   },
   overlay: {
@@ -43,11 +50,10 @@ export default StyleSheet.create({
     flexDirection: 'column',
     position: 'absolute',
     justifyContent: 'center',
-    bottom: 0,
+    top: vs(100),
     left: 0,
     right: 0,
-    top: vs(70),
-    // backgroundColor: 'rgba(0, 0, 0, 0.2)', // Màu nền cho dòng văn bản (với độ trong suốt)
+    bottom: 0,
   },
   imgFavourite: {
     width: 120,
@@ -234,7 +240,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
-    height: 70,
+    height: vs(60),
   },
   leftContainerStyle: {
     backgroundColor: '#2BBAA9',
@@ -267,8 +273,8 @@ export default StyleSheet.create({
   },
 
   textLabelStyle: {
-    paddingHorizontal: '19%',
-    paddingVertical: '9%',
+    paddingHorizontal: '15%',
+    paddingVertical: '5%',
     color: '#FFFFFF',
     fontWeight: '400',
     fontSize: 25,
