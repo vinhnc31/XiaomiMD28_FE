@@ -50,8 +50,8 @@ const listMenu: IMenu[] = [
   // },
   {
     name: 'Lịch sử mua hàng',
-    navigate: '',
-    image: images.history,
+    navigate: APP_NAVIGATION.ORDERDETAIL,
+    icon: 'document-text',
   },
   {
     name: 'Trung tâm hỗ trợ',

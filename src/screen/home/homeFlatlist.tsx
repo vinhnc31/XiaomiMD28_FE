@@ -2,6 +2,7 @@ import { Dimensions, Image, Text, TouchableOpacity, TouchableWithoutFeedback, Vi
 import TouchableScale from "react-native-touchable-scale";
 import { navigateToPage } from "@src/navigations/services";
 import styles from "./styles";
+import React from "react";
 
 export type Movie = {
   id: string;

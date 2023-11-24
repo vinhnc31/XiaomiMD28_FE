@@ -71,7 +71,6 @@ const CartScreen = (props: Props) => {
     setData(latestData);
       setLoading(false);
     } catch (error) {
-      console.error('Lỗi khi tải dữ liệu', error);
       setLoading(false);
     }
   };
