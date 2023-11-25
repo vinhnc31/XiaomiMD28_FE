@@ -15,6 +15,9 @@ import PayDetailScreen from '@src/screen/paydetail/index';
 import HistoryOrderScreen from '@src/screen/historyOrder/index';
 import OrderDetailScreen from '@src/screen/orderDetails/index';
 import VouCherScreen from '@src/screen/voucher/index';
+import myaccount from '@src/screen/account/myaccount';
+import changepass from '@src/screen/account/changepass';
+
 const Stack = createNativeStackNavigator<AppStackParam>();
 
 const AppNavigationScreen = () => {
@@ -69,6 +72,8 @@ const AppNavigationScreen = () => {
       <Stack.Screen name={APP_NAVIGATION.HISTORYORDER} component={HistoryOrderScreen} />
       <Stack.Screen name={APP_NAVIGATION.ORDERDETAIL} component={OrderDetailScreen} />
       <Stack.Screen name={APP_NAVIGATION.VOUCHER} component={VouCherScreen} />
+      <Stack.Screen name={APP_NAVIGATION.MY_ACCOUNT} component={myaccount} />
+      <Stack.Screen name={APP_NAVIGATION.CHANGE_PASS} component={changepass} />
     </Stack.Navigator>
   );
 };

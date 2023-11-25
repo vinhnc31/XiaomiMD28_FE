@@ -12,8 +12,8 @@ import FastImage from 'react-native-fast-image';
 import styles from './styles';
 import BaseInput from '@src/containers/components/Base/BaseInput';
 import {StatusBar} from 'react-native';
-import {vs} from '@src/styles/scalingUtils';
-import {BaseButton} from '@src/containers/components/Base';
+import {hs, ms, vs} from '@src/styles/scalingUtils';
+import {BaseButton, BaseIcon, BaseText} from '@src/containers/components/Base';
 
 interface Props {
   navigation: NativeStackNavigationProp<GuestStackParam>;
@@ -149,6 +149,31 @@ const RegisterScreen = (props: Props) => {
                   text={'Đăng ký'}
                   textStyle={styles.buttonText}
                 />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    columnGap: 12,
+                    justifyContent: 'center',
+                    marginVertical: 16,
+                  }}>
+                  <View style={{borderWidth: 0.5, borderColor: '#9A9A9A', flex: 1, height: 1}}></View>
+                  <BaseText text="OR" />
+                  <View style={{borderWidth: 0.5, borderColor: '#9A9A9A', flex: 1, height: 0.5}}></View>
+                </View>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#007FFF',
+                    flexDirection: 'row',
+                    paddingVertical: vs(12),
+                    paddingHorizontal: hs(10),
+                    columnGap: hs(10),
+                    borderRadius: ms(8),
+                    justifyContent: 'center',
+                  }}>
+                  <BaseIcon name="logo-google" color={'white'} />
+                  <BaseText text="Đăng nhập với Google" color={'white'} />
+                </TouchableOpacity>
                 <View style={styles.bodyFooter}>
                   <Text style={styles.notAccount}>Bạn đã có tài khoản? </Text>
                   <TouchableOpacity onPress={goToLogin}>
