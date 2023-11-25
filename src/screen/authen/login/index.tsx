@@ -12,10 +12,12 @@ import FastImage from 'react-native-fast-image';
 import styles from './styles';
 import BaseInput from '@src/containers/components/Base/BaseInput';
 import {StatusBar} from 'react-native';
-import {vs} from '@src/styles/scalingUtils';
-import {BaseButton} from '@src/containers/components/Base';
+import {hs, ms, vs} from '@src/styles/scalingUtils';
+import {BaseButton, BaseIcon, BaseImage, BaseText} from '@src/containers/components/Base';
 import {useAppDispatch} from '@src/stores';
 import {logInAction} from '@src/stores/auth/auth.actions';
+import {images} from '@src/res/images';
+import GuestNavigation from '@src/navigations/GuestNavigation';
 
 interface Props {
   navigation: NativeStackNavigationProp<GuestStackParam>;
@@ -92,7 +94,7 @@ const LogInComponent = (props: Props) => {
                     borderRadius={40}
                   />
                 </View>
-                <TouchableOpacity style={{marginVertical: vs(10), alignSelf: 'flex-end'}}>
+                <TouchableOpacity style={{marginVertical: vs(10), alignSelf: 'flex-end'}} onPress={() => navigateToPage(GUEST_NAVIGATION.FORGOTPASS)}>
                   <Text style={[styles.forgotPass, {textDecorationLine: 'underline'}]}>Quên mật khẩu?</Text>
                 </TouchableOpacity>
                 <BaseButton
@@ -102,6 +104,31 @@ const LogInComponent = (props: Props) => {
                   text={'Đăng nhập'}
                   textStyle={styles.buttonText}
                 />
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    columnGap: 12,
+                    justifyContent: 'center',
+                    marginVertical: 16,
+                  }}>
+                  <View style={{borderWidth: 0.5, borderColor: '#9A9A9A', flex: 1, height: 1}}></View>
+                  <BaseText text="OR" />
+                  <View style={{borderWidth: 0.5, borderColor: '#9A9A9A', flex: 1, height: 0.5}}></View>
+                </View>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#007FFF',
+                    flexDirection: 'row',
+                    paddingVertical: vs(12),
+                    paddingHorizontal: hs(10),
+                    columnGap: hs(10),
+                    borderRadius: ms(8),
+                    justifyContent: 'center',
+                  }}>
+                  <BaseIcon name="logo-google" color={'white'} />
+                  <BaseText text="Đăng nhập với Google" color={'white'} />
+                </TouchableOpacity>
                 <View style={styles.bodyFooter}>
                   <Text style={styles.notAccount}>Bạn chưa có tài khoản? </Text>
                   <TouchableOpacity onPress={goToRegister}>

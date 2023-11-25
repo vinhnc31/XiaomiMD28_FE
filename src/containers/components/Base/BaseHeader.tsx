@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import R from '@src/res'
 
 const BaseHeader = ({ title, onBackPress, onCartPress }:any) => {
   return (
@@ -7,7 +8,7 @@ const BaseHeader = ({ title, onBackPress, onCartPress }:any) => {
       <View style={styles.container}>
         <View style={{flex: 1, alignItems: 'flex-end'}}>
           <TouchableOpacity onPress={onBackPress}>
-            <Image source={require('../../../assets/images/back.png')} style={styles.icon} />
+            <Image source={R.images.iconBack} style={styles.icon} />
           </TouchableOpacity>
         </View>
 
@@ -17,7 +18,7 @@ const BaseHeader = ({ title, onBackPress, onCartPress }:any) => {
 
         <View style={{flex: 1, alignItems: 'flex-start'}}>
           <TouchableOpacity onPress={onCartPress}>
-            <Image source={require('../../../assets/images/cart.png')} style={styles.icon} />
+            <Image source={R.images.iconCartBlack} style={styles.icon} />
           </TouchableOpacity>
         </View>
       </View>
@@ -29,17 +30,17 @@ const BaseHeader = ({ title, onBackPress, onCartPress }:any) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    height: 60,
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
     backgroundColor: 'white',
   },
   icon: {
     width: 30,
-    height: 30,
+    height:30,
   },
   title: {
-    fontSize: 22,
+    fontSize: 18,
     fontFamily: 'LibreBaskerville-Bold',
     color: 'black',
     marginLeft: 20

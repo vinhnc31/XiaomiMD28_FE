@@ -3,7 +3,7 @@ import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {MenuStackParam} from '@src/navigations/AppNavigation/stackParam';
 import {GuestStackParam} from '@src/navigations/GuestNavigation/stackParam';
-import {MENU_NAVIGATION} from '@src/navigations/routes';
+import {APP_NAVIGATION, MENU_NAVIGATION} from '@src/navigations/routes';
 import React, {useState} from 'react';
 import {Modal, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
@@ -15,6 +15,7 @@ import {hs, ms, vs} from '@src/styles/scalingUtils';
 import {Colors} from '@src/styles/colors';
 import {useAppDispatch} from '@src/stores';
 import {logOutAction} from '@src/stores/auth/auth.actions';
+import {images} from '@src/res/images';
 interface Props {
   navigation: ScreenNavigationProps;
   route: RouteProp<GuestStackParam, MENU_NAVIGATION.ACCOUNT>;
@@ -28,29 +29,34 @@ type ScreenNavigationProps = CompositeNavigationProp<
 interface IMenu {
   name: string;
   navigate: string;
-  icon: string;
+  image: number;
 }
 
 const listMenu: IMenu[] = [
   {
-    name: 'Thiết lập tài khoản',
-    navigate: '',
-    icon: 'people-circle-outline',
+    name: 'Hồ sơ của tôi',
+    navigate: APP_NAVIGATION.MY_ACCOUNT,
+    image: images.user,
   },
   {
-    name: 'Giỏ hàng',
-    navigate: '',
-    icon: 'cart',
+    name: 'Đổi mật khẩu',
+    navigate: APP_NAVIGATION.CHANGE_PASS,
+    image: images.changepass,
   },
+  // {
+  //   name: 'Địa chỉ',
+  //   navigate: '',
+  //   image: images.location,
+  // },
   {
     name: 'Lịch sử mua hàng',
     navigate: '',
-    icon: 'document-text',
+    image: images.history,
   },
   {
     name: 'Trung tâm hỗ trợ',
     navigate: '',
-    icon: 'call',
+    image: images.support,
   },
 ];
 
@@ -71,7 +77,7 @@ const AccountScreen = (props: Props) => {
         }}
         key={index}>
         <View style={{flexDirection: 'row', alignItems: 'center', flex: 1, columnGap: hs(12)}}>
-          <BaseIcon name={item.icon} size={ms(30)} />
+          <BaseImage image={item.image} width={hs(30)} height={vs(30)} />
           <BaseText text={item.name} style={styles.menuName} />
         </View>
         {index !== listMenu.length - 1 && <BaseIcon name="chevron-forward" />}
@@ -103,7 +109,7 @@ const AccountScreen = (props: Props) => {
         <BaseIcon name="log-out-outline" color={Colors.white} size={ms(25)} />
       </TouchableOpacity>
 
-      <Modal visible={isVisible} onRequestClose={onHide} transparent animationType="slide">
+      <Modal visible={isVisible} onRequestClose={onHide} transparent animationType="fade">
         <TouchableOpacity onPress={onHide} style={styles.modalWrap}>
           <View style={styles.modalInner}>
             <BaseText fullText={'Trung tâm hỗ trợ'} style={styles.menuName} />

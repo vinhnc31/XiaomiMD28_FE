@@ -7,8 +7,18 @@ const endpoint = {
     logout: '/api/logout',
     profile: '/api/users/profile',
   },
+  categories: {
+    default: '/api/category',
+    getCategory: '/api/category',
+  },
+ 
+  products: {
+    default: '/api/products',
+    getProduct: '/api/product',
+    getProductByIdCategory: '/api/product/category'
 
-  categories: 'v',
+  },
+  
   favorites:{
     default:"/api/favorite",
     getCart:"/api/favorite",
@@ -16,10 +26,12 @@ const endpoint = {
     deleteCart:'/api/favorite'
   },
 
-  products: {
-    
-  },
-
+  cart:{
+    default:"/api/cart/1",
+    getCart:"/api/cart/1",
+    putCart:'/api/cart',
+    deleteCart:'/api/cart'
+  }
 };
 
 export default endpoint;
