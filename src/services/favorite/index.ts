@@ -7,11 +7,11 @@ const url = endpoints.favorites;
 // http://192.168.1.82:3000/api/favorite/
 export default class FavoriteService extends BaseService<FavoriteModel> {
     constructor() {
-        super(url);
+        super(url.default);
     }
 
-    public async fetchFavorite(accountId: number, productId: number) {
-        const {data} = await http.get<FavoriteModel>(`${url}/favorite/${accountId}&${productId}`);
+    public async fetchFavorite(accountId: number) {
+        const {data} = await http.get<FavoriteModel>(`${url.default}/${accountId}`);
         return data;
     }
 

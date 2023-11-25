@@ -9,8 +9,16 @@ const endpoint = {
   },
 
   categories: 'v',
-  favorites: 'http://192.168.1.82:3000/api',
-  product: '',
+  favorites:{
+    default:"/api/favorite",
+    getCart:"/api/favorite",
+    putCart:'/api/favorite',
+    deleteCart:'/api/favorite'
+  },
+
+  products: {
+    
+  },
 
 };
 
