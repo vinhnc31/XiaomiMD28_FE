@@ -22,7 +22,7 @@ export default class AccountService extends BaseService<IAccount> {
     await http.post(url.logout);
   }
 
-  public async changePass(id: string, obj: IChangePassReq) {
+  public async changePass( obj: IChangePassReq) {
     const {data} = await http.put<IAccount>(`${url}/changePassword`, obj);
     return data;
   }

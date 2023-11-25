@@ -2,7 +2,7 @@ import {API_URL} from '@src/contants/config';
 import R from '@src/res';
 import {ImageSourcePropType} from 'react-native';
 
-export const convertImage = (path?: string, defaultImage: ImageSourcePropType = R.images.avatarEmpty) => {
+export const convertImage = (path?: string, defaultImage: ImageSourcePropType = R.images.avataEmpty) => {
   if (!path) {
     return defaultImage;
   }
