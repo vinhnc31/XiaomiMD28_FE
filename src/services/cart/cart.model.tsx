@@ -13,6 +13,35 @@ export interface CartModel {
     images: string;
     CategoryId: number;
   }>;
+  productcolor: Array<{
+    id: number;
+    image: string;
+    createdAt: string;
+    updatedAt: string;
+    colorId: number;
+    productId: number;
+    Color: Array<{
+      id: number;
+      name: string;
+      createdAt: string;
+      updatedAt: string;
+    }>;
+  }>;
+  ProductColorConfig: Array<{
+    id: number;
+    quantity: number;
+    price: number;
+    createdAt: string;
+    updatedAt: string;
+    configId: number;
+    ProductColorId: number;
+    Config: Array<{
+      id: number;
+      name: string;
+      createdAt: string;
+      updatedAt: string;
+    }>;
+  }>;
 }
 export interface deleteItem {
   productId: number;

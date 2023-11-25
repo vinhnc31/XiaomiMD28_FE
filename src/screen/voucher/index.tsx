@@ -41,9 +41,7 @@ const VouCherScreen = (props: Props) => {
   const [error, setError] = useState('');
   const [data1, setData] = useState<Voucher[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [refreshing, setRefreshing] = useState(false);
-  const [value, setValue] = useState('1');
-  const [isFocus, setIsFocus] = useState(false);
+
   const [selectedVoucher, setSelectedVoucher] = useState(null);
   const fetchData = async () => {
     try {
@@ -66,6 +64,7 @@ const VouCherScreen = (props: Props) => {
   const handleRadioButtonPress = voucherId => {
     setSelectedVoucher(voucherId);
   };
+  console.log( )
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white', flexDirection: 'column'}}>
       <BaseHeaderNoCart title="Voucher" onBackPress={goBack} />
@@ -75,8 +74,9 @@ const VouCherScreen = (props: Props) => {
           <View style={styles.flatListContainer}>
             <View style={{alignItems:'center',marginTop:100}}>
               <Image
-                source={require('../../assets/images/group84.png')}
-                style={{width: 170, height: 170}}></Image>
+              resizeMode="contain"
+                source={require('../../assets/images/Errorvoucher.png')}
+                style={{width: 200, height: 200}}></Image>
             </View>
           </View>
         ) : (
@@ -86,7 +86,6 @@ const VouCherScreen = (props: Props) => {
           <Text>Có thể chọn 1 Voucher</Text>
         </View>
         <View style={{height: 1, backgroundColor: '#D9D9D9'}}></View>
-       
         <FlatList
           data={data1}
           keyExtractor={item => item.id}
@@ -108,7 +107,7 @@ const VouCherScreen = (props: Props) => {
                     <Text style={styles.textColor}>{item.describe}</Text>
                   </View>
                   <View style={{justifyContent:'center',marginRight:10}}>
-                    <CustomRadioButton selected={selectedVoucher === item.id} />
+                    <CustomRadioButton selected={props.route.params?.selectedVoucherData?.id===item.id} />
                   </View>
                 </View>
               </View>
@@ -117,10 +116,15 @@ const VouCherScreen = (props: Props) => {
         />
       </ScrollView>
        )}
-        <BaseButton text="Đồng ý" style={styles.buttonText}  onPress={()=>{goBack();
-      const selectedVoucherData =data1.find((voucher) => voucher.id === selectedVoucher);
-          const onVoucherSelect = props.route.params?.onVoucherSelect;
-          onVoucherSelect && onVoucherSelect(selectedVoucherData);}}/>
+       {loading ? null:
+        <BaseButton text="Đồng ý" style={styles.buttonText}
+        disable={data1.length === 0 ? true :false}
+        onPress={  ()=>{goBack();
+          const selectedVoucherData =data1.find((voucher) => voucher.id === selectedVoucher);
+              const onVoucherSelect = props.route.params?.onVoucherSelect(selectedVoucherData);
+              }}/>
+       }
+       
     </SafeAreaView>
   );
 };
