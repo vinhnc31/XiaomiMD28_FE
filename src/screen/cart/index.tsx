@@ -57,13 +57,13 @@ const CartScreen = (props: Props) => {
       { cancelable: false }
     );
   };
-  
+
   const fetchData = async () => {
     try {
       setLoading(true);
       const cartService = new CartService();
       const result = await cartService.fetchCart(user?.id!);
-      const latestData = result.data.data;
+      const latestData = result.data;
       const savedData = await AsyncStorage.getItem('cartData');
       const isDataChanged = JSON.stringify(latestData) !== savedData;
     if (isDataChanged) {
@@ -147,6 +147,13 @@ const CartScreen = (props: Props) => {
       fetchData();
     }
   }, [refreshing]);
+  const getSelectedItems = () => {
+    return data.filter((item) => selectedItems.includes(item.id));
+  };
+  const handleCheckout = () => {
+    const selectedItemsData = getSelectedItems();
+    navigateToPage(APP_NAVIGATION.PAYDETAIL,selectedItemsData)
+  };
   return (
     <SafeAreaView style={{flex: 1, flexDirection: 'column'}}>
       <BaseHeaderNoCart
@@ -178,7 +185,7 @@ const CartScreen = (props: Props) => {
                       onValueChange={() => toggleCheckbox(item.id)}
                     />
                   <View style={styles.view}>
-                    <Image source={{uri: item.Product['images']}} style={styles.image} resizeMode="stretch" />
+                    <Image source={{uri: item.productcolor['image']}} style={styles.image} resizeMode="stretch" />
                     <View style={styles.viewText}>
                       <Text ellipsizeMode="tail" numberOfLines={1} style={styles.text}>
                         {item.Product['name']}
@@ -204,12 +211,11 @@ const CartScreen = (props: Props) => {
                           maxLength={2}
                           value={item.quantity.toString()}
                           onChangeText={(value) => {
-                            const newQuantity = parseInt(value, 10) || 0;
+                            const newQuantity = parseInt(value, 10) || 1;
                               textInput(item.id, newQuantity);
                           }}
                           />
-                          <View>
-                            
+                          <View>  
                           </View>
                         <TouchableOpacity 
                           onPress={() => {
@@ -242,6 +248,7 @@ const CartScreen = (props: Props) => {
       onValueChange={selectAllItems}
       SumText={calculateTotalPrice()}
       check={selectedItems.length <= 0}
+      data={handleCheckout}
       />
     </SafeAreaView>
   );

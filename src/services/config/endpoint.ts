@@ -23,6 +23,13 @@ const endpoint = {
     getCart:"/api/cart",
     putCart:'/api/cart',
     deleteCart:'/api/cart'
+  },
+  address:{
+    default:"/api/address",
+    postAddress:"/api/address",
+    getAddress:"/api/address",
+    putAddress:'/api/address',
+    deleteAddress:'/api/address'
   }
 };
 

@@ -28,19 +28,19 @@ export default StyleSheet.create({
   },
   text: {
     color: '#000000', // Màu văn bản
-    fontSize: 20,
+    fontSize: 18,
     fontFamily: 'LibreBaskerville-Bold',
     width: hs(200),
   },
   textPrice: {
     marginRight:10,
     color: '#6D6D6D', // Màu văn bản
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: 'LibreBaskerville-DpdE',
   },
   textColor:{
     color:'#6D6D6D',
-    fontSize:18,
+    fontSize:16,
     fontFamily:'LibreBaskerville-DpdE'
   },
   viewItem:{
@@ -54,7 +54,7 @@ export default StyleSheet.create({
     borderColor:'#6D6D6D'
   },
   textNote:{
-    fontSize:18,
+    fontSize:16,
     fontFamily:'LibreBaskerville-DpdE',
     color:'black'
   },
@@ -73,7 +73,7 @@ export default StyleSheet.create({
   },
   textSumPrice:{
     color: '#FF0000',
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: 'LibreBaskerville-DpdE',
   },
   viewVoucher:{

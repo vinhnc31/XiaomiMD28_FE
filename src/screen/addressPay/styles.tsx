@@ -70,15 +70,21 @@ export default StyleSheet.create({
         width: hs(300),
         paddingHorizontal:20,
         paddingVertical:10,
-        alignItems:'center',
         flexDirection:'column',
         backgroundColor: 'white',
         borderRadius: 10,
-
       },
       flatListContainer: {
         flex: 1,
         margin:10,
         flexDirection: 'column', 
       },
+      textInput:{
+        borderWidth: 0.5,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        borderRadius: 10,
+        marginVertical: 10,
+        width: '100%',
+      }
 })

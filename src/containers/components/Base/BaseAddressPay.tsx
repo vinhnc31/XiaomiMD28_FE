@@ -12,8 +12,8 @@ const BaseAddressPay = ({name, phone,note,address, onCartPress}) => {
             <View style={{height: 20, width: 1, backgroundColor: 'grey',marginHorizontal:10}}></View>
             <Text style={styles.text}>{phone}</Text>
           </View>
-            <Text style={styles.textAddress}>{note}</Text>
-            <Text style={styles.textAddress}>{address}</Text>
+            {note !== null && note !== ""?<Text style={styles.textAddress}>Ghi chú: {note}</Text>:null}
+            <Text style={styles.textAddress} >Địa chỉ: {address}</Text>
         </View>
         <Image source={require("../../../assets/images/next.png")}style ={{height:20,width: 20,}}/>
         </View>
