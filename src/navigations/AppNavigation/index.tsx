@@ -66,7 +66,6 @@ const AppNavigationScreen = () => {
       <Stack.Screen name={APP_NAVIGATION.PRODUCTLIST} component={ProductListScreen} />
       <Stack.Screen name={APP_NAVIGATION.DETAILSPRODUCT} component={DetailsScreen} />
       <Stack.Screen name={APP_NAVIGATION.CART} component={CartScreen} />
-      <Stack.Screen name={APP_NAVIGATION.DETAILSPRODUCT} component={DetailsScreen} />
       <Stack.Screen name={APP_NAVIGATION.PAYDETAIL} component={PayDetailScreen} />
       <Stack.Screen name={APP_NAVIGATION.ADDRESS} component={AddressPayScreen} />
       <Stack.Screen name={APP_NAVIGATION.MY_ACCOUNT} component={myaccount} />

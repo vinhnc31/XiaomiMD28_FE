@@ -20,10 +20,10 @@ const endpoint = {
   },
   
   favorites:{
-    default:"/api/favorite",
-    getCart:"/api/favorite",
-    putCart:'/api/favorite',
-    deleteCart:'/api/favorite'
+    default:"/api/favorites",
+    getCart:"/api/favorites",
+    putCart:'/api/favorites',
+    deleteCart:'/api/favorites'
   },
 
   cart:{

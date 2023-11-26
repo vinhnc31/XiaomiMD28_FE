@@ -4,7 +4,7 @@ import http from '@src/services/config/http';
 import {FavoriteModel} from "@src/services/favorite/favorite.model";
 const url = endpoints.favorites;
 
-// http://192.168.1.82:3000/api/favorite/
+// http://192.168.1.82:3000/api/favorites/
 export default class FavoriteService extends BaseService<FavoriteModel> {
     constructor() {
         super(url.default);

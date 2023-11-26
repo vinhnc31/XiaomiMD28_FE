@@ -36,6 +36,7 @@ export default StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   imageContainer: {
+    marginTop: 10,
     height: 265,
     marginBottom: vs(30),
     backgroundColor: '#EFEFEF',
@@ -279,5 +280,10 @@ export default StyleSheet.create({
     fontWeight: '400',
     fontSize: 25,
     fontFamily: 'LibreBaskerville-Bold',
+  },
+
+  LoadingContainer: {
+    height: '100%',
+    justifyContent: 'center',
   },
 });

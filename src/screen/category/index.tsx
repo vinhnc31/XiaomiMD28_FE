@@ -65,7 +65,7 @@ const CategoryScreen = (props: Props) => {
       <View style={{flex: 1, paddingHorizontal: 16}}>
         <FlatList
           data={data}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
           renderItem={({ item, index }) => (
             <TouchableScale onPress={() => goToProductListById(item.id, item.name)} activeScale={0.9} friction={9} tension={100}>

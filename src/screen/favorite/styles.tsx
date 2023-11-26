@@ -1,5 +1,5 @@
-import {ms, vs} from '@src/styles/scalingUtils';
-import {StyleSheet, Dimensions} from 'react-native';
+import { ms, vs } from '@src/styles/scalingUtils';
+import { StyleSheet, Dimensions } from 'react-native';
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default StyleSheet.create({
@@ -54,7 +54,7 @@ export default StyleSheet.create({
 
     elevation: 2, // Độ sâu của đổ bóng (cho Android)
     shadowColor: 'black', // Màu của đổ bóng (cho iOS)
-    shadowOffset: {width: 0, height: 2}, // Độ dài và độ rộng của đổ bóng (cho iOS)
+    shadowOffset: { width: 0, height: 2 }, // Độ dài và độ rộng của đổ bóng (cho iOS)
     shadowOpacity: 0.2, // Độ trong suốt của đổ bóng (cho iOS)
     shadowRadius: 2, // Bán kính của đổ bóng (cho iOS)
   },
@@ -106,4 +106,24 @@ export default StyleSheet.create({
     fontFamily: 'LibreBaskerville-Bold',
     marginLeft: 5,
   },
+
+  noDataContainer: {
+    height: '100%',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  noDataText: {
+    color: 'black', // Màu văn bản
+    fontSize: 18,
+    fontFamily: 'LibreBaskerville-Bold',
+    marginBottom: vs(250),
+  },
+
+  LoadingContainer: {
+    height: '100%',
+    justifyContent: 'center',
+  },
+
 });
