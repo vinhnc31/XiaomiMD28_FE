@@ -95,11 +95,11 @@ export default StyleSheet.create({
     width: 100,
     fontSize:15,
     fontFamily:'LibreBaskerville-DpdE',
-    color:'#F0761E'
+    color:'#03AA00'
   },
   textVoucherShip:{
     marginHorizontal:10,
-    fontSize:15,
+    fontSize:17,
     fontFamily:'LibreBaskerville-DpdE',
     color:'#0032E4'
   },

@@ -127,7 +127,7 @@ const FavoriteScreen = (props: Props) => {
                     tension={100}>
                     <View style={styles.item}>
                       <View style={styles.imageContainer}>
-                        <Image source={{uri: item.image}} style={styles.image} resizeMode="stretch" />
+                        <Image source={{uri: item.image}} style={styles.image} resizeMode="cover" />
 
                         <View style={styles.overlay}>
                           <View style={{alignItems: 'flex-end', justifyContent: 'center'}}>

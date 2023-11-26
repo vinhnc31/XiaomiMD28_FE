@@ -30,6 +30,10 @@ const endpoint = {
     getAddress:"/api/address",
     putAddress:'/api/address',
     deleteAddress:'/api/address'
+  },
+  voucher:{
+    default:"/api/promotion",
+    getPromotion:"/api/promotion",
   }
 };
 

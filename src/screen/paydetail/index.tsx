@@ -1,19 +1,8 @@
-import {RouteProp, useFocusEffect} from '@react-navigation/native';
+import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {APP_NAVIGATION, GUEST_NAVIGATION} from '@src/navigations/routes';
-import React, {useCallback, useEffect, useState} from 'react';
-import {
-  Text,
-  SafeAreaView,
-  View,
-  FlatList,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-  TextInput,
-  Platform,
-  KeyboardAvoidingView,
-} from 'react-native';
+import {APP_NAVIGATION} from '@src/navigations/routes';
+import React, {useEffect, useState} from 'react';
+import {Text, SafeAreaView, View, FlatList, Image, TouchableOpacity, ScrollView, TextInput} from 'react-native';
 import {AppStackParam} from '@src/navigations/AppNavigation/stackParam';
 import styles from './styles';
 import {goBack, navigateToPage} from '@src/navigations/services';
@@ -21,12 +10,10 @@ import BaseHeaderNoCart from '@src/containers/components/Base/BaseHeaderNoCart';
 import BaseAddressPay from '@src/containers/components/Base/BaseAddressPay';
 import {Dropdown} from 'react-native-element-dropdown';
 import BaseButtonPay from '@src/containers/components/Base/BaseButtonPay';
-import boot from '@src/navigations/boot';
-import {CartModel} from '@src/services/cart/cart.model';
 import {AddressModel} from '@src/services/address/address.model';
 import AddressService from '@src/services/address';
-import { useAuth } from '@src/hooks/useAuth';
-import { BaseLoading } from '@src/containers/components/Base/BaseLoading';
+import {useAuth} from '@src/hooks/useAuth';
+import {BaseLoading} from '@src/containers/components/Base/BaseLoading';
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
   route: RouteProp<AppStackParam, APP_NAVIGATION.PAYDETAIL>;
@@ -34,11 +21,11 @@ interface Props {
 const PayDetailScreen = (props: Props) => {
   const {user} = useAuth();
   const data = props.route.params;
-  const [selectedVoucherData, setSelectedVoucherData] = useState(null);
+  const [selectedVoucherData, setSelectedVoucherData] = useState();
   const [loading, setLoading] = useState<boolean>(false);
-  const [refreshing, setRefreshing] = useState(false);
   const [value, setValue] = useState('1');
   const [isFocus, setIsFocus] = useState(false);
+  const [totalAmounts, setTotalAmounts] = useState({});
   const [addressData, setAddressData] = useState<AddressModel>();
   const pay = [
     {label: 'Thanh toán khi nhận hàng', value: '1'},
@@ -52,18 +39,36 @@ const PayDetailScreen = (props: Props) => {
       addressData,
     });
   };
+  const navigateToVouCher = () => {
+    navigateToPage(APP_NAVIGATION.VOUCHER, {
+      onVoucherSelect: item => {
+        setSelectedVoucherData(item);
+      },
+      selectedVoucherData,
+    });
+  };
   const fetchDataAddress = async () => {
     try {
       setLoading(true);
       const cartService = new AddressService();
       const result = await cartService.fetchAddress(user?.id!);
-      setAddressData(result.data? result.data[0] : undefined);
+      setAddressData(result.data ? result.data[0] : undefined);
       setLoading(false);
     } catch (error) {}
   };
-  useEffect(()=>{
+  useEffect(() => {
     fetchDataAddress();
-  },[])
+    setTotalAmounts(calculateTotalAmount());
+  }, []);
+  const calculateTotalAmount = () => {
+    let total = 0;
+    data?.forEach(item => {
+      total += item.Product['price'];
+    });
+    return total;
+  };
+  const discount = totalAmounts * data!.length * (selectedVoucherData?.discount / 100) || 0;
+  const sumPay = (totalAmounts * data!.length)-discount;
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white', flexDirection: 'column'}}>
       <BaseHeaderNoCart title="Chi tiết thanh toán" onBackPress={goBack} />
@@ -72,11 +77,11 @@ const PayDetailScreen = (props: Props) => {
           <Image source={require('../../assets/images/placeholder.png')} style={{width: 25, height: 25}} />
           <Text style={{fontFamily: 'LibreBaskerville-DpdE', fontSize: 18}}> Địa chỉ nhận hàng</Text>
         </View>
-        {loading?
-        <View style={{paddingVertical:30}}>
-<BaseLoading size={20} loading={true} />
-        </View>
-         : addressData ? (
+        {loading ? (
+          <View style={{paddingVertical: 30}}>
+            <BaseLoading size={20} loading={true} />
+          </View>
+        ) : addressData ? (
           <BaseAddressPay
             name={addressData.nameReceiver}
             phone={addressData.phoneReceiver}
@@ -91,7 +96,7 @@ const PayDetailScreen = (props: Props) => {
             </View>
           </TouchableOpacity>
         )}
-
+      
         <View style={{height: 10, backgroundColor: '#EEEEEE', marginVertical: 10}}></View>
         <FlatList
           data={data}
@@ -125,7 +130,7 @@ const PayDetailScreen = (props: Props) => {
                   <Text style={styles.textNote}>({item.quantity} sản phẩm)</Text>
                 </View>
                 <Text style={styles.textSumPrice}>
-                  {(item.Product['price'] * item.quantity).toLocaleString('vi-VN', {
+                  {totalAmounts.toLocaleString('vi-VN', {
                     style: 'currency',
                     currency: 'VND',
                   })}
@@ -137,12 +142,7 @@ const PayDetailScreen = (props: Props) => {
         />
         <TouchableOpacity
           onPress={() => {
-            navigateToPage(APP_NAVIGATION.VOUCHER, {
-              onVoucherSelect: selectedVoucher => {
-                setSelectedVoucherData(selectedVoucher);
-              },
-              selectedVoucherData
-            });
+            navigateToVouCher();
           }}>
           <View style={styles.viewVoucher}>
             <View style={{flexDirection: 'row'}}>
@@ -150,7 +150,9 @@ const PayDetailScreen = (props: Props) => {
               <Text style={styles.textVoucher}>Voucher</Text>
             </View>
             <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-              <Text style={styles.textVoucherShip}>{selectedVoucherData ? selectedVoucherData.titleVoucher : ''}</Text>
+              <Text style={styles.textVoucherShip}>
+                {selectedVoucherData ? `[- ${selectedVoucherData.discount} % ]` : ''}
+              </Text>
               <Text style={styles.textVoucherSale}>Miễn phí vận chuyển</Text>
               <Image source={require('../../assets/images/next.png')} style={{width: 20, height: 20}} />
             </View>
@@ -203,15 +205,30 @@ const PayDetailScreen = (props: Props) => {
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'space-between', marginVertical: 5}}>
             <Text style={styles.textDetail}>Tổng tiền hàng </Text>
-            <Text style={styles.textDetail}>800.000đ</Text>
+            <Text style={styles.textDetail}>
+              {(totalAmounts * data!.length).toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+              })}
+            </Text>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'space-between', marginVertical: 5}}>
             <Text style={styles.textDetail}>Giảm giá</Text>
-            <Text style={styles.textDetail}>800.000đ</Text>
+            <Text style={styles.textDetail}>
+              {selectedVoucherData
+                ? `- ${discount.toLocaleString('vi-VN', {
+                  style: 'currency',
+                  currency: 'VND',
+                })}`
+                : "0 ₫"}
+            </Text>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'space-between', marginVertical: 5}}>
             <Text style={styles.textSumAllPrice}>Tổng thanh toán</Text>
-            <Text style={styles.textSumPrice}>800.000đ</Text>
+            <Text style={styles.textSumPrice}>{sumPay.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND',
+                  })}</Text>
           </View>
         </View>
       </ScrollView>

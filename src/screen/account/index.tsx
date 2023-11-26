@@ -43,11 +43,11 @@ const listMenu: IMenu[] = [
     navigate: APP_NAVIGATION.CHANGE_PASS,
     image: images.changepass,
   },
-  // {
-  //   name: 'Địa chỉ',
-  //   navigate: '',
-  //   image: images.location,
-  // },
+  {
+    name: 'Địa chỉ',
+    navigate: APP_NAVIGATION.ADDRESS,
+    image: images.location,
+  },
   {
     name: 'Lịch sử mua hàng',
     navigate: APP_NAVIGATION.HISTORYORDER,

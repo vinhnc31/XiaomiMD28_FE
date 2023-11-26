@@ -30,7 +30,7 @@ export default StyleSheet.create({
   },
 
   bodyInner: {
-    height: vs(400),
+   paddingVertical:20,
     backgroundColor: Colors.white,
     borderRadius: ms(40),
     paddingHorizontal: hs(33),

@@ -25,6 +25,7 @@ const CartScreen = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const cartService = new CartService();
   const handleDeleteItem = (itemId:number) => {
     Alert.alert(
       'Xác nhận xóa',
@@ -46,7 +47,6 @@ const CartScreen = (props: Props) => {
                 await AsyncStorage.setItem('cartData', JSON.stringify(updatedCartData));
                 setData(updatedCartData);
               }
-              const cartService = new CartService();
               const result = await cartService.deleteCart(itemId);
             } catch (error) {
               console.error('Error deleting item from AsyncStorage', error);
@@ -61,7 +61,6 @@ const CartScreen = (props: Props) => {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const cartService = new CartService();
       const result = await cartService.fetchCart(user?.id!);
       const latestData = result.data;
       const savedData = await AsyncStorage.getItem('cartData');
@@ -100,14 +99,17 @@ const CartScreen = (props: Props) => {
   
   const incrementQuantity = async (itemId: number, newQuantity: number) => {
     await updateQuantity(itemId, newQuantity + 1);
+    await cartService.putCart(itemId,{quantity:newQuantity+1})
   };
   
   const minusQuantity = async (itemId: number, newQuantity: number) => {
     await updateQuantity(itemId, newQuantity - 1);
+    await cartService.putCart(itemId,{quantity:newQuantity-1})
   };
   
   const textInput = async (itemId: number, newQuantity: number) => {
     await updateQuantity(itemId, newQuantity);
+    await cartService.putCart(itemId,{quantity:newQuantity})
   };
   const toggleCheckbox = (itemId: number) => {
     const isSelected = selectedItems.includes(itemId);

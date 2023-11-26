@@ -50,3 +50,6 @@ export interface deleteItem {
   ProductColorId: number;
   ProductColorConfigId: number;
 }
+export interface putItem {
+  quantity: number;
+}

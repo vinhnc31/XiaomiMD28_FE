@@ -38,14 +38,13 @@ export default StyleSheet.create({
     width: hs(40),
   },
   text: {
-    color: '#000000', // Màu văn bản
+    color: '#000000', 
     fontSize: 20,
     fontFamily: 'LibreBaskerville-Bold',
     width: hs(200),
   },
   textPrice: {
     marginRight: 10,
-    color: '#6D6D6D', // Màu văn bản
     fontSize: 18,
     fontFamily: 'LibreBaskerville-DpdE',
   },
