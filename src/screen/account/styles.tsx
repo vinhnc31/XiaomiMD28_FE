@@ -8,7 +8,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     rowGap: vs(24),
-    paddingHorizontal: hs(40),
+    paddingHorizontal: hs(20),
   },
   avatar: {
     width: hs(100),
@@ -17,9 +17,10 @@ export default StyleSheet.create({
   },
   name: {
     fontSize: ms(25),
-    fontFamily: 'LibreBaskerville-Italic',
+    fontFamily: 'LibreBaskerville-DpdE',
   },
   itemMenu: {
+    borderRadius:10,
     backgroundColor: Colors.white,
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -28,8 +29,8 @@ export default StyleSheet.create({
     paddingVertical: vs(20),
   },
   menuName: {
-    fontSize: ms(20),
-    fontFamily: 'LibreBaskerville-Italic',
+    fontSize: ms(18),
+    fontFamily: 'LibreBaskerville-DpdE',
   },
   btnLogout: {
     flexDirection: 'row',
@@ -43,8 +44,8 @@ export default StyleSheet.create({
   },
   textLogout: {
     color: Colors.white,
-    fontSize: ms(20),
-    fontFamily: 'LibreBaskerville',
+    fontSize: ms(18),
+    fontFamily: 'LibreBaskerville-DpdE',
   },
   modalWrap: {
     flex: 1,

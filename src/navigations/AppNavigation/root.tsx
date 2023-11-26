@@ -29,7 +29,7 @@ const RootScreen = () => {
           tabBarLabel: ({focused}) => (
             <Text style={focused ? styles.tabBarActiveLabelStyle : styles.tabBarLabelStyle}>Trang chủ</Text>
           ),
-          tabBarIcon: ({color, size}) => <BaseIcon name="home-outline" color={color} size={size} />,
+          tabBarIcon: ({color, size}) => <BaseIcon name="home" color={color} size={size} />,
         }}
       />
       <Tab.Screen
@@ -39,7 +39,7 @@ const RootScreen = () => {
           tabBarLabel: ({focused}) => (
             <Text style={focused ? styles.tabBarActiveLabelStyle : styles.tabBarLabelStyle}>Yêu thích</Text>
           ),
-          tabBarIcon: ({color, size}) => <BaseIcon name="heart-outline" color={color} size={size} />,
+          tabBarIcon: ({color, size}) => <BaseIcon name="heart" color={color} size={size} />,
         }}
       />
 
@@ -50,7 +50,7 @@ const RootScreen = () => {
           tabBarLabel: ({focused}) => (
             <Text style={focused ? styles.tabBarActiveLabelStyle : styles.tabBarLabelStyle}>Thông báo</Text>
           ),
-          tabBarIcon: ({color, size}) => <BaseIcon name="notifications-outline" color={color} size={size} />,
+          tabBarIcon: ({color, size}) => <BaseIcon name="notifications" color={color} size={size} />,
         }}
       />
       <Tab.Screen
@@ -60,10 +60,9 @@ const RootScreen = () => {
           tabBarLabel: ({focused}) => (
             <Text style={focused ? styles.tabBarActiveLabelStyle : styles.tabBarLabelStyle}>Tài khoản</Text>
           ),
-          tabBarIcon: ({color, size}) => <BaseIcon name="person-circle-outline" color={color} size={size} />,
+          tabBarIcon: ({color, size}) => <BaseIcon name="person-circle" color={color} size={size} />,
         }}
       />
-    
     </Tab.Navigator>
   );
 };

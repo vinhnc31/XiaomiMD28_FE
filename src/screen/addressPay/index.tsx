@@ -6,6 +6,7 @@ import {APP_NAVIGATION} from '@src/navigations/routes';
 import {goBack} from '@src/navigations/services';
 import React, {useEffect, useState} from 'react';
 import {
+  Alert,
   FlatList,
   Image,
   Modal,
@@ -23,12 +24,14 @@ import AddressService from '@src/services/address';
 import {useAuth} from '@src/hooks/useAuth';
 import {AddressModel} from '@src/services/address/address.model';
 import BaseTextInput from '@src/containers/components/Base/BaseTextInput';
+import useToast from '@src/hooks/useToast';
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
   route: RouteProp<AppStackParam, APP_NAVIGATION.ADDRESS>;
 }
 const AddressPayScreen = (props: Props) => {
   const {user} = useAuth();
+  const toast = useToast();
   const [data, setData] = useState<AddressModel[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -42,6 +45,33 @@ const AddressPayScreen = (props: Props) => {
   const [addressError, setAddressError] = useState<string>('');
   const [selectedAddress, setSelectedAddress] = useState<AddressModel | null>(null);
   const addressService = new AddressService();
+  const handleDeleteItem = (itemId:number) => {
+    Alert.alert(
+      'Xác nhận xóa',
+      'Bạn có chắc chắn muốn xóa địa chỉ này không?',
+      [
+        {
+          text: 'Hủy',
+          onPress: () => console.log('Hủy xóa'),
+          style: 'cancel',
+        },
+        {
+          text: 'Xóa',
+          onPress: async () => {
+            try {
+              const result = await addressService.deleteAddress(itemId);
+              fetchData();
+              toast.showSuccess({messageText: 'Xóa địa chỉ thành công'});
+              closeModal();
+            } catch (error) {
+              console.error('Error deleting item from AsyncStorage', error);
+            }
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -54,8 +84,8 @@ const AddressPayScreen = (props: Props) => {
     fetchData();
   }, []);
 
-  const openModal = (addressData: AddressModel,id:number) => {
-    if(addressData){
+  const openModal = (addressData: AddressModel, id: number) => {
+    if (addressData) {
       setSelectedAddress(addressData);
       setName(addressData.nameReceiver);
       setPhone(addressData.phoneReceiver);
@@ -108,13 +138,16 @@ const AddressPayScreen = (props: Props) => {
     }
     return valid;
   };
-  const Address =(item)=>{
+  const Address = item => {
     props.route.params?.onAddress(item);
     goBack();
-  }
+  };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white', flexDirection: 'column'}}>
-      <BaseHeaderNoCart title="Địa chỉ nhận hàng" onBackPress={goBack} />
+      <BaseHeaderNoCart
+        title={props.route.params == undefined ? 'Địa chỉ' : 'Địa chỉ nhận hàng'}
+        onBackPress={goBack}
+      />
       {loading ? (
         <BaseLoading size={20} top={100} loading={true} />
       ) : (
@@ -125,10 +158,15 @@ const AddressPayScreen = (props: Props) => {
             showsVerticalScrollIndicator={false}
             scrollEnabled={false}
             renderItem={({item}) => (
-              <TouchableOpacity onPress={() => {Address(item)}}>
+              <TouchableOpacity
+                onPress={() => {
+                  props.route.params == undefined ? openModal(item, item.id) : Address(item);
+                }}>
                 <View style={styles.viewItem}>
                   <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around'}}>
-                    <CustomRadioButton selected={props.route.params?.addressData?.id==item.id}/>
+                    {props.route.params == undefined ? null : (
+                      <CustomRadioButton selected={props.route.params?.addressData?.id == item.id} />
+                    )}
                     <View style={styles.item}>
                       <View style={styles.container}>
                         <View>
@@ -141,9 +179,19 @@ const AddressPayScreen = (props: Props) => {
                           <Text style={styles.textAddress}>Địa chỉ: {item.address}</Text>
                         </View>
                       </View>
-                      <TouchableOpacity style={{margin: 10}} onPress={() => openModal(item,item.id)}>
-                        <Text style={{color: '#FF6900'}}>Sửa</Text>
-                      </TouchableOpacity>
+                      {props.route.params == undefined ? (
+                        <TouchableOpacity
+                          style={{position: 'relative', zIndex: 1, top: -10, right: -5}}
+                          onPress={() => {
+                            handleDeleteItem(item.id);
+                          }}>
+                          <Image style={{width: 25, height: 25}} source={require('../../assets/images/close.png')} />
+                        </TouchableOpacity>
+                      ) : (
+                        <TouchableOpacity style={{margin: 10}} onPress={() => openModal(item, item.id)}>
+                          <Text style={{color: '#FF6900'}}>Sửa</Text>
+                        </TouchableOpacity>
+                      )}
                     </View>
                   </View>
                 </View>
@@ -164,7 +212,9 @@ const AddressPayScreen = (props: Props) => {
       <Modal visible={modalVisible} animationType="fade" transparent={true} onRequestClose={closeModal}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={{fontSize: 20, fontWeight: 'bold', alignSelf: 'center', marginBottom: 10}}>{selectedAddress ? 'Sửa Địa Chỉ' : 'Thêm Địa Chỉ'}</Text>
+            <Text style={{fontSize: 20, fontWeight: 'bold', alignSelf: 'center', marginBottom: 10}}>
+              {selectedAddress ? 'Sửa Địa Chỉ' : 'Thêm Địa Chỉ'}
+            </Text>
             <BaseTextInput hintext={'Tên người dùng'} onChangeText={(value: string) => setName(value)} name={name} />
             <Text style={{color: 'red'}}>{nameError}</Text>
             <BaseTextInput hintext={'Số điện thoại'} onChangeText={(value: string) => setPhone(value)} name={phone} />
@@ -181,15 +231,15 @@ const AddressPayScreen = (props: Props) => {
                 height={40}
                 onPress={async () => {
                   if (validateInputs()) {
-                    if(selectedAddress){
-                       await addressService.putAddress(idItem!,{
+                    if (selectedAddress) {
+                      await addressService.putAddress(idItem!, {
                         nameReceiver: name,
                         phoneReceiver: phone,
                         note: note,
                         address: address,
                         AccountId: user?.id!,
                       });
-                    }else{
+                    } else {
                       await addressService.postAddress({
                         nameReceiver: name,
                         phoneReceiver: phone,
@@ -197,6 +247,7 @@ const AddressPayScreen = (props: Props) => {
                         address: address,
                         AccountId: user?.id!,
                       });
+                      toast.showSuccess({messageText: 'Thêm địa chỉ thành công'});
                     }
                     fetchData();
                     closeModal();
