@@ -1,13 +1,29 @@
 const endpoint = {
   csrf: '/api',
-  auth: {
-    register: '/api/auth/signup',
-    login: '/api/auth/login',
-    logout: '/api/auth/logout',
+  account: {
+    default: '/api',
+    register: '/api/register',
+    login: '/api/login',
+    logout: '/api/logout',
     profile: '/api/users/profile',
   },
-  account: '/api/account',
-  categories: 'v',
+  categories: {
+    default: '/api/category',
+    getCategory: '/api/category',
+  },
+ 
+  products: {
+    default: '/api/products',
+    getProduct: '/api/product',
+    getProductByIdCategory: '/api/product/category'
+
+  },
+  cart:{
+    default:"/api/cart/1",
+    getCart:"/api/cart/1",
+    putCart:'/api/cart',
+    deleteCart:'/api/cart'
+  }
 };
 
 export default endpoint;

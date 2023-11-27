@@ -1,25 +1,29 @@
 import {BaseService} from '@src/services/base.service';
 import endpoints from '@src/services/config/endpoint';
 import http from '@src/services/config/http';
-import {IAccount, IChangePassReq, ILoginData} from './account.model';
+import {IAccount, IChangePassReq, ILoginData, IRegisterData} from './account.model';
 const url = endpoints.account;
-const urlAuth = endpoints.auth;
 export default class AccountService extends BaseService<IAccount> {
   constructor() {
-    super(url);
+    super(url.default);
   }
 
-  public async logIn({phone}: ILoginData) {
-    const {data} = await http.post<IAccount>(urlAuth.login, {phone});
+  public async logIn(body: ILoginData) {
+    const {data} = await http.post<IAccount>(url.login, body);
+    return data;
+  }
+
+  public async register(body: IRegisterData) {
+    const {data} = await http.post<IAccount>(url.register, body);
     return data;
   }
 
   public async logOut() {
-    await http.post(urlAuth.logout);
+    await http.post(url.logout);
   }
 
-  public async changePass(id: string, obj: IChangePassReq) {
-    const {data} = await http.put<IAccount>(`${url}/change-pass/${id}`, obj);
+  public async changePass( obj: IChangePassReq) {
+    const {data} = await http.put<IAccount>(`${url}/changePassword`, obj);
     return data;
   }
 

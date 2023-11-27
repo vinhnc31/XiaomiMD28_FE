@@ -1,7 +1,7 @@
 import {Colors} from '@src/styles/colors';
 import {hs, ms, vs} from '@src/styles/scalingUtils';
 import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View, TextInput} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View, TextInput, StyleProp, ViewStyle} from 'react-native';
 import {BaseIcon} from '@src/containers/components/Base';
 
 interface Props {
@@ -18,6 +18,7 @@ interface Props {
   showTitle?: boolean;
   leftIcon: string;
   borderRadius?: number;
+  style?: StyleProp<ViewStyle>; // Thêm style cho Props
 }
 
 const InputBase = ({
@@ -34,6 +35,7 @@ const InputBase = ({
   showTitle = false,
   leftIcon = '',
   borderRadius,
+  style,
 }: Props) => {
   const [isSecureTextEntry, setIsSecureTextEntry] = useState(true);
 
@@ -46,7 +48,7 @@ const InputBase = ({
         </Text>
       )}
       {password ? (
-        <View style={[styles.innerInput, {borderRadius: ms(borderRadius ? borderRadius : 5)}]}>
+        <View style={[styles.innerInput, {borderRadius: ms(borderRadius ? borderRadius : 5)}, style]}>
           <View style={styles.input}>
             {leftIcon && leftIcon.length > 0 && <BaseIcon name={leftIcon} size={24} color={Colors.black} />}
             <TextInput
@@ -65,7 +67,7 @@ const InputBase = ({
       ) : (
         <>
           {multiline ? (
-            <View style={[styles.innerInput, {borderRadius: ms(borderRadius ? borderRadius : 5)}]}>
+            <View style={[styles.innerInput, {borderRadius: ms(borderRadius ? borderRadius : 5)}, style]}>
               <View style={styles.input}>
                 {leftIcon && leftIcon.length > 0 && <BaseIcon name={leftIcon} size={24} color={Colors.black} />}
                 <TextInput
@@ -82,7 +84,7 @@ const InputBase = ({
               </View>
             </View>
           ) : (
-            <View style={[styles.innerInput, {borderRadius: ms(borderRadius ? borderRadius : 5)}]}>
+            <View style={[styles.innerInput, {borderRadius: ms(borderRadius ? borderRadius : 5)}, style]}>
               <View style={styles.input}>
                 {leftIcon && leftIcon.length > 0 && <BaseIcon name={leftIcon} size={24} color={Colors.black} />}
                 <TextInput
@@ -115,7 +117,7 @@ const styles = StyleSheet.create({
   },
   innerInput: {
     borderWidth: 1,
-    height: vs(48),
+    height: vs(46),
     marginVertical: vs(8),
     borderRadius: 5,
     borderColor: '#C2C2C2',
