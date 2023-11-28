@@ -237,7 +237,7 @@ const CartScreen = (props: Props) => {
         )}
       </View>
       <BaseHeaderBottom disabled={false} 
-      value={selectedItems.length === data.length&& data.length > 0}
+      value={selectedItems.length === data.length && data.length > 0}
       onValueChange={selectAllItems}
       SumText={calculateTotalPrice()}
       check={selectedItems.length <= 0}
