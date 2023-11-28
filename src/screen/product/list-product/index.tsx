@@ -24,6 +24,8 @@ import { hs } from '@src/styles/scalingUtils';
 import R from '@src/res';
 import BaseInput from '@src/containers/components/Base/BaseInput';
 
+
+import DropDownPicker from 'react-native-dropdown-picker';
 interface Props {
   navigation: NativeStackNavigationProp<GuestStackParam>;
   route: RouteProp<GuestStackParam, GUEST_NAVIGATION.PRODUCTLIST>;
@@ -37,6 +39,14 @@ const ProductListScreen = (props: Props) => {
 
   const [minimum, setMinimum] = useState<string>('');
   const [max, setMax] = useState<string>('');
+
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    {label: 'Apple', value: 'apple'},
+    {label: 'Banana', value: 'banana'}
+  ]);
+
 
   const config = {
     style: "currency",
@@ -60,6 +70,40 @@ const ProductListScreen = (props: Props) => {
       console.error('Error fetching products:', error);
     }
   };
+
+
+  const sortProducts = (order: 'asc' | 'desc') => {
+    const sortedProducts = [...products].sort((a, b) => {
+      if (order === 'asc') {
+        return a.price - b.price;
+      } else {
+        return b.price - a.price;
+      }
+    });
+    setProducts(sortedProducts);
+  };
+
+  
+  const filterProducts = (minPrice: number, maxPrice: number) => {
+    let filteredProducts = products;
+    if (!isNaN(minPrice) && !isNaN(maxPrice)) {
+      filteredProducts = filteredProducts.filter(item => item.price >= minPrice && item.price <= maxPrice);
+    } else {
+      fetchProducts();
+    }
+    setProducts([...filteredProducts]);  // Cập nhật mảng products
+  };
+  
+  const sortByAscending = () => {
+    sortProducts('asc');
+  };
+  
+  const sortByDescending = () => {
+    sortProducts('desc');
+  };
+
+
+
 
   const handleBackPress = () => {
     goBack();
@@ -111,14 +155,14 @@ const ProductListScreen = (props: Props) => {
         <View style={styles.viewFilter}>
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
             <BaseButton
-              onPress={() => console.log("ssaasas")}
+              onPress={sortByAscending}
               style={{ flex: 1, backgroundColor: '#D9D9D9', marginRight: 8 }}
               loading={loading}
               text={'Giá từ thấp đến cao'}
               textStyle={styles.buttonText}
             />
             <BaseButton
-              onPress={() => console.log("ssaasas")}
+              onPress={sortByDescending}
               style={{ flex: 1, backgroundColor: '#D9D9D9' }}
               loading={loading}
               text={'Giá từ cao đến thấp'}
@@ -126,38 +170,43 @@ const ProductListScreen = (props: Props) => {
             />
           </View>
 
-          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', backgroundColor: 'red' }}>
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-              <BaseInput
-                leftIcon={''}
-                title="Tối thiểu"
-                value={minimum}
-                onChangeText={setMinimum}
-                borderRadius={10}
-                style={{ width: '100%', height: 40, marginBottom: -2 }}
+          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center'}}>
+            <View style={{flex: 6, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginRight: 8}}>
+              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <BaseInput
+                  leftIcon={''}
+                  title="Tối thiểu"
+                  value={minimum}
+                  onChangeText={setMinimum}
+                  borderRadius={10}
+                  style={{ width: '100%', height: 40, marginBottom: -2 }}
+                />
+              </View>
+
+              <View style={{ borderWidth: 1, width: 10, marginTop: 8, marginHorizontal: 6, borderColor: 'gray' }} />
+
+              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <BaseInput
+                  leftIcon={''}
+                  title="Tối đa"
+                  value={max}
+                  onChangeText={setMax}
+                  borderRadius={10}
+                  style={{ width: '100%', height: 40, marginBottom: -2 }}
+                />
+              </View>
+            </View>
+            
+            <View style={{flex: 2.5}}>
+              <BaseButton
+                onPress={() => filterProducts(parseInt(minimum), parseInt(max))}
+                style={{ flex: 1, backgroundColor: '#FF6900', height: 40 }}
+                loading={loading}
+                text={'Áp dụng'}
+                textStyle={styles.buttonText}
               />
             </View>
-
-            <View style={{ borderWidth: 1, width: 10 }} />
-
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-              <BaseInput
-                leftIcon={''}
-                title="Tối đa"
-                value={max}
-                onChangeText={setMax}
-                borderRadius={10}
-                style={{ width: '100%', height: 40, marginBottom: -2 }}
-              />
-            </View>
-
-            <BaseButton
-              onPress={() => console.log("ssaasas")}
-              style={{ flex: 1, backgroundColor: '#D9D9D9', height: 40 }}
-              loading={loading}
-              text={'Áp dụng'}
-              textStyle={styles.buttonText}
-            />
+           
           </View>
 
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
@@ -175,6 +224,15 @@ const ProductListScreen = (props: Props) => {
               text={'Theo màu sắc'}
               textStyle={styles.buttonText}
             />
+            {/* <DropDownPicker
+             style={{ flex: 1, backgroundColor: '#D9D9D9', marginHorizontal: 8, zIndex: 1}}
+              open={open}
+              value={value}
+              items={items}
+              setOpen={setOpen}
+              setValue={setValue}
+              setItems={setItems}
+            /> */}
             <BaseButton
               onPress={() => console.log("ssaasas")}
               style={{ flex: 1, backgroundColor: '#D9D9D9' }}

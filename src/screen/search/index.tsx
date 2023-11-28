@@ -84,24 +84,7 @@ const SearchScreen = (props: Props) => {
             borderRadius={10}
             style={{ width: '95%', height: 40, marginRight: 4 }}
           />
-          {/* <Autocomplete
-            data={searchResults}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            flatListProps={{
-              renderItem: ({ item }) => (
-                <TouchableOpacity onPress={() => setSearchQuery(item.name)}>
-                  <Text>{item.name}</Text>
-                </TouchableOpacity>
-              ),
-            }}
-            style={{height: 40, marginRight: 4,  width: '95%'}}
-          /> */}
-        
-
       </View>
-        
-
         
       </View>
 
