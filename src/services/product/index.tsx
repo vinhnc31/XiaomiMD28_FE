@@ -5,6 +5,9 @@ import {ProductModel} from '@src/services/product/product.model';
 const url = endpoints.products;
 
 export default class ProductService extends BaseService<ProductModel> {
+    static getSearch(searchQuery: string) {
+      throw new Error('Method not implemented.');
+    }
     constructor() {
         super(url.default);
     }
@@ -18,7 +21,12 @@ export default class ProductService extends BaseService<ProductModel> {
         const { data } = await http.get<ProductModel>(`${url.getProductByIdCategory}/${categoryId}`);
         return data;
     }
-    
+
+    public async getSearch(searchQuery: string) {
+        const { data } = await http.get<ProductModel[]>(`${url.getProduct}?name=${encodeURIComponent(searchQuery)}`);
+        return data;
+    }
+
 
 
 }

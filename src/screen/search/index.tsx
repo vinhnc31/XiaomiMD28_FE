@@ -5,9 +5,14 @@ import { APP_NAVIGATION } from '@src/navigations/routes';
 import ProductService from '@src/services/product';
 import { ProductModel } from '@src/services/product/product.model';
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, Image, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import R from '@src/res';
-import {goBack} from '@src/navigations/services';
+import { goBack } from '@src/navigations/services';
+import { vs } from '@src/styles/scalingUtils';
+import BaseInput from '@src/containers/components/Base/BaseInput';
+
+import Autocomplete from 'react-native-autocomplete-input';
+import styles from './style';
 
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
@@ -15,168 +20,112 @@ interface Props {
 }
 
 const SearchScreen = (props: Props) => {
-  const [listProducts, setListProducts] = useState<ProductModel[]>([]);
-  const [filteredDataSource, setFilteredDataSource] = useState<ProductModel[]>([]);
-  const [search, setSearch] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [searchResults, setSearchResults] = useState<ProductModel[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const config = { style: 'currency', currency: 'VND', maximumFractionDigits: 9 }
-
-  useEffect(() => {
-    fetchProducts()
-  }, [])
-
-  const fetchProducts = async () => {
-    try {
-      const productService = new ProductService();
-      const productList = await productService.getProduct();
-      console.log('Product: ', productList.data.length);
-      setListProducts(productList.data);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    }
-  };
-
-  const searchFillterArr = (text) => {
-    if (text) {
-      const newData = listProducts.filter(function (item) {
-        const itemData = item.name
-          ? item.name.toUpperCase()
-          : ''.toUpperCase();
-        const textData = text.toUpperCase();
-        return itemData.indexOf(textData) > -1;
-      });
-      setFilteredDataSource(newData);
-      setSearch(text);
-      // console.log("search: ", search);
-      // console.log("setFilteredDataSource: ", filteredDataSource)
-    } else {
-      setFilteredDataSource([]);
-      setSearch(text);
-    }
-  }
 
   const handleBackPress = () => {
     goBack();
   };
 
+
+  const fetchData = async (query: string) => {
+    try {
+      setLoading(true);
+
+      // Kiểm tra xem query có giá trị không
+      if (query.trim() !== '') {
+        const productService = new ProductService();
+        const result = await productService.getSearch(query);
+        setSearchResults(result.data);
+      } else {
+        // Nếu không có giá trị, đặt searchResults về mảng rỗng
+        setSearchResults([]);
+      }
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  // useEffect để theo dõi sự thay đổi của searchQuery và gọi fetchData
+  useEffect(() => {
+    if (searchQuery.trim() !== '') {
+      fetchData(searchQuery);
+    } else {
+      // Nếu không có giá trị, đặt searchResults về mảng rỗng
+      setSearchResults([]);
+    }
+  }, [searchQuery]);
+
+
+  const handleSearch = () => {
+    fetchData(searchQuery);
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={[styles.viewHeader, { flexDirection: "row" }]}>
-        <View style={{ flex: 0.5, justifyContent: "center" }}>
-          <TouchableOpacity
-            onPress={handleBackPress}
-          >
-            <Image
-              style={{ width: 20, height: 20, marginLeft: 5 }}
-              source={R.images.iconBack}
-            />
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ flex: 1, flexDirection: 'row', backgroundColor: '#FF6900', }}>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <TouchableOpacity onPress={handleBackPress} style={{ marginLeft: 8 }}>
+            <Image style={{ width: vs(28), height: vs(28) }} source={R.images.iconBack} />
           </TouchableOpacity>
         </View>
-
-        <View style={{ flex: 4, justifyContent: "center" }}>
-          <View
-            style={{
-              backgroundColor: "#ffffff",
-              width: "95%",
-              height: 47,
-              alignSelf: "center",
-              borderRadius: 10,
-              flexDirection: "row",
-              alignItems: "center",
+        <View style={{ flex: 9, alignItems: 'center', justifyContent: 'center', }}>
+          <BaseInput
+            leftIcon={'search-outline'}
+            title="Search"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            onSubmitEditing={handleSearch} // Xử lý sự kiện khi người dùng ấn Enter
+            borderRadius={10}
+            style={{ width: '95%', height: 40, marginRight: 4 }}
+          />
+          {/* <Autocomplete
+            data={searchResults}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            flatListProps={{
+              renderItem: ({ item }) => (
+                <TouchableOpacity onPress={() => setSearchQuery(item.name)}>
+                  <Text>{item.name}</Text>
+                </TouchableOpacity>
+              ),
             }}
-          >
-            <Image
-              style={{ width: 20, height: 20, marginLeft: 16 }}
-              source={R.images.iconSearch}
-            />
+            style={{height: 40, marginRight: 4,  width: '95%'}}
+          /> */}
+        
 
-            <TextInput
-              style={{ width: "100%", height: "100%", marginLeft: 11 }}
-              placeholder="Tìm kiếm sản phẩm"
-              placeholderTextColor="#808080"
-              onChangeText={(text) => searchFillterArr(text)}
-              value={search}
-            />
+      </View>
+        
 
-          </View>
-        </View>
+        
       </View>
 
-      {/* <View style={styles.viewTabar}></View> */}
-
-      <View style={styles.viewFlatlist}>
-        {isLoading ? <ActivityIndicator size="large" color="#00ff00" /> : null}
-        <FlatList
-          style={{ alignSelf: "center"}}
-          data={filteredDataSource}
-          renderItem={({ item }) => {
-            const partialText = item.name.split(search)
-            return (
-
-              <TouchableOpacity
-                style={styles.itemView}>
-                <Text>
-                  {partialText.map((part, index) => {
-                    console.log(partialText.length, 'length');
-                    console.log(part, "part");
-                    return (
-                      <Text key={index}>
-                        {part}
-                        {index !== partialText.length - 1 && <Text style={{ color: 'red' }}>{search}</Text>}
-                      </Text>
-                    )
-                  })}
-                </Text>
-                <Text style={{ color: "red" }}>{new Intl.NumberFormat('vi-VN', config).format(item.price)}</Text>
-                <Text>{item.quantity}</Text>
+      <View style={{ flex: 9, backgroundColor: 'yellow' }}>
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
+          <FlatList
+            data={searchResults}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => setSearchQuery(item.name)}>
+                <Text>{item.name}</Text>
               </TouchableOpacity>
-            )
-          }}
-          keyExtractor={(item) => item.id.toString()}
+            )}
+          />
+        )}
 
-        />
       </View>
-    </View>
 
+    </SafeAreaView>
+
+    
   );
 }
 
 export default React.memo(SearchScreen);
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F7F7F7",
-    flexDirection: "column",
-  },
-  viewHeader: {
-    flex: 1.8,
-    backgroundColor: "orange",
-  },
-  viewTabar: {
-    flex: 1.2,
-    backgroundColor: "#CDF1FF",
-  },
-  viewFlatlist: {
-    flex: 15,
-    backgroundColor: "red",
-  },
-  itemView: {
-    width: "98%",
-    height: 80,
-    backgroundColor: "#CDF1FF",
-    margin: 5,
-    borderRadius: 10,
-    padding: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    elevation: 5,
-  }
-});

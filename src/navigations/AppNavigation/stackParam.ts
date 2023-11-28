@@ -7,6 +7,7 @@ export type AppStackParam = {
   PAYDETAIL: undefined;
   VOUCHER:undefined;
   HISTORYORDER:undefined;
+  SEARCH: undefined;
 };
 
 export type MenuStackParam = {
