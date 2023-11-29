@@ -257,3 +257,21 @@ const FavoriteScreen = (props: Props) => {
 };
 
 export default React.memo(FavoriteScreen);
+
+// const styles = StyleSheet.create({
+//   productContainer: {
+//     flexDirection: 'row',
+//     justifyContent: 'space-between',
+//     alignItems: 'center',
+//     padding: 16,
+//     borderBottomWidth: 1,
+//     borderBottomColor: '#ccc',
+//   },
+//   likeButton: {
+//     padding: 8,
+//     borderRadius: 5,
+//   },
+//   likeButtonText: {
+//     color: 'white',
+//   },
+// });
