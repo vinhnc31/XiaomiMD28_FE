@@ -20,8 +20,9 @@ import { AppStackParam } from '@src/navigations/AppNavigation/stackParam';
 import { BaseLoading } from '@src/containers/components/Base/BaseLoading';
 import Carousel from './Carousel';
 
-import { ProductModel } from '@src/services/product/product.model';
+import { ProductModel, ProductDetailModel } from '@src/services/product/product.model';
 import ProductService from '@src/services/product';
+import { navigateToPage } from '@src/navigations/services';
 
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
@@ -29,7 +30,7 @@ interface Props {
 }
 
 const DetailsScreen = (props: Props) => {
-  const [productData, setProductData] = useState<ProductModel[]>([]);
+  const [productIdData, setProductIdData] = useState<ProductDetailModel[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState('');
   const [refreshing, setRefreshing] = useState(false);
@@ -56,21 +57,9 @@ const DetailsScreen = (props: Props) => {
     try {
       setLoading(true);
       const productService = new ProductService();
-      const result = await productService.getProduct();
-      // Lấy mảng sản phẩm từ response
-      const products = result.data;
-      console.log('---------------products data: -----------', productId);
-
-      // Tìm sản phẩm có productId trùng với id của productData
-      const selectedProduct = products.find(product => product.id === productId);
-      console.log('proudct có id: ', productId, 'là----', selectedProduct);
-      // Nếu tìm thấy sản phẩm, cập nhật state productData
-      if (selectedProduct) {
-        setProductData(selectedProduct);
-        console.log('proudct có id: ', productId, 'là----', selectedProduct);
-      } else {
-        console.log('Không tìm thấy sản phẩm có id =', productId);
-      }
+      const result = await productService.getProductId(productId);
+      console.log('---------------products data id:',productId, '-----------', result.data);
+      setProductIdData(result.data);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -78,23 +67,42 @@ const DetailsScreen = (props: Props) => {
     }
   }
 
-  console.log('-----------------------productData-------------------:', JSON.stringify(productData));
-
   const onRefresh = async () => {
     setRefreshing(true);
     await fetchDataProduct();
     setRefreshing(false);
   };
 
+  const getQuantitiys = (productData: any): number => {
+    let totalQuantity = 0;
+  
+    if (productData && productData.colorProducts && Array.isArray(productData.colorProducts)) {
+      productData.colorProducts.forEach((colorProduct: any) => {
+        if (colorProduct && colorProduct.colorConfigs && Array.isArray(colorProduct.colorConfigs)) {
+          colorProduct.colorConfigs.forEach((colorConfig: any) => {
+            if (colorConfig && typeof colorConfig.quantity === 'number') {
+              totalQuantity += colorConfig.quantity;
+            }
+          });
+        }
+      });
+    }
+  
+    return totalQuantity;
+  };
+  
+
   const handleBackPress = () => {
     // Xử lý khi nút back được nhấn
     props.navigation.goBack();
   };
 
-  const listImage = productData.images ? [productData.images, productData.images, productData.images] : [];
+  console.log('productIdData?.colorConfigs?.quantity--------------', getQuantitiys(productIdData))
 
-  //const listImage = productData?.images || [];  // "images": "link"
-  console.log('-------------listImage---------------', JSON.stringify(listImage));
+  const listImage = productIdData.images ? [productIdData.images, productIdData.images, productIdData.images] : [];
+
+  //const listImage = productIdData?.images || [];  // "images": "link"
+  //console.log('-------------listImage---------------', JSON.stringify(listImage));
   const imagesData = listImage.map((img, index) => ({
     id: (index + 1).toString(),
     image: img,
@@ -104,7 +112,7 @@ const DetailsScreen = (props: Props) => {
     <SafeAreaView style={{ flex: 1, flexDirection: 'column', backgroundColor: '#F1F1F1', width: '100%' }}>
       <View style={styles.backContainer}>
         <TouchableOpacity onPress={handleBackPress}>
-          <Image source={require('../../../assets/images/back.png')} style={styles.icon} />
+          <Image source={require('../../../assets/images/back.png')} style={styles.iconBack} />
         </TouchableOpacity>
       </View>
       {loading ? (
@@ -126,7 +134,6 @@ const DetailsScreen = (props: Props) => {
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
             <View style={styles.item}>
               <View style={styles.imageContainer}>
-                {/* <Image source={require('../../../assets/images/demo.jpg')} style={styles.image} resizeMode="stretch" /> */}
                 <Carousel data={imagesData} />
               </View>
 
@@ -144,41 +151,39 @@ const DetailsScreen = (props: Props) => {
                   marginHorizontal: 20,
                 }}>
                 <Text style={styles.priceText}>
-                  {productData?.price || ''}
+                  {productIdData?.price || ''}
                   <Text style={{ textDecorationLine: 'underline', marginLeft: 2 }}>đ</Text>
                 </Text>
 
                 <View style={{ flex: 1, justifyContent: 'center', marginBottom: 8 }}>
                   <Text style={styles.textName}>
-                    {productData?.name || ''}
+                    {productIdData?.name || ''}
                   </Text>
                 </View>
 
                 <View style={styles.viewStar}>
                   <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
                   <Text style={styles.textStar}>4.9</Text>
-                  <Text style={styles.textCmt}>({productData?.quantity || ''})</Text>
+                  <Text style={styles.textCmt}>({getQuantitiys(productIdData) || '0'})</Text>
                   <Text style={styles.textSell}>| Đã bán : </Text>
                   <Text style={styles.textSellNumber}>123</Text>
                 </View>
               </View>
             </View>
 
-            <View style={{ flex: 1, paddingHorizontal: 16 }}></View>
-
-            <View style={{ flex: 1, backgroundColor: '#FFFFFF', marginBottom: 20 }}>
+            <View style={{ flex: 1, backgroundColor: '#FFFFFF', marginBottom: 10 }}>
               <View style={styles.descriptionContainer}>
                 <Text style={styles.descriptionTitle}>Mô tả về sản phẩm</Text>
                 {showFullDescription ? (
                   <View>
                     <Text style={styles.descriptionText}>
-                      {productData?.description || ''}
+                      {productIdData?.description || ''}
                     </Text>
                   </View>
                 ) : (
                   <View>
                     <Text style={styles.descriptionText} numberOfLines={10}>
-                      {productData?.description || ''}
+                      {productIdData?.description || ''}
                     </Text>
                   </View>
                 )}
@@ -187,7 +192,6 @@ const DetailsScreen = (props: Props) => {
                   <TouchableOpacity onPress={() => setShowFullDescription(false)}>
                     <View style={styles.seeMore}>
                       <Text style={styles.seeMoreText}>Ẩn bớt</Text>
-                      <Image style={styles.imgPlus} source={R.images.iconMinus} />
                     </View>
                   </TouchableOpacity>
                 ) : (
@@ -303,17 +307,12 @@ const DetailsScreen = (props: Props) => {
 
           <View style={styles.containerStyle}>
             <View style={styles.leftContainerStyle}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => {}}>
                 <View style={styles.imageBtn}>
                   <Image style={styles.imageStyle} source={require('../../../assets/images/chat.png')} />
                 </View>
               </TouchableOpacity>
-              <Text style={styles.lineverticalLines}></Text>
-              <TouchableOpacity>
-                <View style={styles.imageBtn}>
-                  <Image style={styles.imageStyle} source={require('../../../assets/images/addToCart.png')} />
-                </View>
-              </TouchableOpacity>
+              <Text style={styles.lineverticalLines}>Thêm vào giỏ hàng</Text>
             </View>
 
             <View style={styles.rightContainerStyle}>

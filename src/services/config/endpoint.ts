@@ -15,8 +15,8 @@ const endpoint = {
   products: {
     default: '/api/products',
     getProduct: '/api/product',
-    getProductByIdCategory: '/api/product/category'
-
+    getProductByIdCategory: '/api/product/category',
+    getProductId: '/api/product',
   },
   
   favorites:{

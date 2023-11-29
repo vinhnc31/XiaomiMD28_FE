@@ -1,4 +1,5 @@
 import { View, Text, Dimensions, FlatList, Image, StyleSheet, Pressable } from 'react-native';
+import {ms, vs, hs} from '@src/styles/scalingUtils';
 import React, { useState, useRef } from 'react';
 import Swiper from 'react-native-swiper';
 
@@ -20,6 +21,8 @@ const Carousel: React.FC<CarouselProps> = ({ data }) => {
         autoplay={false}
         autoplayTimeout={2}
         onIndexChanged={(index) => setSlide(index + 1)}
+        loadMinimal
+        loadMinimalSize={1}
       >
         {data.map((item) => (
           <View key={item.id} style={styles.slide}>
@@ -44,8 +47,8 @@ const Carousel: React.FC<CarouselProps> = ({ data }) => {
 
 const styles = StyleSheet.create({
   image: {
-    width: '100%',
-    height: '100%',
+    width: hs(265),
+    height: vs(265),
     resizeMode: 'cover',
     borderRadius: 5,
   },
@@ -53,11 +56,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#fff',
   },
   pagination: {
     flexDirection: 'row',
     position: 'absolute',
-    bottom: 10,
+    bottom: vs(10),
     left: 0,
     right: 0,
     justifyContent: 'center',
@@ -65,10 +69,11 @@ const styles = StyleSheet.create({
   },
   dot: {
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    margin: 3,
+    width: hs(8),
+    height: vs(8),
+    borderRadius: ms(4),
+    marginVertical: vs(3),
+    marginHorizontal: hs(3),
   },
   activeDot: {
     backgroundColor: '#fff',

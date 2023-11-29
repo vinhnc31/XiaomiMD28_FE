@@ -1,49 +1,49 @@
-import {ms, vs} from '@src/styles/scalingUtils';
+import {ms, vs, hs} from '@src/styles/scalingUtils';
 import {Dimensions, StyleSheet} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 export default StyleSheet.create({
   container: {
-    marginBottom: vs(60),
+    marginBottom: vs(89),
   },
   backContainer: {
     position: 'absolute',
     top: 0,
     zIndex: 1,
-    marginTop: 20,
-    marginLeft: 20,
+    marginTop: vs(20),
+    marginLeft: hs(20),
   },
   iconBack: {
-    width: 30,
-    height: 30,
-
+    width: hs(30),
+    height: vs(38),
   },
+  
   icon: {
-    width: 30,
-    height: 30,
+    width: hs(30),
+    height: vs(30),
   },
+
   title: {
-    fontSize: 22,
+    fontSize: ms(22),
     fontFamily: 'LibreBaskerville-Bold',
     color: 'black',
-    marginLeft: 20,
+    marginLeft: hs(20),
   },
 
   item: {
     flex: 1,
     height: 'auto',
-    marginBottom: 20,
+    marginBottom: vs(10),
     backgroundColor: '#FFFFFF',
   },
   imageContainer: {
-    marginTop: 10,
-    height: 265,
+    marginTop: vs(10),
+    height: vs(265),
     marginBottom: vs(30),
     backgroundColor: '#EFEFEF',
   },
   image: {
-    // flex: 1,
-    height: 50, 
+    height: vs(50), 
     width: 'auto',
   },
   overlay: {
@@ -53,91 +53,91 @@ export default StyleSheet.create({
     justifyContent: 'center',
     top: vs(100),
     left: 0,
-    right: 0,
+    right: vs(-10),
     bottom: 0,
   },
   imgFavourite: {
-    width: 120,
-    height: 120,
+    width: hs(100),
+    height: vs(100),
     marginRight: vs(10),
   },
   text: {
-    fontSize: 18,
-    color: '#2A2A2A',
+    fontSize: ms(18),
+    color: '#000',
     fontWeight: '400',
     fontFamily: 'LibreBaskerville-Bold',
   },
   textName: {
-    marginTop: 5,
-    fontSize: 25,
-    color: '#2A2A2A',
+    marginTop: vs(5),
+    fontSize: ms(20),
+    color: '#000',
     fontWeight: '400',
     fontFamily: 'LibreBaskerville-Bold',
   },
   textStar: {
-    fontSize: 16,
-    color: '#2A2A2A',
+    fontSize: ms(14),
+    color: '#000',
     fontWeight: '400',
     fontFamily: 'LibreBaskerville-Bold',
   },
   priceText: {
-    marginTop: 5,
-    color: 'red',
-    fontSize: 25,
+    marginTop: vs(5),
+    color: '#F00',
+    fontSize: ms(20),
     fontWeight: '400',
     fontFamily: 'LibreBaskerville-Bold',
   },
   viewStar: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 8,
-    marginBottom: 20,
+    marginTop: vs(8),
+    marginBottom: vs(20),
   },
   imgStar: {
-    width: 15,
-    height: 15,
-    marginRight: 5,
+    width: hs(13),
+    height: vs(15),
+    marginRight: hs(5),
   },
   textCmt: {
     color: '#817F7F', // Màu văn bản
-    fontSize: 16,
+    fontSize: ms(14),
     fontFamily: 'LibreBaskerville-Bold',
-    marginLeft: 5,
+    marginLeft: hs(5),
   },
   textSell: {
     color: '#817F7F', // Màu văn bản
-    fontSize: 16,
+    fontSize: ms(14),
     fontFamily: 'LibreBaskerville-Bold',
     marginLeft: 5,
   },
   textSellNumber: {
-    color: '#2A2A2A', // Màu văn bản
-    fontSize: 16,
+    color: '#000', // Màu văn bản
+    fontSize: ms(14),
     fontFamily: 'LibreBaskerville-Bold',
   },
   // part 2
   // mo ta chi tiet
   descriptionContainer: {
-    marginHorizontal: 20,
+    marginHorizontal: hs(20),
   },
   descriptionTitle: {
-    fontSize: 18,
-    color: '#2A2A2A',
-    fontWeight: '400',
+    fontSize: ms(14),
+    color: '#000',
+    fontWeight: '200',
     fontFamily: 'LibreBaskerville-Bold',
-    marginTop: 14,
-    marginBottom: 10,
+    marginTop: vs(14),
+    marginBottom: vs(10),
   },
   descriptionText: {
-    fontSize: 14,
+    fontSize: ms(12),
     color: '#646464',
     fontWeight: '400',
     fontFamily: 'LibreBaskerville-Bold',
-    marginBottom: 10,
+    marginBottom: vs(10),
   },
   descriptionImage: {
-    width: 200,
-    height: 200,
+    width: hs(200),
+    height: vs(200),
     alignSelf: 'center',
   },
   // xem them
@@ -147,25 +147,25 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#E6E6E6',
-    marginBottom: 15,
+    marginBottom: vs(15),
+    backgroundColor: '#D9D9D9'
   },
   seeMoreText: {
-    color: '#2A2A2A',
+    color: '#000',
     fontWeight: '400',
-    fontSize: 16,
+    fontSize: ms(13),
     fontFamily: 'LibreBaskerville-Bold',
-    marginRight: 5,
+    marginRight: hs(5),
   },
   imgPlus: {
-    width: vs(15),
-    height: vs(15),
+    width: hs(13),
+    height: vs(16),
   },
   // đánh giá về sp
   reviews: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    marginBottom: 15,
+    marginBottom: vs(15),
   },
   reviewsContainer: {
     width: '100%',
@@ -176,14 +176,14 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between', // Để căn chỉnh phần tử bên trong
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: vs(8),
   },
   // tiêu đề và số lượng đánh giá
   reviewsTitle: {},
   reviewTitleText: {
-    color: '#2A2A2A',
+    color: '#000',
     fontWeight: '400',
-    fontSize: 18,
+    fontSize: ms(14),
     fontFamily: 'LibreBaskerville-Bold',
   },
   reviewsTitleContainer: {
@@ -193,26 +193,26 @@ export default StyleSheet.create({
     alignSelf: 'flex-end',
   },
   numberReviews: {
-    color: '#2A2A2A',
+    color: '#000',
     fontWeight: '400',
-    fontSize: 16,
+    fontSize: ms(14),
     fontFamily: 'LibreBaskerville-Bold',
-    marginLeft: 5,
+    marginLeft: hs(5),
   },
   // điểm đánh giá và só sao
   starPoint: {
     flexDirection: 'row',
-    marginVertical: 8,
+    marginVertical: vs(8),
     width: '50%',
   },
   pointText: {
-    color: '#2A2A2A',
+    color: '#000',
     fontWeight: '400',
-    fontSize: 16,
+    fontSize: ms(12),
     fontFamily: 'LibreBaskerville-Bold',
   },
   seeMoreReviews: {
-    marginLeft: 20,
+    marginLeft: vs(15),
     flexDirection: 'row',
     justifyContent: 'center', // Để căn chỉnh phần tử bên trong
     alignItems: 'center',
@@ -221,14 +221,13 @@ export default StyleSheet.create({
   seeMoreReviewsText: {
     color: '#858383',
     fontWeight: '400',
-    fontSize: 14,
+    fontSize: ms(12),
     fontFamily: 'LibreBaskerville-Bold',
   },
   imgNext: {
-    width: 14,
-    height: 14,
-    marginLeft: 4,
-    marginTop: 2,
+    width: hs(8),
+    height: vs(10),
+    marginLeft: hs(1),
   },
 
   flatListContainer: {
@@ -241,7 +240,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
-    height: vs(60),
+    height: vs(89),
   },
   leftContainerStyle: {
     backgroundColor: '#2BBAA9',
@@ -257,11 +256,11 @@ export default StyleSheet.create({
   },
 
   imageStyle: {
-    width: 50,
-    height: 50,
+    width: hs(40),
+    height: vs(40),
   },
   lineverticalLines: {
-    height: 35,
+    height: vs(31),
     borderLeftWidth: 0.8,
     borderColor: '#727272',
   },
@@ -278,7 +277,7 @@ export default StyleSheet.create({
     paddingVertical: '5%',
     color: '#FFFFFF',
     fontWeight: '400',
-    fontSize: 25,
+    fontSize: ms(20),
     fontFamily: 'LibreBaskerville-Bold',
   },
 

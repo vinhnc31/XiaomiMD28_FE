@@ -1,7 +1,7 @@
 import {BaseService} from '@src/services/base.service';
 import endpoints from '@src/services/config/endpoint';
 import http from '@src/services/config/http';
-import {ProductModel} from '@src/services/product/product.model';
+import {ProductDetailModel, ProductModel} from '@src/services/product/product.model';
 const url = endpoints.products;
 
 export default class ProductService extends BaseService<ProductModel> {
@@ -18,7 +18,10 @@ export default class ProductService extends BaseService<ProductModel> {
         const { data } = await http.get<ProductModel>(`${url.getProductByIdCategory}/${categoryId}`);
         return data;
     }
+
+    public async getProductId(productId: number) {
+        const { data } = await http.get<ProductDetailModel>(`${url.getProductId}/${productId}`);
+        return data;
+    }
     
-
-
 }
