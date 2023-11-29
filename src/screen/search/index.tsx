@@ -23,6 +23,7 @@ import BaseInput from '@src/containers/components/Base/BaseInput';
 
 import styles from './style';
 import TouchableScale from 'react-native-touchable-scale';
+import { useDebounce } from 'use-debounce';
 
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
@@ -35,7 +36,10 @@ const SearchScreen = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [suggestions, setSuggestions] = useState<ProductModel[]>([]);
   const [selectedSuggestion, setSelectedSuggestion] = useState<ProductModel | null>(null);
-  const [showSuggestions, setShowSuggestions] = useState<boolean>(true);
+  const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
+
+  const [value] = useDebounce(searchQuery, 2000);
+
 
   const config = {
     style: 'currency',
@@ -55,8 +59,8 @@ const SearchScreen = (props: Props) => {
       if (query.trim() !== '') {
         const productService = new ProductService();
         const result = await productService.getSearch(query);
-
         setSuggestions(result.data.slice(0, 10));
+        setShowSuggestions(true);
       } else {
         setSuggestions([]);
       }
@@ -74,7 +78,6 @@ const SearchScreen = (props: Props) => {
       if (query.trim() !== '') {
         const productService = new ProductService();
         const result = await productService.getSearch(query);
-
         setSearchResults(result.data);
       } else {
         setSearchResults([]);
@@ -82,27 +85,28 @@ const SearchScreen = (props: Props) => {
     } catch (error) {
       console.error('Error fetching search results:', error);
     } finally {
+      setShowSuggestions(false);
       setLoading(false);
+      setSuggestions([])
     }
   };
 
-  useEffect(() => {
-    fetchData(searchQuery);
-  }, [searchQuery]);
+  // useEffect(() => {
+  //  fetchData(value);
+  // }, [value]);
 
   const handleSuggestionPress = (item: ProductModel) => {
+    console.log('item:', item.name);
     setSelectedSuggestion(item);
     setSearchQuery(item.name);
-    setShowSuggestions(false); // Ẩn danh sách gợi ý khi đã chọn một gợi ý
-    // Fetch search results for the selected suggestion
     fetchSearchResults(item.name);
   };
 
-
-
   function ListItemSuggest({ item }: { item: ProductModel }) {
     return (
-      <TouchableScale onPress={() => console.log('da chon 1 item', item.id)} activeScale={0.9}
+      <TouchableScale
+        onPress={() => console.log('da chon 1 item', item.id)}
+        activeScale={0.9}
         friction={9}
         tension={100}>
         <View style={styles.suggestItem}>
@@ -115,11 +119,7 @@ const SearchScreen = (props: Props) => {
             <Text numberOfLines={1} style={styles.suggestTextName}>
               {item.name}
             </Text>
-            <Text style={styles.text}>
-              {new Intl.NumberFormat("vi-VN", config).format(
-                item.price
-              )}
-            </Text>
+            <Text style={styles.text}>{new Intl.NumberFormat('vi-VN', config).format(item.price)}</Text>
             <View style={styles.viewStar}>
               <Image style={styles.imgStar} source={R.images.iconStar} />
               <Text style={styles.text}>4.9</Text>
@@ -141,43 +141,59 @@ const SearchScreen = (props: Props) => {
           <BaseInput
             leftIcon={'search-outline'}
             title="Search"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            // onSubmitEditing={}
+            value={searchQuery} x
+            onChangeText={(text) => {
+              setSearchResults([]);
+              setSelectedSuggestion(null);
+              setSearchQuery(text);
+
+              fetchData(text);
+            }}
+            onSubmitEditing={event => {
+              setSelectedSuggestion(null);
+
+              if (selectedSuggestion?.name?.trim()) {
+                console.log('event', event.nativeEvent.text);
+                fetchSearchResults(selectedSuggestion.name);
+                return;
+              }
+              fetchSearchResults(event.nativeEvent.text)
+            }}
             borderRadius={10}
             style={styles.searchInput}
+            autoCompleteType={true}
           />
-
-       
         </View>
       </View>
 
-      <View style={{ flex: 9 }}>
-      {loading && <ActivityIndicator size="large" />}
+      <View style={{ flex: 9, padding: 8}}>
+        {loading && <ActivityIndicator size="large" />}
         {!loading && suggestions.length > 0 && (
           <FlatList
             data={suggestions}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={item => item.id.toString()}
             renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.suggestionItem} 
-                onPress={() => handleSuggestionPress(item)}>
+              <TouchableOpacity style={styles.suggestionItem} onPress={() => handleSuggestionPress(item)}>
                 <Text style={styles.suggestionText}>{item.name}</Text>
               </TouchableOpacity>
             )}
           />
         )}
-        
+
         {!loading && searchResults.length > 0 && (
           <FlatList
             data={searchResults}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={item => item.id.toString()}
+            columnWrapperStyle={{ justifyContent: 'space-between' }}
+            numColumns={2}
+            horizontal={false}
+            // scrollEnabled={false}
+            contentContainerStyle={styles.flatListSuggestContainer}
             renderItem={({ item }) => <ListItemSuggest key={item.id} item={item} />}
           />
         )}
-        {/* Hiển thị nội dung khác dựa trên kết quả tìm kiếm hoặc gợi ý đã chọn */}
-      </View>
 
+      </View>
     </SafeAreaView>
   );
 };

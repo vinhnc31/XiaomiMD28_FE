@@ -34,5 +34,11 @@ export default class ProductService extends BaseService<ProductModel> {
     }
 
 
+    // get màu 
+    public async getProductByColor(color: string) {
+        const { data } = await http.get<ProductModel[]>(`${url}/filter/Color?color=${encodeURIComponent(color)}`);
+        return data;
+    }
+
 
 }

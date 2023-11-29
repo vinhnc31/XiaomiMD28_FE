@@ -123,4 +123,9 @@ export default StyleSheet.create({
     fontFamily: 'LibreBaskerville-Bold',
   },
 
+
+  flatListSuggestContainer: {
+    justifyContent: 'space-between',
+  },
+
 });

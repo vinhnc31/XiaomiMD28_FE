@@ -43,8 +43,8 @@ const ProductListScreen = (props: Props) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
-    {label: 'Apple', value: 'apple'},
-    {label: 'Banana', value: 'banana'}
+    { label: 'Apple', value: 'apple' },
+    { label: 'Banana', value: 'banana' }
   ]);
 
 
@@ -83,7 +83,7 @@ const ProductListScreen = (props: Props) => {
     setProducts(sortedProducts);
   };
 
-  
+
   const filterProducts = (minPrice: number, maxPrice: number) => {
     let filteredProducts = products;
     if (!isNaN(minPrice) && !isNaN(maxPrice)) {
@@ -97,25 +97,25 @@ const ProductListScreen = (props: Props) => {
   const fetchProductsByPrice = async (minPrice?: number, maxPrice?: number) => {
     try {
       const productService = new ProductService();
-  
+
       // Kiểm tra nếu không có giá trị minPrice hoặc maxPrice thì thực hiện cuộc gọi không có tham số
       const productList = await (minPrice !== undefined && maxPrice !== undefined
         ? productService.getProductByPrice(minPrice, maxPrice)
         : productService.getProduct());
-  
+
       console.log('Product: ', productList.data.length);
       setProducts(productList.data);
     } catch (error) {
       console.error('Error fetching products:', error);
     }
   }
-  
-  
-  
+
+
+
   const sortByAscending = () => {
     sortProducts('asc');
   };
-  
+
   const sortByDescending = () => {
     sortProducts('desc');
   };
@@ -150,7 +150,7 @@ const ProductListScreen = (props: Props) => {
             </Text>
             <View style={styles.viewStar}>
               <Image style={styles.imgStar} source={R.images.iconStar} />
-              <Text style={styles.text}>4.9</Text>
+              <Text style={styles.text}>4.9 </Text>
               <Text style={styles.textCmt}>(50)</Text>
             </View>
           </View>
@@ -163,6 +163,7 @@ const ProductListScreen = (props: Props) => {
     <SafeAreaView style={{ flex: 1, flexDirection: 'column', backgroundColor: 'white' }}>
       <BaseHeader title={route.params!.name} onCartPress={handleCartPress} onBackPress={handleBackPress} />
 
+<View>
       <ScrollView style={{ paddingHorizontal: 8, backgroundColor: '#FBEFE5' }} showsVerticalScrollIndicator={false}>
 
         <View style={styles.viewFilter}>
@@ -183,8 +184,8 @@ const ProductListScreen = (props: Props) => {
             />
           </View>
 
-          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center'}}>
-            <View style={{flex: 6, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginRight: 8}}>
+          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
+            <View style={{ flex: 6, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginRight: 8 }}>
               <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <BaseInput
                   leftIcon={''}
@@ -209,8 +210,8 @@ const ProductListScreen = (props: Props) => {
                 />
               </View>
             </View>
-            
-            <View style={{flex: 2.5}}>
+
+            <View style={{ flex: 2.5 }}>
               <BaseButton
                 onPress={() => filterProducts(parseInt(minimum), parseInt(max))}
                 style={{ flex: 1, backgroundColor: '#FF6900', height: 40 }}
@@ -219,7 +220,7 @@ const ProductListScreen = (props: Props) => {
                 textStyle={styles.buttonText}
               />
             </View>
-           
+
           </View>
 
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
@@ -230,22 +231,18 @@ const ProductListScreen = (props: Props) => {
               text={'Theo đánh giá'}
               textStyle={styles.buttonText}
             />
-            <BaseButton
-              onPress={() => console.log("ssaasas")}
-              style={{ flex: 1, backgroundColor: '#D9D9D9', marginHorizontal: 8 }}
-              loading={loading}
-              text={'Theo màu sắc'}
-              textStyle={styles.buttonText}
-            />
-            {/* <DropDownPicker
-             style={{ flex: 1, backgroundColor: '#D9D9D9', marginHorizontal: 8, zIndex: 1}}
-              open={open}
-              value={value}
-              items={items}
-              setOpen={setOpen}
-              setValue={setValue}
-              setItems={setItems}
-            /> */}
+            <View style={{ flex: 1 }}>
+              <DropDownPicker
+                open={open}
+                value={value}
+                items={items}
+                setOpen={setOpen}
+                setValue={setValue}
+                setItems={setItems}
+              />
+
+            </View>
+
             <BaseButton
               onPress={() => console.log("ssaasas")}
               style={{ flex: 1, backgroundColor: '#D9D9D9' }}
@@ -267,6 +264,7 @@ const ProductListScreen = (props: Props) => {
           renderItem={({ item }) => <ListItemSuggest key={item.id} item={item} />}
         />
       </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };

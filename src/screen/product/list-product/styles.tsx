@@ -64,7 +64,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  imgStar: {width: vs(12), height: vs(12)},
+  imgStar: {width: vs(15), height: vs(15), marginBottom: vs(3), marginRight: vs(2)},
   textCmt: {
     color: '#817F7F', // Màu văn bản
     fontSize: vs(14),

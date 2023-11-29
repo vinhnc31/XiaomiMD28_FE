@@ -20,6 +20,7 @@ interface Props {
   borderRadius?: number;
   style?: StyleProp<ViewStyle>; // Thêm style cho Props
   onSubmitEditing?: () => void;
+  onEndEditing?: () => void;
 }
 
 const InputBase = ({
@@ -38,6 +39,7 @@ const InputBase = ({
   borderRadius,
   style,
   onSubmitEditing,
+  onEndEditing,
 }: Props) => {
   const [isSecureTextEntry, setIsSecureTextEntry] = useState(true);
 
@@ -100,6 +102,7 @@ const InputBase = ({
                   multiline={multiline}
                   numberOfLines={multiline ? 12 : 1}
                   onSubmitEditing={onSubmitEditing} // Thêm onSubmitEditing vào đây
+                  onEndEditing={onEndEditing}
                 />
               </View>
             </View>

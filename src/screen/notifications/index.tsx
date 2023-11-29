@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Text, SafeAreaView, Button, View, StyleSheet, TouchableOpacity, Dimensions, FlatList, Image, Modal, TextInput } from 'react-native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
@@ -28,17 +28,38 @@ interface Props {
 
 const NotificationScreen = (props: Props) => {
 
-  const countries = ["Egypt", "Canada", "Australia", "Ireland"]
-  const [selectedItem, setSelectedItem] = useState(null);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
-    { label: 'Apple', value: 'apple' },
-    { label: 'Banana', value: 'banana' }
+    { label: 'Titanium', value: 'titanium', color: 'gray' },
+    { label: 'Xanh', value: 'xanh', color: 'green' },
+    { label: 'Đen', value: 'den', color: 'black' },
+    { label: 'Xám', value: 'xam', color: 'gray' },
+    { label: 'Hồng', value: 'hong', color: 'pink' },
+    { label: 'Trắng', value: 'trang', color: 'white' },
+    { label: 'Tím', value: 'tim', color: 'purple' },
+    { label: 'Vàng', value: 'vang', color: 'yellow' },
   ]);
 
+  const productService = new ProductService();
+  const [filteredProducts, setFilteredProducts] = useState<ProductModel[]>([]);
 
+  useEffect(() => {
+    const fetchProductsByColor = async () => {
+      try {
+        if (value) {
+          const products = await productService.getProductByColor(value);
+          setFilteredProducts(products);
+        } else {
+          setFilteredProducts([]);
+        }
+      } catch (error) {
+        console.error('Error fetching products by color:', error);
+      }
+    };
 
+    fetchProductsByColor();
+  }, [value]);
 
   return (
 
@@ -46,15 +67,38 @@ const NotificationScreen = (props: Props) => {
       <DropDownPicker
         open={open}
         value={value}
-        items={items}
+        items={items.map((item) => ({
+          label: (
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View
+                style={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: 10,
+                  backgroundColor: item.color,
+                  marginRight: 10,
+                }}
+              />
+              <Text>{item.label}</Text>
+            </View>
+          ),
+          value: item.value,
+          color: item.color,
+        }))}
         setOpen={setOpen}
         setValue={setValue}
         setItems={setItems}
       />
       <Text>Selected Item: {value ? value : 'None'}</Text>
+
+      {/* Display filtered products */}
+      <Text>Filtered Products:</Text>
+      {filteredProducts.map((product) => (
+        <Text key={product.id}>{product.name}</Text>
+        // Add other product details as needed
+      ))}
     </View>
 
-   
   );
 };
 
