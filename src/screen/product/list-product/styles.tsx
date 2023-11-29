@@ -34,7 +34,6 @@ export default StyleSheet.create({
     borderRadius: vs(20),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'red'
   },
 
   viewSuggestText: {

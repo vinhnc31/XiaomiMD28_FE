@@ -93,6 +93,24 @@ const ProductListScreen = (props: Props) => {
     }
     setProducts([...filteredProducts]);  // Cập nhật mảng products
   };
+
+  const fetchProductsByPrice = async (minPrice?: number, maxPrice?: number) => {
+    try {
+      const productService = new ProductService();
+  
+      // Kiểm tra nếu không có giá trị minPrice hoặc maxPrice thì thực hiện cuộc gọi không có tham số
+      const productList = await (minPrice !== undefined && maxPrice !== undefined
+        ? productService.getProductByPrice(minPrice, maxPrice)
+        : productService.getProduct());
+  
+      console.log('Product: ', productList.data.length);
+      setProducts(productList.data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+  }
+  
+  
   
   const sortByAscending = () => {
     sortProducts('asc');
@@ -115,9 +133,7 @@ const ProductListScreen = (props: Props) => {
 
   function ListItemSuggest({ item }: { item: ProductModel }) {
     return (
-      <TouchableScale
-        onPress={() => console.log('da chon 1 item', item.id)}
-        activeScale={0.9}
+      <TouchableScale onPress={() => console.log('da chon 1 item', item.id)} activeScale={0.9}
         friction={9}
         tension={100}>
         <View style={styles.suggestItem}>
