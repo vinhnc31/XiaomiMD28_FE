@@ -120,9 +120,6 @@ const ProductListScreen = (props: Props) => {
     sortProducts('desc');
   };
 
-
-
-
   const handleBackPress = () => {
     goBack();
   };
