@@ -28,19 +28,19 @@ export default StyleSheet.create({
   },
   text: {
     color: '#000000', // Màu văn bản
-    fontSize: 18,
+    fontSize: 20,
     fontFamily: 'LibreBaskerville-Bold',
     width: hs(200),
   },
   textPrice: {
     marginRight:10,
     color: '#6D6D6D', // Màu văn bản
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: 'LibreBaskerville-DpdE',
   },
   textColor:{
     color:'#6D6D6D',
-    fontSize:16,
+    fontSize:18,
     fontFamily:'LibreBaskerville-DpdE'
   },
   viewItem:{
@@ -54,7 +54,7 @@ export default StyleSheet.create({
     borderColor:'#6D6D6D'
   },
   textNote:{
-    fontSize:16,
+    fontSize:18,
     fontFamily:'LibreBaskerville-DpdE',
     color:'black'
   },
@@ -73,7 +73,7 @@ export default StyleSheet.create({
   },
   textSumPrice:{
     color: '#FF0000',
-    fontSize: 16,
+    fontSize: 18,
     fontFamily: 'LibreBaskerville-DpdE',
   },
   viewVoucher:{
@@ -95,11 +95,11 @@ export default StyleSheet.create({
     width: 100,
     fontSize:15,
     fontFamily:'LibreBaskerville-DpdE',
-    color:'#03AA00'
+    color:'#F0761E'
   },
   textVoucherShip:{
     marginHorizontal:10,
-    fontSize:17,
+    fontSize:15,
     fontFamily:'LibreBaskerville-DpdE',
     color:'#0032E4'
   },
@@ -146,5 +146,18 @@ export default StyleSheet.create({
     fontSize:18,
     fontFamily:'LibreBaskerville-DpdE',
     color:'black',
+  },
+  container: {
+    borderWidth:.5,
+    marginHorizontal:10,
+    flexDirection: 'column',
+    paddingVertical: 15,
+    paddingHorizontal:10,
+    backgroundColor: 'white',
+    borderRadius :10
+  },
+  textAddress:{
+    fontSize: 16, fontFamily: 'LibreBaskerville-Bold',
+    marginVertical:2
   },
   });

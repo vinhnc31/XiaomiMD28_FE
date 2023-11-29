@@ -27,10 +27,21 @@ const endpoint = {
   },
 
   cart:{
-    default:"/api/cart/1",
-    getCart:"/api/cart/1",
+    default:"/api/cart",
+    getCart:"/api/cart",
     putCart:'/api/cart',
     deleteCart:'/api/cart'
+  },
+  address:{
+    default:"/api/address",
+    postAddress:"/api/address",
+    getAddress:"/api/address",
+    putAddress:'/api/address',
+    deleteAddress:'/api/address'
+  },
+  voucher:{
+    default:"/api/promotion",
+    getPromotion:"/api/promotion",
   }
 };
 

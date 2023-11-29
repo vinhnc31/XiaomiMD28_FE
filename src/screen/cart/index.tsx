@@ -13,16 +13,19 @@ import BaseHeaderBottom from '@src/containers/components/Base/BaseHeaderBottom';
 import CartService from '@src/services/cart';
 import {CartModel} from '@src/services/cart/cart.model';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '@src/hooks/useAuth';
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
   route: RouteProp<AppStackParam, APP_NAVIGATION.CART>;
 }
 const CartScreen = (props: Props) => {
+  const {user}=useAuth();
   const [error, setError] = useState('');
   const [data, setData] = useState<CartModel[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
+  const cartService = new CartService();
   const handleDeleteItem = (itemId:number) => {
     Alert.alert(
       'Xác nhận xóa',
@@ -44,7 +47,6 @@ const CartScreen = (props: Props) => {
                 await AsyncStorage.setItem('cartData', JSON.stringify(updatedCartData));
                 setData(updatedCartData);
               }
-              const cartService = new CartService();
               const result = await cartService.deleteCart(itemId);
             } catch (error) {
               console.error('Error deleting item from AsyncStorage', error);
@@ -55,13 +57,12 @@ const CartScreen = (props: Props) => {
       { cancelable: false }
     );
   };
-  
+
   const fetchData = async () => {
     try {
       setLoading(true);
-      const cartService = new CartService();
-      const result = await cartService.fetchCart();
-      const latestData = result.data.data;
+      const result = await cartService.fetchCart(user?.id!);
+      const latestData = result.data;
       const savedData = await AsyncStorage.getItem('cartData');
       const isDataChanged = JSON.stringify(latestData) !== savedData;
     if (isDataChanged) {
@@ -71,7 +72,6 @@ const CartScreen = (props: Props) => {
     setData(latestData);
       setLoading(false);
     } catch (error) {
-      console.error('Lỗi khi tải dữ liệu', error);
       setLoading(false);
     }
   };
@@ -99,14 +99,17 @@ const CartScreen = (props: Props) => {
   
   const incrementQuantity = async (itemId: number, newQuantity: number) => {
     await updateQuantity(itemId, newQuantity + 1);
+    await cartService.putCart(itemId,{quantity:newQuantity+1})
   };
   
   const minusQuantity = async (itemId: number, newQuantity: number) => {
     await updateQuantity(itemId, newQuantity - 1);
+    await cartService.putCart(itemId,{quantity:newQuantity-1})
   };
   
   const textInput = async (itemId: number, newQuantity: number) => {
     await updateQuantity(itemId, newQuantity);
+    await cartService.putCart(itemId,{quantity:newQuantity})
   };
   const toggleCheckbox = (itemId: number) => {
     const isSelected = selectedItems.includes(itemId);
@@ -146,6 +149,13 @@ const CartScreen = (props: Props) => {
       fetchData();
     }
   }, [refreshing]);
+  const getSelectedItems = () => {
+    return data.filter((item) => selectedItems.includes(item.id));
+  };
+  const handleCheckout = () => {
+    const selectedItemsData = getSelectedItems();
+    navigateToPage(APP_NAVIGATION.PAYDETAIL,selectedItemsData)
+  };
   return (
     <SafeAreaView style={{flex: 1, flexDirection: 'column'}}>
       <BaseHeaderNoCart
@@ -177,7 +187,7 @@ const CartScreen = (props: Props) => {
                       onValueChange={() => toggleCheckbox(item.id)}
                     />
                   <View style={styles.view}>
-                    <Image source={{uri: item.Product['images']}} style={styles.image} resizeMode="stretch" />
+                    <Image source={{uri: item.productcolor['image']}} style={styles.image} resizeMode="stretch" />
                     <View style={styles.viewText}>
                       <Text ellipsizeMode="tail" numberOfLines={1} style={styles.text}>
                         {item.Product['name']}
@@ -203,12 +213,11 @@ const CartScreen = (props: Props) => {
                           maxLength={2}
                           value={item.quantity.toString()}
                           onChangeText={(value) => {
-                            const newQuantity = parseInt(value, 10) || 0;
+                            const newQuantity = parseInt(value, 10) || 1;
                               textInput(item.id, newQuantity);
                           }}
                           />
-                          <View>
-                            
+                          <View>  
                           </View>
                         <TouchableOpacity 
                           onPress={() => {
@@ -241,6 +250,7 @@ const CartScreen = (props: Props) => {
       onValueChange={selectAllItems}
       SumText={calculateTotalPrice()}
       check={selectedItems.length <= 0}
+      data={handleCheckout}
       />
     </SafeAreaView>
   );

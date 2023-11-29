@@ -30,7 +30,7 @@ export default StyleSheet.create({
   },
 
   bodyInner: {
-    height: vs(300),
+    paddingVertical:20,
     backgroundColor: Colors.white,
     borderRadius: ms(40),
     paddingHorizontal: hs(33),
@@ -99,7 +99,7 @@ export default StyleSheet.create({
   },
   forgotPass: {
     color: Colors.gray,
-    fontSize: ms(18),
+    fontSize: ms(16),
     fontFamily: 'Lato-Bold',
   },
 });

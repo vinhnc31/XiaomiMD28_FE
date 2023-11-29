@@ -25,8 +25,6 @@ import { BaseLoading } from '@src/containers/components/Base/BaseLoading';
 import Swiper from 'react-native-swiper';
 import { navigateToPage } from '@src/navigations/services';
 
-import * as Animatable from 'react-native-animatable';
-
 import { Movie } from './homeFlatlist';
 import TouchableScale from 'react-native-touchable-scale';
 import CategoryService from '@src/services/category';

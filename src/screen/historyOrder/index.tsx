@@ -173,7 +173,6 @@ const HistoryOrderTab = ({data, loading,onShow}: {data: HISTORYORDER[]; loading:
             </View>
           )}
         />
-        
       </ScrollView>
     )}
   </View>

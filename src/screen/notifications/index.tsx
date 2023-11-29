@@ -30,71 +30,7 @@ const images = [
 
 const NotificationScreen = (props: Props) => {
 
- const [dataCategory, setDataCategory] = useState<CategoryModel[]>([]);
-  const flatListRef = useRef(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-
-  const fetchDataCategory = async () => {
-    try {
-      const categoryService = new CategoryService();
-      const result = await categoryService.fetchCategory();
-      setDataCategory(result.data);
-      console.log(result.data.length);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleScroll = (event) => {
-    const { contentOffset } = event.nativeEvent;
-    const index = Math.floor(contentOffset.x / width);
-    setCurrentIndex(index);
-  };
-
-  const scrollToNext = () => {
-    if (currentIndex < dataCategory.length - 1) {
-      flatListRef.current.scrollToIndex({ index: currentIndex + 1 });
-    } else {
-      flatListRef.current.scrollToIndex({ index: 0 });
-    }
-  };
-
-  useEffect(() => {
-    fetchDataCategory()
-  }, [])
-
-  useEffect(() => {
-    const intervalId = setInterval(scrollToNext, 3000);
-
-    return () => clearInterval(intervalId);
-  }, [currentIndex]);
-
-  
-  const renderPagination = () => (
-    <View style={{ flexDirection: 'row', position: 'absolute', bottom: 10, right: 10 }}>
-      {dataCategory.map((_, i) => (
-        <View
-          key={i}
-          style={{
-            width: 8,
-            height: 8,
-            borderRadius: 4,
-            margin: 3,
-            backgroundColor: i === currentIndex ? '#007aff' : '#ccc',
-          }}
-        />
-      ))}
-    </View>
-  );
-
-  const renderItem = ({ item }) => (
-    <View style={{ flex: 1 }}>
-      <Image source={{ uri: item.image }} style={{ width, height: 160 }} resizeMode="cover" />
-    </View>
-  );
-
-
+ 
   return (
 
   <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>

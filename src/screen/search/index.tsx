@@ -15,54 +15,54 @@ interface Props {
 }
 
 const SearchScreen = (props: Props) => {
-  const [listProducts, setListProducts] = useState<ProductModel[]>([]);
-  const [filteredDataSource, setFilteredDataSource] = useState<ProductModel[]>([]);
-  const [search, setSearch] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  // const [listProducts, setListProducts] = useState<ProductModel[]>([]);
+  // const [filteredDataSource, setFilteredDataSource] = useState<ProductModel[]>([]);
+  // const [search, setSearch] = useState('');
+  // const [isLoading, setIsLoading] = useState(false);
 
-  const config = { style: 'currency', currency: 'VND', maximumFractionDigits: 9 }
+  // const config = { style: 'currency', currency: 'VND', maximumFractionDigits: 9 }
 
-  useEffect(() => {
-    fetchProducts()
-  }, [])
+  // useEffect(() => {
+  //   fetchProducts()
+  // }, [])
 
-  const fetchProducts = async () => {
-    try {
-      const productService = new ProductService();
-      const productList = await productService.getProduct();
-      console.log('Product: ', productList.data.length);
-      setListProducts(productList.data);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    }
-  };
+  // const fetchProducts = async () => {
+  //   try {
+  //     const productService = new ProductService();
+  //     const productList = await productService.getProduct();
+  //     console.log('Product: ', productList.data.length);
+  //     setListProducts(productList.data);
+  //   } catch (error) {
+  //     console.error('Error fetching products:', error);
+  //   }
+  // };
 
-  const searchFillterArr = (text) => {
-    if (text) {
-      const newData = listProducts.filter(function (item) {
-        const itemData = item.name
-          ? item.name.toUpperCase()
-          : ''.toUpperCase();
-        const textData = text.toUpperCase();
-        return itemData.indexOf(textData) > -1;
-      });
-      setFilteredDataSource(newData);
-      setSearch(text);
-      // console.log("search: ", search);
-      // console.log("setFilteredDataSource: ", filteredDataSource)
-    } else {
-      setFilteredDataSource([]);
-      setSearch(text);
-    }
-  }
+  // const searchFillterArr = (text) => {
+  //   if (text) {
+  //     const newData = listProducts.filter(function (item) {
+  //       const itemData = item.name
+  //         ? item.name.toUpperCase()
+  //         : ''.toUpperCase();
+  //       const textData = text.toUpperCase();
+  //       return itemData.indexOf(textData) > -1;
+  //     });
+  //     setFilteredDataSource(newData);
+  //     setSearch(text);
+  //     // console.log("search: ", search);
+  //     // console.log("setFilteredDataSource: ", filteredDataSource)
+  //   } else {
+  //     setFilteredDataSource([]);
+  //     setSearch(text);
+  //   }
+  // }
 
-  const handleBackPress = () => {
-    goBack();
-  };
+  // const handleBackPress = () => {
+  //   goBack();
+  // };
 
   return (
     <View style={styles.container}>
-      <View style={[styles.viewHeader, { flexDirection: "row" }]}>
+      {/* <View style={[styles.viewHeader, { flexDirection: "row" }]}>
         <View style={{ flex: 0.5, justifyContent: "center" }}>
           <TouchableOpacity
             onPress={handleBackPress}
@@ -105,7 +105,7 @@ const SearchScreen = (props: Props) => {
 
       {/* <View style={styles.viewTabar}></View> */}
 
-      <View style={styles.viewFlatlist}>
+      {/* <View style={styles.viewFlatlist}>
         {isLoading ? <ActivityIndicator size="large" color="#00ff00" /> : null}
         <FlatList
           style={{ alignSelf: "center"}}
@@ -136,7 +136,7 @@ const SearchScreen = (props: Props) => {
           keyExtractor={(item) => item.id.toString()}
 
         />
-      </View>
+      </View> */} 
     </View>
 
   );
