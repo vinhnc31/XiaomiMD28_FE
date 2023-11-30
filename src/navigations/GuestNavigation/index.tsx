@@ -21,7 +21,10 @@ const GuestNavigationComponent = () => {
   useEffect(() => {
     const user: IAccount | null = StorageUtils.getObject(StorageKey.User);
     if (!user?.id) {
-      handleOnLoadingScreen();
+      setTimeout(() => {
+
+        handleOnLoadingScreen();
+      },2000);
     } else {
       handleFetchProfile();
     }

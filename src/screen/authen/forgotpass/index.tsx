@@ -24,6 +24,7 @@ const ForgotScreen = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const toast = useToast();
   const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
 
   const goToLogin = () => {
     navigateToPage(GUEST_NAVIGATION.LOGIN);
@@ -42,9 +43,11 @@ const ForgotScreen = (props: Props) => {
     try {
       const sv = new AccountService();
 
-      setLoading(false);
+      setLoading(true);
       // @ts-ignore
-
+      await sv.fogotpass({email, newPassword: password});
+      toast.showSuccess({messageText: 'Cập nhật mật khẩu thành công'});
+      setLoading(false);
       resetStack(GUEST_NAVIGATION.LOGIN);
     } catch (error) {
       console.log('error: ', error);
@@ -63,7 +66,7 @@ const ForgotScreen = (props: Props) => {
         <FastImage style={styles.container} source={R.images.bgRegister}>
           <View style={styles.wrap}>
             <View style={styles.header}>
-              <Image style={styles.logoImg} source={R.images.logo} />
+              <Image style={styles.logoImg} source={R.images.logoApp} />
             </View>
 
             <View style={styles.body}>
@@ -74,6 +77,17 @@ const ForgotScreen = (props: Props) => {
                     title="Email"
                     value={email}
                     onChangeText={setEmail}
+                    borderRadius={40}
+                  />
+                </View>
+
+                <View>
+                  <BaseInput
+                    leftIcon={'key-outline'}
+                    title="Mật khẩu"
+                    valuePassword={password}
+                    onChangeText={setPassword}
+                    password
                     borderRadius={40}
                   />
                 </View>

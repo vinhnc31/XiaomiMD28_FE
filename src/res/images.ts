@@ -21,5 +21,6 @@ export const images = {
   location: require('../assets/images/placeholder.png'),
   history: require('../assets/images/history.png'),
   support: require('../assets/images/support.png'),
-  signinGG:require('../assets/images/signGG.png'),
+  signinGG: require('../assets/images/signGG.png'),
+  logoApp: require('../assets/images/logoApp.png'),
 };

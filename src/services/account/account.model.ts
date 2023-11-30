@@ -12,8 +12,8 @@ export interface IAccount {
   accessToken: string;
   refreshToken: string;
   avatar?: string;
-  birthday?: string;
-  password:string
+  dayOfBirth?: string;
+  password: string;
 }
 
 export type AuthStatus = 'idle' | 'pending' | 'resolved' | 'rejected';
@@ -30,6 +30,7 @@ export interface IRegisterData {
 }
 
 export interface IChangePassReq {
+  password: string;
   newPassword: string;
   reNewPassword: string;
 }
