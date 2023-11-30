@@ -22,4 +22,5 @@ export const images = {
   history: require('../assets/images/history.png'),
   support: require('../assets/images/support.png'),
   signinGG:require('../assets/images/signGG.png'),
+  iconFilter: require('../assets/images/filter.png'),
 };

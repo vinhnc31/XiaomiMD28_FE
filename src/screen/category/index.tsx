@@ -27,7 +27,7 @@ const CategoryScreen = (props: Props) => {
   };
 
   const handleCartPress = () => {
-    // fetchDataCategory()
+    navigateToPage(APP_NAVIGATION.CART)
   };
 
   useEffect(() => {

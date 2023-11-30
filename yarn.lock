@@ -8275,13 +8275,7 @@
   "resolved" "https://registry.npmjs.org/react-native-mmkv/-/react-native-mmkv-2.11.0.tgz"
   "version" "2.11.0"
 
-"react-native-modal@^13.0.1":
-  "integrity" "sha512-UB+mjmUtf+miaG/sDhOikRfBOv0gJdBU2ZE1HtFWp6UixW9jCk/bhGdHUgmZljbPpp0RaO/6YiMmQSSK3kkMaw=="
-  "resolved" "https://registry.npmjs.org/react-native-modal/-/react-native-modal-13.0.1.tgz"
-  "version" "13.0.1"
-  dependencies:
-    "prop-types" "^15.6.2"
-    "react-native-animatable" "1.3.3"
+
 
 "react-native-offline@^6.0.2":
   "integrity" "sha512-lQUMoiDEAwJPI7lmbiLoa7txI23mxKaEVekpzg5o+0KD0mUFJSfcf97d+VFYuNDSbV8ELEss0WUkA8APk4OmTA=="

@@ -2,8 +2,7 @@ import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import BaseHeader from '@src/containers/components/Base/BaseHeader';
 import { GuestStackParam } from '@src/navigations/GuestNavigation/stackParam';
-import { GUEST_NAVIGATION } from '@src/navigations/routes';
-import { goBack } from '@src/navigations/services';
+import { APP_NAVIGATION, GUEST_NAVIGATION } from '@src/navigations/routes';
 import ProductService from '@src/services/product';
 import React, { useEffect, useState, useRef } from 'react';
 import {
@@ -11,7 +10,9 @@ import {
   Image,
   SafeAreaView,
   Text,
+  TouchableOpacity,
   View,
+  Modal
 } from 'react-native';
 
 import styles from './styles';
@@ -23,6 +24,7 @@ import { ScrollView } from 'react-native';
 import { hs } from '@src/styles/scalingUtils';
 import R from '@src/res';
 import BaseInput from '@src/containers/components/Base/BaseInput';
+import { navigateToPage, goBack } from "@src/navigations/services";
 
 
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -43,10 +45,26 @@ const ProductListScreen = (props: Props) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
-    { label: 'Apple', value: 'apple' },
-    { label: 'Banana', value: 'banana' }
+    { label: 'Titanium', value: 'titanium', color: 'gray' },
+    { label: 'Xanh', value: 'xanh', color: 'green' },
+    { label: 'Đen', value: 'den', color: 'black' },
+    { label: 'Xám', value: 'xam', color: 'gray' },
+    { label: 'Hồng', value: 'hong', color: 'pink' },
+    { label: 'Trắng', value: 'trang', color: 'white' },
+    { label: 'Tím', value: 'tim', color: 'purple' },
+    { label: 'Vàng', value: 'vang', color: 'yellow' },
   ]);
 
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [isChecked, setChecked] = useState(false);
+
+  const toggleCheckbox = () => {
+    setChecked(!isChecked);
+  };
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
   const config = {
     style: "currency",
@@ -90,26 +108,10 @@ const ProductListScreen = (props: Props) => {
       filteredProducts = filteredProducts.filter(item => item.price >= minPrice && item.price <= maxPrice);
     } else {
       fetchProducts();
+      return;
     }
     setProducts([...filteredProducts]);  // Cập nhật mảng products
   };
-
-  const fetchProductsByPrice = async (minPrice?: number, maxPrice?: number) => {
-    try {
-      const productService = new ProductService();
-
-      // Kiểm tra nếu không có giá trị minPrice hoặc maxPrice thì thực hiện cuộc gọi không có tham số
-      const productList = await (minPrice !== undefined && maxPrice !== undefined
-        ? productService.getProductByPrice(minPrice, maxPrice)
-        : productService.getProduct());
-
-      console.log('Product: ', productList.data.length);
-      setProducts(productList.data);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    }
-  }
-
 
 
   const sortByAscending = () => {
@@ -124,9 +126,9 @@ const ProductListScreen = (props: Props) => {
     goBack();
   };
 
-  const handleCartPress = () => { };
-
-
+  const handleCartPress = () => {
+    navigateToPage(APP_NAVIGATION.CART)
+  };
 
   function ListItemSuggest({ item }: { item: ProductModel }) {
     return (
@@ -161,10 +163,12 @@ const ProductListScreen = (props: Props) => {
 
   return (
     <SafeAreaView style={{ flex: 1, flexDirection: 'column', backgroundColor: 'white' }}>
-      <BaseHeader title={route.params!.name} onCartPress={handleCartPress} onBackPress={handleBackPress} />
+      <BaseHeader title={route.params!.name} onCartPress={handleCartPress} onBackPress={handleBackPress} onFilterPress={toggleModal} />
 
-<View>
-      <ScrollView style={{ paddingHorizontal: 8, backgroundColor: '#FBEFE5' }} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={{ paddingHorizontal: 8, backgroundColor: '#FBEFE5' }}
+        showsVerticalScrollIndicator={false}
+      >
 
         <View style={styles.viewFilter}>
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
@@ -231,17 +235,41 @@ const ProductListScreen = (props: Props) => {
               text={'Theo đánh giá'}
               textStyle={styles.buttonText}
             />
-            <View style={{ flex: 1 }}>
-              <DropDownPicker
-                open={open}
-                value={value}
-                items={items}
-                setOpen={setOpen}
-                setValue={setValue}
-                setItems={setItems}
-              />
 
-            </View>
+            <BaseButton
+              onPress={() => console.log("ssaasas")}
+              style={{ flex: 1, backgroundColor: '#D9D9D9' }}
+              loading={loading}
+              text={'Theo màu'}
+              textStyle={styles.buttonText}
+            />
+
+            {/* <DropDownPicker
+              open={open}
+              value={value}
+              items={items.map((item) => ({
+                label: (
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <View
+                      style={{
+                        width: 20,
+                        height: 20,
+                        borderRadius: 10,
+                        backgroundColor: item.color,
+                        marginRight: 10,
+                      }}
+                    />
+                    <Text>{item.label}</Text>
+                  </View>
+                ),
+                value: item.value,
+                color: item.color,
+              }))}
+              setOpen={setOpen}
+              setValue={setValue}
+              setItems={setItems}
+              containerStyle={{ zIndex: 1000 }}
+            /> */}
 
             <BaseButton
               onPress={() => console.log("ssaasas")}
@@ -264,7 +292,46 @@ const ProductListScreen = (props: Props) => {
           renderItem={({ item }) => <ListItemSuggest key={item.id} item={item} />}
         />
       </ScrollView>
-      </View>
+
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={isModalVisible}
+        onRequestClose={toggleModal}
+        statusBarTranslucent={true}
+      >
+        <View style={styles.modalContainer}>
+          <View style={{ height: 60, backgroundColor: '#FF6900', flexDirection: 'row' }}>
+           
+
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+              <TouchableOpacity onPress={toggleModal} style={{backgroundColor: 'white', width: 20, alignItems: 'center'}}>
+                <Text>X</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={{ flex: 9, alignItems: 'center', justifyContent: 'center' }}>
+              <Text style={{fontSize: 18, fontWeight: 'bold', color: 'white'}}>Lọc kết quả</Text>
+
+            </View>
+          </View>
+
+          <View>
+            <TouchableOpacity onPress={toggleCheckbox} style={styles.checkboxContainer}>
+              <View style={[styles.checkbox, isChecked && styles.checked]} />
+              <Text style={styles.label}>Checkbox Label</Text>
+            </TouchableOpacity>
+          </View>
+
+
+
+
+        </View>
+
+
+
+
+      </Modal>
     </SafeAreaView>
   );
 };

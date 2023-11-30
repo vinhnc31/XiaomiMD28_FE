@@ -105,4 +105,34 @@ export default StyleSheet.create({
     marginTop: vs(10),
     flexDirection: 'row',
   },
+
+
+
+  modalContainer: {
+    flex: 1,
+    marginTop: vs(27),
+    // justifyContent: 'center',
+    // alignItems: 'flex-start',
+    backgroundColor: 'white',
+  },
+
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderWidth: 2,
+    borderColor: 'black',
+    borderRadius: 5,
+    marginRight: 8,
+  },
+  checked: {
+    backgroundColor: 'blue', // Màu nền khi checkbox được chọn
+    borderColor: 'blue', // Màu viền khi checkbox được chọn
+  },
+  label: {
+    fontSize: 16,
+  },
 });
