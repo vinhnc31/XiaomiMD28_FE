@@ -62,6 +62,8 @@ const listMenu: IMenu[] = [
 
 const AccountScreen = (props: Props) => {
   const {user} = useAuth();
+  const distchpatch = useAppDispatch();
+  console.log('user: ', user);
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const renderMenu = (item: IMenu, index: number) => {
@@ -87,7 +89,7 @@ const AccountScreen = (props: Props) => {
 
   const handleLogout = () => {
     // @ts-ignore
-    useAppDispatch(logOutAction(true));
+    distchpatch(logOutAction(true));
   };
 
   const onHide = (): void => {
@@ -100,7 +102,7 @@ const AccountScreen = (props: Props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <BaseImage image={R.images.avataEmpty} imageStyle={styles.avatar} resizeMode="cover" />
+      <BaseImage image={{uri:user?.avatar}} imageStyle={styles.avatar} resizeMode="cover" />
       <BaseText fullText={user?.name || 'Minh'} style={styles.name} />
       {listMenu.map(renderMenu)}
 

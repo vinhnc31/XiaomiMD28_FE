@@ -19,21 +19,26 @@ export default class AccountService extends BaseService<IAccount> {
   }
 
   public async logOut() {
-    await http.post(url.logout);
+    await http.get(url.logout);
   }
 
-  public async changePass( obj: IChangePassReq) {
-    const {data} = await http.put<IAccount>(`${url}/changePassword`, obj);
+  public async changePass(id: number, obj: IChangePassReq) {
+    const {data} = await http.post<IAccount>(`${url.default}/changePassword/${id}`, obj);
     return data;
   }
 
-  public async updateProfile(obj: FormData) {
-    const {data} = await http.put<IAccount>(`${url}/profile`, obj);
+  public async updateProfile(id:number,obj: FormData) {
+    const {data} = await http.put<IAccount>(`${url.default}/updateProfile/${id}`, obj);
     return data;
   }
 
   public async fetchProfile() {
-    const {data} = await http.get<IAccount>(`${url}/profile`);
+    const {data} = await http.get<IAccount>(`${url.default}/profile`);
+    return data;
+  }
+
+  public async fogotpass(params: any) {
+    const {data} = await http.post<IAccount>(`${url.default}/forgotPassword`, params);
     return data;
   }
 }

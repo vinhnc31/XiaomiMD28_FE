@@ -70,7 +70,7 @@ const LogInComponent = (props: Props) => {
         <FastImage style={styles.container} source={R.images.bgLogin}>
           <View style={styles.wrap}>
             <View style={styles.header}>
-              <Image style={styles.logoImg} source={R.images.logo} />
+              <Image style={styles.logoImg} source={R.images.logoApp} />
             </View>
 
             <View style={styles.body}>

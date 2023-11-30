@@ -14,12 +14,12 @@ export default function BaseScreenLoading() {
         justifyContent: 'center',
       }}>
       <BaseImage
-        style={{marginTop: -DimensionUtils.getScreenHeight() * 0.2, alignSelf: 'center'}}
-        image={images.iconSplash}
+        style={{marginTop: -DimensionUtils.getScreenHeight() * 0.5, alignSelf: 'center'}}
+        image={images.logoApp}
         width={DimensionUtils.getScreenWidth() * 0.8}
         height={109}
       />
-      <ActivityIndicator size="large" color="#b0b0b0" />
+      <ActivityIndicator size="large" color="#b0b0b0" style={{bottom:-110}} />
     </View>
   );
 }

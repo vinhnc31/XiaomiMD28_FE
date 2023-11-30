@@ -18,8 +18,8 @@ export default StyleSheet.create({
   },
 
   logoImg: {
-    width: hs(172),
-    height: vs(146),
+    width: hs(120),
+    height: vs(120),
     resizeMode: 'contain',
   },
 

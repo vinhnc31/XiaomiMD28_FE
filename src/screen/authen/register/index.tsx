@@ -98,7 +98,7 @@ const RegisterScreen = (props: Props) => {
         <FastImage style={styles.container} source={R.images.bgRegister}>
           <View style={styles.wrap}>
             <View style={styles.header}>
-              <Image style={styles.logoImg} source={R.images.logo} resizeMode='cover'/>
+              <Image style={styles.logoImg} source={R.images.logoApp} resizeMode='cover'/>
             </View>
 
             <View style={styles.body}>
