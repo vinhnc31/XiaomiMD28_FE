@@ -1,8 +1,8 @@
-import { RouteProp } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import {RouteProp} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import BaseHeader from '@src/containers/components/Base/BaseHeader';
-import { APP_NAVIGATION, GUEST_NAVIGATION } from '@src/navigations/routes';
-import React, { useEffect, useState } from 'react';
+import {APP_NAVIGATION, GUEST_NAVIGATION} from '@src/navigations/routes';
+import React, {useEffect, useState} from 'react';
 import R from '@src/res';
 import {
   Text,
@@ -16,13 +16,13 @@ import {
   RefreshControl,
 } from 'react-native';
 import styles from './styles';
-import { AppStackParam } from '@src/navigations/AppNavigation/stackParam';
-import { BaseLoading } from '@src/containers/components/Base/BaseLoading';
+import {AppStackParam} from '@src/navigations/AppNavigation/stackParam';
+import {BaseLoading} from '@src/containers/components/Base/BaseLoading';
 import Carousel from './Carousel';
 
-import { ProductModel, ProductDetailModel } from '@src/services/product/product.model';
+import {ProductModel, ProductDetailModel} from '@src/services/product/product.model';
 import ProductService from '@src/services/product';
-import { navigateToPage } from '@src/navigations/services';
+import {navigateToPage} from '@src/navigations/services';
 
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
@@ -39,7 +39,7 @@ const DetailsScreen = (props: Props) => {
 
   const route = props.route;
   const productId = route.params ? route.params.productId : undefined;
-  //const productId = 1; 
+  //const productId = 1;
 
   useEffect(() => {
     // Chỉ kích hoạt làm mới nếu refreshing đã được đặt thành true
@@ -58,14 +58,14 @@ const DetailsScreen = (props: Props) => {
       setLoading(true);
       const productService = new ProductService();
       const result = await productService.getProductId(productId);
-      console.log('---------------products data id:',productId, '-----------', result.data);
+      console.log('---------------products data id:', productId, '-----------', result.data);
       setProductIdData(result.data);
       setLoading(false);
     } catch (error) {
       setLoading(false);
       setError('err');
     }
-  }
+  };
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -73,13 +73,13 @@ const DetailsScreen = (props: Props) => {
     setRefreshing(false);
   };
 
-  const getQuantitiys = (productData: any): number => {
+  const getQuantitiys = (productData: ProductDetailModel): number => {
     let totalQuantity = 0;
-  
+
     if (productData && productData.colorProducts && Array.isArray(productData.colorProducts)) {
-      productData.colorProducts.forEach((colorProduct: any) => {
+      productData.colorProducts.forEach(colorProduct => {
         if (colorProduct && colorProduct.colorConfigs && Array.isArray(colorProduct.colorConfigs)) {
-          colorProduct.colorConfigs.forEach((colorConfig: any) => {
+          colorProduct.colorConfigs.forEach(colorConfig => {
             if (colorConfig && typeof colorConfig.quantity === 'number') {
               totalQuantity += colorConfig.quantity;
             }
@@ -87,17 +87,20 @@ const DetailsScreen = (props: Props) => {
         }
       });
     }
-  
+
     return totalQuantity;
   };
-  
+
+  console.log('productIdData:', productIdData);
+  console.log('productIdData?.colorProducts:', productIdData?.colorProducts);
+  console.log('productIdData?.colorConfigs:', productIdData?.colorConfigs);
 
   const handleBackPress = () => {
     // Xử lý khi nút back được nhấn
     props.navigation.goBack();
   };
 
-  console.log('productIdData?.colorConfigs?.quantity--------------', getQuantitiys(productIdData))
+  console.log('productIdData?.colorConfigs?.quantity--------------', getQuantitiys(productIdData));
 
   const listImage = productIdData.images ? [productIdData.images, productIdData.images, productIdData.images] : [];
 
@@ -109,7 +112,7 @@ const DetailsScreen = (props: Props) => {
   }));
 
   return (
-    <SafeAreaView style={{ flex: 1, flexDirection: 'column', backgroundColor: '#F1F1F1', width: '100%' }}>
+    <SafeAreaView style={{flex: 1, flexDirection: 'column', backgroundColor: '#F1F1F1', width: '100%'}}>
       <View style={styles.backContainer}>
         <TouchableOpacity onPress={handleBackPress}>
           <Image source={require('../../../assets/images/back.png')} style={styles.iconBack} />
@@ -119,11 +122,11 @@ const DetailsScreen = (props: Props) => {
         // <View style={styles.LoadingContainer}>
         //   <BaseLoading size={60} top={250} loading={true} />
         // </View>
-        <View style={{
-          height: '100%',
-          justifyContent: 'center',
-          
-        }}>
+        <View
+          style={{
+            height: '100%',
+            justifyContent: 'center',
+          }}>
           <BaseLoading size={60} top={250} loading={true} />
         </View>
       ) : (
@@ -138,7 +141,7 @@ const DetailsScreen = (props: Props) => {
               </View>
 
               <View style={styles.overlay}>
-                <View style={{ alignItems: 'flex-end', justifyContent: 'center' }}>
+                <View style={{alignItems: 'flex-end', justifyContent: 'center'}}>
                   <TouchableOpacity onPress={() => console.log('code logic button tymm <3')}>
                     <Image style={styles.imgFavourite} source={require('../../../assets/images/heart1.png')} />
                   </TouchableOpacity>
@@ -152,13 +155,11 @@ const DetailsScreen = (props: Props) => {
                 }}>
                 <Text style={styles.priceText}>
                   {productIdData?.price || ''}
-                  <Text style={{ textDecorationLine: 'underline', marginLeft: 2 }}>đ</Text>
+                  <Text style={{textDecorationLine: 'underline', marginLeft: 2}}>đ</Text>
                 </Text>
 
-                <View style={{ flex: 1, justifyContent: 'center', marginBottom: 8 }}>
-                  <Text style={styles.textName}>
-                    {productIdData?.name || ''}
-                  </Text>
+                <View style={{flex: 1, justifyContent: 'center', marginBottom: 8}}>
+                  <Text style={styles.textName}>{productIdData?.name || ''}</Text>
                 </View>
 
                 <View style={styles.viewStar}>
@@ -171,14 +172,12 @@ const DetailsScreen = (props: Props) => {
               </View>
             </View>
 
-            <View style={{ flex: 1, backgroundColor: '#FFFFFF', marginBottom: 10 }}>
+            <View style={{flex: 1, backgroundColor: '#FFFFFF', marginBottom: 10}}>
               <View style={styles.descriptionContainer}>
                 <Text style={styles.descriptionTitle}>Mô tả về sản phẩm</Text>
                 {showFullDescription ? (
                   <View>
-                    <Text style={styles.descriptionText}>
-                      {productIdData?.description || ''}
-                    </Text>
+                    <Text style={styles.descriptionText}>{productIdData?.description || ''}</Text>
                   </View>
                 ) : (
                   <View>
@@ -206,7 +205,7 @@ const DetailsScreen = (props: Props) => {
             </View>
 
             <View style={styles.reviews}>
-              <View style={{ marginHorizontal: 20 }}>
+              <View style={{marginHorizontal: 20}}>
                 <TouchableOpacity>
                   <View style={styles.reviewsContainer}>
                     <View style={styles.reviewsContainer2}>
@@ -219,7 +218,7 @@ const DetailsScreen = (props: Props) => {
                         <View style={styles.starPoint}>
                           <Text style={styles.pointText}>4.9</Text>
                           <Text style={styles.pointText}> / 5 </Text>
-                          <View style={{ marginLeft: 5, flexDirection: 'row', alignItems: 'center' }}>
+                          <View style={{marginLeft: 5, flexDirection: 'row', alignItems: 'center'}}>
                             <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
                             <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
                             <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
@@ -236,26 +235,14 @@ const DetailsScreen = (props: Props) => {
                     </View>
                   </View>
                 </TouchableOpacity>
-                <View style={{ width: '100%', borderBottomWidth: 1, borderColor: '#DDDDDD' }}></View>
-
-                {/* <FlatList
-              data={data}
-              keyExtractor={item => item.id}
-              horizontal={true}
-              contentContainerStyle={styles.flatListContainer}
-              renderItem={({item}) => (
-                <TouchableWithoutFeedback onPress={() => console.log('code Xem chi tiet đánh giá: ', item.name)}>
-                  
-                </TouchableWithoutFeedback>
-              )}
-              scrollEnabled={false}/> */}
+                <View style={{width: '100%', borderBottomWidth: 1, borderColor: '#DDDDDD'}}></View>
 
                 <View>
                   <TouchableOpacity>
                     <View>
                       <View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 15, marginBottom: 8 }}>
-                          <Image style={{ width: 20, height: 20 }} source={require('../../../assets/images/plus.png')} />
+                        <View style={{flexDirection: 'row', alignItems: 'center', marginTop: 15, marginBottom: 8}}>
+                          <Image style={{width: 20, height: 20}} source={require('../../../assets/images/plus.png')} />
                           <Text
                             style={{
                               color: '#2A2A2A',
@@ -267,7 +254,7 @@ const DetailsScreen = (props: Props) => {
                             Name
                           </Text>
                         </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                        <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 8}}>
                           <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
                           <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
                           <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
@@ -299,7 +286,7 @@ const DetailsScreen = (props: Props) => {
                     </View>
                   </TouchableOpacity>
 
-                  <View style={{ width: '100%', borderBottomWidth: 1, borderColor: '#DDDDDD' }}></View>
+                  <View style={{width: '100%', borderBottomWidth: 1, borderColor: '#DDDDDD'}}></View>
                 </View>
               </View>
             </View>

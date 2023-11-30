@@ -153,8 +153,7 @@ export default StyleSheet.create({
   },
 
   noDataContainer: {
-    height: SCREEN_WIDTH,
-    width: SCREEN_HEIGHT,
+    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
