@@ -1,10 +1,10 @@
-import { RouteProp } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AppStackParam } from '@src/navigations/AppNavigation/stackParam';
-import { APP_NAVIGATION } from '@src/navigations/routes';
+import {RouteProp} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {AppStackParam} from '@src/navigations/AppNavigation/stackParam';
+import {APP_NAVIGATION} from '@src/navigations/routes';
 import ProductService from '@src/services/product';
-import { ProductModel } from '@src/services/product/product.model';
-import React, { useEffect, useRef, useState } from 'react';
+import {ProductModel} from '@src/services/product/product.model';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -17,13 +17,13 @@ import {
   View,
 } from 'react-native';
 import R from '@src/res';
-import { goBack } from '@src/navigations/services';
-import { vs } from '@src/styles/scalingUtils';
+import {goBack} from '@src/navigations/services';
+import {vs} from '@src/styles/scalingUtils';
 import BaseInput from '@src/containers/components/Base/BaseInput';
+import {BaseLoading} from '@src/containers/components/Base/BaseLoading';
 
 import styles from './style';
 import TouchableScale from 'react-native-touchable-scale';
-import { useDebounce } from 'use-debounce';
 
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
@@ -37,16 +37,13 @@ const SearchScreen = (props: Props) => {
   const [suggestions, setSuggestions] = useState<ProductModel[]>([]);
   const [selectedSuggestion, setSelectedSuggestion] = useState<ProductModel | null>(null);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
-
-  const [value] = useDebounce(searchQuery, 2000);
-
+  const [hasData, setHasData] = useState(true); //check hiển thị tb k có dât
 
   const config = {
     style: 'currency',
     currency: 'VND',
     maximumFractionDigits: 9,
   };
-
 
   const handleBackPress = () => {
     goBack();
@@ -60,6 +57,7 @@ const SearchScreen = (props: Props) => {
         const productService = new ProductService();
         const result = await productService.getSearch(query);
         setSuggestions(result.data.slice(0, 10));
+        setHasData(result.data.length > 0);
         setShowSuggestions(true);
       } else {
         setSuggestions([]);
@@ -79,6 +77,7 @@ const SearchScreen = (props: Props) => {
         const productService = new ProductService();
         const result = await productService.getSearch(query);
         setSearchResults(result.data);
+        setHasData(result.data.length > 0);
       } else {
         setSearchResults([]);
       }
@@ -87,13 +86,9 @@ const SearchScreen = (props: Props) => {
     } finally {
       setShowSuggestions(false);
       setLoading(false);
-      setSuggestions([])
+      setSuggestions([]);
     }
   };
-
-  // useEffect(() => {
-  //  fetchData(value);
-  // }, [value]);
 
   const handleSuggestionPress = (item: ProductModel) => {
     console.log('item:', item.name);
@@ -102,7 +97,7 @@ const SearchScreen = (props: Props) => {
     fetchSearchResults(item.name);
   };
 
-  function ListItemSuggest({ item }: { item: ProductModel }) {
+  function ListItemSuggest({item}: {item: ProductModel}) {
     return (
       <TouchableScale
         onPress={() => console.log('da chon 1 item', item.id)}
@@ -111,9 +106,9 @@ const SearchScreen = (props: Props) => {
         tension={100}>
         <View style={styles.suggestItem}>
           <View style={styles.viewSuggestImage}>
-            <Image source={{ uri: item.images }} style={{ width: '100%', height: '100%' }} />
+            <Image source={{uri: item.images}} style={{width: '100%', height: '100%'}} />
           </View>
-          <View style={{ flex: 0.5 }} />
+          <View style={{flex: 0.5}} />
 
           <View style={styles.viewSuggestText}>
             <Text numberOfLines={1} style={styles.suggestTextName}>
@@ -141,8 +136,9 @@ const SearchScreen = (props: Props) => {
           <BaseInput
             leftIcon={'search-outline'}
             title="Search"
-            value={searchQuery} x
-            onChangeText={(text) => {
+            value={searchQuery}
+            x
+            onChangeText={text => {
               setSearchResults([]);
               setSelectedSuggestion(null);
               setSearchQuery(text);
@@ -157,7 +153,7 @@ const SearchScreen = (props: Props) => {
                 fetchSearchResults(selectedSuggestion.name);
                 return;
               }
-              fetchSearchResults(event.nativeEvent.text)
+              fetchSearchResults(event.nativeEvent.text);
             }}
             borderRadius={10}
             style={styles.searchInput}
@@ -166,13 +162,17 @@ const SearchScreen = (props: Props) => {
         </View>
       </View>
 
-      <View style={{ flex: 9, padding: 8}}>
-        {loading && <ActivityIndicator size="large" />}
+      <View style={{flex: 9, padding: 8}}>
+        {loading && (
+          <View style={{height: 100}}>
+            <BaseLoading size={30} top={10} loading={true} color={'red'} />
+          </View>
+        )}
         {!loading && suggestions.length > 0 && (
           <FlatList
             data={suggestions}
             keyExtractor={item => item.id.toString()}
-            renderItem={({ item }) => (
+            renderItem={({item}) => (
               <TouchableOpacity style={styles.suggestionItem} onPress={() => handleSuggestionPress(item)}>
                 <Text style={styles.suggestionText}>{item.name}</Text>
               </TouchableOpacity>
@@ -184,15 +184,21 @@ const SearchScreen = (props: Props) => {
           <FlatList
             data={searchResults}
             keyExtractor={item => item.id.toString()}
-            columnWrapperStyle={{ justifyContent: 'space-between' }}
+            columnWrapperStyle={{justifyContent: 'space-between'}}
             numColumns={2}
             horizontal={false}
             // scrollEnabled={false}
             contentContainerStyle={styles.flatListSuggestContainer}
-            renderItem={({ item }) => <ListItemSuggest key={item.id} item={item} />}
+            renderItem={({item}) => <ListItemSuggest key={item.id} item={item} />}
           />
         )}
 
+        {!hasData && (
+          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+            <Image source={R.images.imgNoResult} style={{width: 100, height: 100}} />
+            <Text style={{fontSize: 20, fontFamily: 'LibreBaskerville-Bold', color: 'black'}}>Không có sản phẩm</Text>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );

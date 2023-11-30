@@ -135,4 +135,48 @@ export default StyleSheet.create({
   label: {
     fontSize: 16,
   },
+
+  //
+  dropdown: {
+    height: 45,
+    borderColor: 'gray',
+    borderRadius: 4,
+    paddingHorizontal: 8,
+    flex: 1, 
+    marginHorizontal: 8,
+    backgroundColor: '#D9D9D9',
+    marginTop: 10
+  },
+  dropdown1: {
+    height: 45,
+    borderColor: 'gray',
+    borderRadius: 4,
+    paddingHorizontal: 8,
+    flex: 1, 
+    backgroundColor: '#D9D9D9',
+    marginTop: 10
+  },
+  placeholderStyle: {
+    fontSize: 14,
+    fontFamily: 'LibreBaskerville-Regular',
+    color: 'black'
+    
+  },
+  selectedTextStyle: {
+    fontSize: 14,
+    color: 'black',
+    fontFamily: 'LibreBaskerville-Bold',
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  dropdownOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+  },
+  dropdownOptionText: {
+    color: 'red'
+  },
 });

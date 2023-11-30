@@ -53,15 +53,12 @@ const HomeScreen = (props: Props) => {
 
   const displayedDataSuggest = showAll ? dataProduct : dataProduct.slice(0, 10);
 
-
   const [dataCategory, setDataCategory] = useState<CategoryModel[]>([]);
   const [showAllCategory, setShowAllCategory] = useState(false);
   const displayedDataCategory = showAllCategory ? dataCategory : dataCategory.slice(0, 5);
 
   const limitedData = dataProduct.slice(0, 5);
   const animatedValues = limitedData.map(() => new Animated.Value(0));
-
-  const [activeIndex, setActiveIndex] = useState(0);
 
   const config = {
     style: "currency",
@@ -76,6 +73,7 @@ const HomeScreen = (props: Props) => {
       fetchDataProduct()
         .then(() => setRefreshing(false))
         .catch(() => setRefreshing(false));
+        
     } else {
       fetchDataCategory();
       fetchDataProduct()
@@ -245,7 +243,8 @@ const HomeScreen = (props: Props) => {
           <ScrollView
             indicatorStyle="black"
             showsVerticalScrollIndicator={false}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} 
+            />}>
 
             <View style={{ height: vs(160), marginTop: vs(8), borderRadius: vs(50)}}>
               <Swiper
