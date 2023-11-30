@@ -12,6 +12,9 @@ import ProductListScreen from '../../screen/product/list-product/index';
 import DetailsScreen from '@src/screen/product/detail-product/index';
 import CartScreen from '@src/screen/cart/index';
 import PayDetailScreen from '@src/screen/paydetail/index';
+import HistoryOrderScreen from '@src/screen/historyOrder/index';
+import OrderDetailScreen from '@src/screen/orderDetails/index';
+import VouCherScreen from '@src/screen/voucher/index';
 import myaccount from '@src/screen/account/myaccount';
 import changepass from '@src/screen/account/changepass';
 
@@ -69,6 +72,9 @@ const AppNavigationScreen = () => {
       <Stack.Screen name={APP_NAVIGATION.CART} component={CartScreen} />
       <Stack.Screen name={APP_NAVIGATION.PAYDETAIL} component={PayDetailScreen} />
       <Stack.Screen name={APP_NAVIGATION.ADDRESS} component={AddressPayScreen} />
+      <Stack.Screen name={APP_NAVIGATION.HISTORYORDER} component={HistoryOrderScreen} />
+      <Stack.Screen name={APP_NAVIGATION.ORDERDETAIL} component={OrderDetailScreen} />
+      <Stack.Screen name={APP_NAVIGATION.VOUCHER} component={VouCherScreen} />
       <Stack.Screen name={APP_NAVIGATION.MY_ACCOUNT} component={myaccount} />
       <Stack.Screen name={APP_NAVIGATION.CHANGE_PASS} component={changepass} />
       <Stack.Screen name={APP_NAVIGATION.HISTORYORDER} component={HistoryOrderScreen} />
