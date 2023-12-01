@@ -21,9 +21,9 @@ const endpoint = {
   
   favorites:{
     default:"/api/favorites",
-    getCart:"/api/favorites",
-    putCart:'/api/favorites',
-    deleteCart:'/api/favorites'
+    getfavorite:"/api/favorites",
+    postfavorite:'/api/favorites',
+    deletefavorite:'/api/favorites'
   },
 
   cart:{

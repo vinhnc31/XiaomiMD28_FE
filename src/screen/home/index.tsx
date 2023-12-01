@@ -171,14 +171,16 @@ const HomeScreen = (props: Props) => {
     );
   }
 
+  // chuyển sang màn chi tiết
   const goToDetails = (id: number) => {
     navigateToPage(APP_NAVIGATION.DETAILSPRODUCT, {productId: id});
+    //goToDetails(item.id)
   };
 
   //danh sach yeu thich
   function ListItemFavorite({ item }: { item: ProductModel }) {
     return (
-      <TouchableWithoutFeedback onPress={() => {console.log('code Xem chi tiet data: ', item.name), goToDetails(3)}}>
+      <TouchableWithoutFeedback onPress={() => {console.log('code Xem chi tiet data: ', item.name), goToDetails(item.id)}}>
         <View style={styles.item}>
           <Image source={{ uri: item.images }} style={styles.image} resizeMode="cover" />
           <View style={styles.overlay}>

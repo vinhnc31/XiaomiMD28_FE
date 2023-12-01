@@ -1,10 +1,9 @@
 import {BaseService} from '@src/services/base.service';
 import endpoints from '@src/services/config/endpoint';
 import http from '@src/services/config/http';
-import {FavoriteModel} from "@src/services/favorite/favorite.model";
+import {FavoriteModel, AddFavoriteModel} from "@src/services/favorite/favorite.model";
 const url = endpoints.favorites;
 
-// http://192.168.1.82:3000/api/favorites/
 export default class FavoriteService extends BaseService<FavoriteModel> {
     constructor() {
         super(url.default);
@@ -14,6 +13,11 @@ export default class FavoriteService extends BaseService<FavoriteModel> {
         const {data} = await http.get<FavoriteModel>(`${url.default}/${accountId}`);
         return data;
     }
+
+    public async addFavorite(body: AddFavoriteModel) {
+        const {data} = await http.post<FavoriteModel>(url.postfavorite, body);
+        return data;
+      }
 
 
 }

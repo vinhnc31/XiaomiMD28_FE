@@ -3,3 +3,8 @@ export interface FavoriteModel {
     productId: number,
     accountId: number,
 }
+
+export interface AddFavoriteModel {
+    productId: number,
+    AccountId: number,
+}

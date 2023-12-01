@@ -3,6 +3,12 @@ import {Dimensions, StyleSheet} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 export default StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: '#F1F1F1',
+    width: '100%',
+  },
   container: {
     marginBottom: vs(89),
   },
@@ -17,7 +23,7 @@ export default StyleSheet.create({
     width: hs(30),
     height: vs(38),
   },
-  
+
   icon: {
     width: hs(30),
     height: vs(30),
@@ -43,10 +49,10 @@ export default StyleSheet.create({
     backgroundColor: '#EFEFEF',
   },
   image: {
-    height: vs(50), 
+    height: vs(50),
     width: 'auto',
   },
-  overlay: {
+  overlayIconFavorite: {
     flex: 1,
     flexDirection: 'column',
     position: 'absolute',
@@ -56,11 +62,17 @@ export default StyleSheet.create({
     right: vs(-10),
     bottom: 0,
   },
+  iconFavoriteContainer: {alignItems: 'flex-end', justifyContent: 'center'},
   imgFavourite: {
     width: hs(100),
     height: vs(100),
     marginRight: vs(10),
   },
+  priceNameViewStarContainer: {
+    flex: 1.5,
+    marginHorizontal: hs(20),
+  },
+  nameContainer: {flex: 1, justifyContent: 'center', marginBottom: 8},
   text: {
     fontSize: ms(18),
     color: '#000',
@@ -115,6 +127,39 @@ export default StyleSheet.create({
     fontSize: ms(14),
     fontFamily: 'LibreBaskerville-Bold',
   },
+  // phan chọn màu
+  flatListColorsContainer: {
+    flex: 1,
+    marginHorizontal: hs(20),
+    marginBottom: vs(15),
+  },
+  mainDescription: {flex: 1, backgroundColor: '#FFFFFF', marginBottom: vs(10)},
+  btnColorsContainer: {
+    flex: 1,
+    marginRight: hs(5),
+  },
+  btnColors: {
+    height: vs(30),
+    alignItems: 'center',
+    alignSelf: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    borderRadius: ms(6),
+    borderWidth: 0.3,
+    borderColor: '#000',
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  txtNameColors: {
+    fontSize: ms(12),
+    fontFamily: 'LibreBaskerville-Bold',
+    fontWeight: '400',
+    marginHorizontal: hs(14),
+    color: '#000000',
+  },
   // part 2
   // mo ta chi tiet
   descriptionContainer: {
@@ -148,7 +193,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: vs(15),
-    backgroundColor: '#D9D9D9'
+    backgroundColor: '#D9D9D9',
   },
   seeMoreText: {
     color: '#000',
@@ -167,6 +212,7 @@ export default StyleSheet.create({
     backgroundColor: '#FFFFFF',
     marginBottom: vs(15),
   },
+  reviewBody: {marginHorizontal: 20},
   reviewsContainer: {
     width: '100%',
     height: vs(70),
@@ -178,6 +224,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     marginTop: vs(8),
   },
+  borderBottom: {width: '100%', borderBottomWidth: 1, borderColor: '#DDDDDD'},
   // tiêu đề và số lượng đánh giá
   reviewsTitle: {},
   reviewTitleText: {
@@ -236,35 +283,36 @@ export default StyleSheet.create({
   },
 
   // mua hang vv
-  containerStyle: {
+  BuyandAddtoCartContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
     height: vs(89),
   },
-  leftContainerStyle: {
+  leftContainerCart: {
     backgroundColor: '#2BBAA9',
-    flexDirection: 'row',
+    alignItems: 'center', // Canh giữa các phần tử theo chiều dọc
+    justifyContent: 'center', // Canh giữa các phần tử theo chiều ngang
     width: '50%',
     height: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
-  imageBtn: {
-    width: vs(100),
-    alignItems: 'center',
+  leftRowCart: {
+    flexDirection: 'row', // Thiết lập hướng dòng là "row" để các phần tử con nằm ngang
+    alignItems: 'center', // Canh giữa các phần tử theo chiều dọc
+    justifyContent: 'center', // Canh giữa các phần tử theo chiều ngang
   },
-
-  imageStyle: {
-    width: hs(40),
-    height: vs(40),
+  imgAddCart: {
+    width: hs(33),
+    height: vs(33),
   },
-  lineverticalLines: {
-    height: vs(31),
-    borderLeftWidth: 0.8,
-    borderColor: '#727272',
+  txtAddCart: {
+    color: '#FFFFFF',
+    fontWeight: '300',
+    fontSize: ms(11),
+    fontFamily: 'LibreBaskerville-Bold',
+    marginLeft: hs(5),
   },
-  rightContainerStyle: {
+  rightContainerBuy: {
     backgroundColor: '#FF6900',
     width: '50%',
     height: '100%',
@@ -272,12 +320,12 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
 
-  textLabelStyle: {
+  textBuy: {
     paddingHorizontal: '15%',
     paddingVertical: '5%',
     color: '#FFFFFF',
-    fontWeight: '400',
-    fontSize: ms(20),
+    fontWeight: '300',
+    fontSize: ms(18),
     fontFamily: 'LibreBaskerville-Bold',
   },
 
