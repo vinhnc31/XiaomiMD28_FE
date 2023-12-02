@@ -18,8 +18,9 @@ export const images = {
   iconBack: require('../assets/images/back.png'),
   changepass: require('../assets/images/changepass.png'),
   user: require('../assets/images/user.png'),
-  location: require('../assets/images/placeholder.png'),
+  location: require('../assets/images/placeholder1.png'),
   history: require('../assets/images/history.png'),
   support: require('../assets/images/support.png'),
-  signinGG:require('../assets/images/signGG.png'),
+  signinGG: require('../assets/images/signGG.png'),
+  cameraIconx2: require('../assets/images/iconCamera2x.png'),
 };

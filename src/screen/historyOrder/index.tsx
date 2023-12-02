@@ -2,76 +2,42 @@ import {RouteProp, useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {APP_NAVIGATION} from '@src/navigations/routes';
 import React, {useEffect, useState} from 'react';
-import {
-  Text,
-  SafeAreaView,
-  View,
-  FlatList,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-  Modal,
-} from 'react-native';
-import {hs} from '@src/styles/scalingUtils';
+import {Text, SafeAreaView, View, FlatList, Image, TouchableOpacity, ScrollView, Modal} from 'react-native';
 import {AppStackParam} from '@src/navigations/AppNavigation/stackParam';
 import styles from './styles';
-import {goBack} from '@src/navigations/services';
+import {goBack, navigateToPage} from '@src/navigations/services';
 import BaseHeaderNoCart from '@src/containers/components/Base/BaseHeaderNoCart';
 import {BaseButton} from '@src/containers/components/Base/BaseButton';
 import {BaseLoading} from '@src/containers/components/Base/BaseLoading';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {BaseText} from '@src/containers/components/Base';
+import {HistoryOrderModel} from '@src/services/historyOrder/history.model';
+import HistoryOrderService from '@src/services/historyOrder';
+import {useAuth} from '@src/hooks/useAuth';
+import { Dimensions } from 'react-native';
+import {ms, vs, hs} from '@src/styles/scalingUtils';
 const MaterialTopTabs = createMaterialTopTabNavigator();
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
   route: RouteProp<AppStackParam, APP_NAVIGATION.HISTORYORDER>;
 }
-type HISTORYORDER = {
-  id: string;
-  nameProduct: string;
-  priceProduct: number;
-  statusOrder: string;
-  quantityProduct: number;
-  createAt: string;
-  colorProduct: string;
-  imageProduct: string;
-  saleProduct: string;
-  totalProduct: number;
-  paymentMethods: string;
-  confirmationTime: string;
-  deliveryTime: string;
-  addressUser: {
-    name: string;
-    phone: string;
-    note: string;
-    address: string;
-  };
-};
-
 const HistoryOrderScreen = (props: Props) => {
-  const [selectedVouchers, setSelectedVouchers] = useState<HISTORYORDER[]>([]);
-  const [data1, setData] = useState<HISTORYORDER[]>([]);
+  const [data, setData] = useState<HistoryOrderModel[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedVoucher, setSelectedVoucher] = useState(null);
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  const fetchData = async () => {
+  const historyOrder = new HistoryOrderService();
+  const {user} = useAuth();
+  const fetchData = async (status: string) => {
     try {
       setLoading(true);
-      const response = await fetch('https://655c63b225b76d9884fd1f63.mockapi.io/historyOrder');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const result = await response.json();
-      setData(result);
+      const result = await historyOrder.getOrder(Number(user?.id), status);
+      setData(result.data);
       setLoading(false);
     } catch (error) {
       setLoading(false);
     }
   };
   const navigation = useNavigation();
-  useEffect(() => {
-    fetchData();
-  }, []);
   const onHide = (): void => {
     setIsVisible(false);
   };
@@ -79,6 +45,7 @@ const HistoryOrderScreen = (props: Props) => {
   const onShow = (): void => {
     setIsVisible(true);
   };
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white', flexDirection: 'column'}}>
       <BaseHeaderNoCart title="Lịch sử mua hàng" onBackPress={navigation.goBack} />
@@ -88,37 +55,83 @@ const HistoryOrderScreen = (props: Props) => {
           tabBarScrollEnabled: true,
           tabBarAndroidRipple: {borderless: false},
         }}>
-        <MaterialTopTabs.Screen name="Tab1" options={{title: 'Chưa xác nhận'}}>
-          {props => <HistoryOrderTab {...props} data={data1} loading={loading} onShow={onShow}/>}
+        <MaterialTopTabs.Screen
+          name="Tab1"
+          options={{title: 'Chưa xác nhận'}}
+          listeners={{
+            focus: () => fetchData('0'),
+          }}>
+          {props => <HistoryOrderTab {...props} data={data} loading={loading} onShow={onShow} />}
         </MaterialTopTabs.Screen>
-        <MaterialTopTabs.Screen name="Tab2" options={{title: 'Đang vận chuyển'}}>
-          {props => <HistoryOrderTab {...props} data={data1} loading={loading} />}
+        <MaterialTopTabs.Screen
+          name="Tab2"
+          options={{title: 'Đang vận chuyển'}}
+          listeners={{
+            focus: () => fetchData('1'),
+          }}>
+          {props => <HistoryOrderTab {...props} data={data} loading={loading} />}
         </MaterialTopTabs.Screen>
-        <MaterialTopTabs.Screen name="Tab3" options={{title: 'Chờ nhận hàng'}}>
-          {props => <HistoryOrderTab {...props} data={data1} loading={loading} />}
+        <MaterialTopTabs.Screen
+          name="Tab3"
+          options={{title: 'Chờ nhận hàng'}}
+          listeners={{
+            focus: () => fetchData('2'),
+          }}>
+          {props => <HistoryOrderTab {...props} data={data} loading={loading} />}
         </MaterialTopTabs.Screen>
-        <MaterialTopTabs.Screen name="Tab4" options={{title: 'Đã nhận'}}>
-          {props => <HistoryOrderTab {...props} data={data1} loading={loading} />}
+        <MaterialTopTabs.Screen
+          name="Tab4"
+          options={{title: 'Đã nhận'}}
+          listeners={{
+            focus: () => fetchData('3'),
+          }}>
+          {props => <HistoryOrderTab {...props} data={data} loading={loading} />}
         </MaterialTopTabs.Screen>
-        <MaterialTopTabs.Screen name="Tab5" options={{title: 'Đã hủy'}}>
-          {props => <HistoryOrderTab {...props} data={data1} loading={loading} />}
+        <MaterialTopTabs.Screen
+          name="Tab5"
+          options={{title: 'Đã hủy'}}
+          listeners={{
+            focus: () => fetchData('4'),
+          }}>
+          {props => <HistoryOrderTab {...props} data={data} loading={loading} />}
         </MaterialTopTabs.Screen>
       </MaterialTopTabs.Navigator>
       <Modal visible={isVisible} onRequestClose={onHide} transparent animationType="fade">
-          <TouchableOpacity onPress={onHide} style={styles.modalWrap}>
-            <View style={styles.modalInner}>
-              <BaseText fullText={'Bạn có chắc chắn muốn hủy không ?'} style={styles.menuName} />
-              <View style={{flexDirection:'row',justifyContent:'space-around',width: "100%",}}>
-              <BaseButton text="Hủy" onPress={onHide} width={hs(70)} height={hs(35)} style={{backgroundColor:'#B7B7B7'}}/>
-              <BaseButton text="Xác nhận" onPress={()=>{}} width={hs(100)} height={hs(35)} />
-              </View>
+        <TouchableOpacity onPress={onHide} style={styles.modalWrap}>
+          <View style={styles.modalInner}>
+            <BaseText fullText={'Bạn có chắc chắn muốn hủy không ?'} style={styles.menuName} />
+            <View style={{flexDirection: 'row', justifyContent: 'space-around', width: '100%'}}>
+              <BaseButton
+                text="Hủy"
+                onPress={onHide}
+                width={hs(70)}
+                height={hs(35)}
+                style={{backgroundColor: '#B7B7B7'}}
+              />
+              <BaseButton text="Xác nhận" onPress={() => {}} width={hs(100)} height={hs(35)} />
             </View>
-          </TouchableOpacity>
-        </Modal>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </SafeAreaView>
   );
 };
-const HistoryOrderTab = ({data, loading,onShow}: {data: HISTORYORDER[]; loading: boolean; onShow: () => void}) => (
+const getStatusText = (status: string) => {
+  if (status === '0') return 'Chờ xác nhận';
+  if (status === '1') return 'Đang vận chuyển';
+  if (status === '2') return 'Chờ giao hàng';
+  if (status === '3') return 'Đã nhận';
+  if (status === '4') return 'Đã hủy';
+};
+const HistoryOrderTab = ({
+  data,
+  loading,
+  onShow,
+}: {
+  data: HistoryOrderModel[];
+  loading: boolean;
+  onShow: () => void;
+}) => (
   <View>
     {loading ? (
       <BaseLoading size={20} top={100} loading={true} />
@@ -132,42 +145,65 @@ const HistoryOrderTab = ({data, loading,onShow}: {data: HISTORYORDER[]; loading:
       <ScrollView showsVerticalScrollIndicator={false}>
         <FlatList
           data={data}
-          keyExtractor={item => item.id}
           horizontal={false}
           scrollEnabled={false}
           showsVerticalScrollIndicator={false}
           renderItem={({item}) => (
             <View style={{backgroundColor: 'white'}}>
-              <TouchableOpacity onPress={() => {}}>
+               <Text style={styles.textStatus}>{getStatusText(item.status)}</Text>
+              <TouchableOpacity onPress={() => {navigateToPage(APP_NAVIGATION.ORDERDETAIL,{item})}}>
                 <View style={styles.viewItem}>
                   <View style={styles.item}>
-                    <Image source={{uri: item.imageProduct}} style={styles.image} resizeMode="stretch" />
+                    <Image
+                      source={{uri: item.OrdersProducts[0].productcolor['image']}}
+                      style={styles.image}
+                      resizeMode="stretch"
+                    />
                     <View style={styles.viewItem}>
                       <Text style={{color: 'black', fontSize: 18, width: '50%'}} numberOfLines={1} ellipsizeMode="tail">
-                        {item.nameProduct}
+                        {item.OrdersProducts[0].Product['name']}
                       </Text>
-                      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                      <View style={{flexDirection: 'row', justifyContent: 'space-between',width: hs(220),}}>
                         <Text ellipsizeMode="tail" numberOfLines={1} style={styles.text}>
-                          Màu sắc: {item.colorProduct}
+                          Màu sắc: {item.OrdersProducts[0].productcolor['Color']['nameColor']}
                         </Text>
-                        <Text style={styles.text}>x {item.quantityProduct}</Text>
+                        <Text style={styles.text}>x {item.OrdersProducts[0].quantity}</Text>
                       </View>
-                      <Text style={styles.textStatus}>{item.statusOrder}</Text>
+                      <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
+                        <Text>
+                        </Text>
+                        <View style={{width: hs(220),alignItems:'flex-end'}}>
+                        <Text style={{fontSize:15}}>{item.OrdersProducts[0].ProductColorConfig["price"].toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}</Text>
+                        </View>                       
+                      </View>
                     </View>
                   </View>
                 </View>
+                {item.OrdersProducts.length > 1 ? (
+                  <View style={{borderWidth: 0.2, marginBottom:5}}>
+                    <Text style={{alignSelf: 'center', margin: 5}}>Xem thêm sản phẩm</Text>
+                  </View>
+                ) : null}
               </TouchableOpacity>
               <View style={{height: 1, width: '100%', backgroundColor: '#D9D9D9'}} />
               <View style={styles.viewTextTotal}>
-                <Text style={styles.textQuantity}>{item.quantityProduct} sản phẩm</Text>
+                <Text style={styles.textQuantity}>{item.OrdersProducts[0].quantity} sản phẩm</Text>
                 <View style={{flexDirection: 'row'}}>
                   <Text style={{fontSize: 16}}>Thành tiền :</Text>
-                  <Text style={{color: 'red', fontSize: 16}}>{item.totalProduct}₫</Text>
+                  <Text style={{color: 'red', fontSize: 16}}>
+                    {item.total.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}
+                  </Text>
                 </View>
               </View>
               <View style={{height: 1, width: '100%', backgroundColor: '#D9D9D9'}} />
               <View style={{alignSelf: 'flex-end', marginHorizontal: 10}}>
-                <BaseButton onPress={() => {onShow()}} text="Hủy" style={styles.buttonCancer} />
+                <BaseButton
+                  onPress={() => {
+                    onShow();
+                  }}
+                  text="Hủy"
+                  style={styles.buttonCancer}
+                />
               </View>
               <View style={{height: 10, width: '100%', backgroundColor: '#F1F1F1', marginTop: 10}}></View>
             </View>

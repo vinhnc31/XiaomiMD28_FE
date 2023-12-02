@@ -85,7 +85,7 @@ const HomeScreen = (props: Props) => {
     navigateToPage(APP_NAVIGATION.CATEGORY);
   };
   const goToCart = () => {
-    navigateToPage(APP_NAVIGATION.CART);
+    navigateToPage(APP_NAVIGATION.EVALUATE);
   };
 
   const gotoListProduct = (id, name) => {

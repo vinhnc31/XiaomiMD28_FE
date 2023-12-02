@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { BaseButton } from './BaseButton';
 
-const BaseButtonPay = ({ name, phone, note, address, onCartPress }) => {
+const BaseButtonPay = ({ totalPrice ,onOrderPress, check }) => {
   return (
     <View style={{ borderColor: '#D9D9D9', borderWidth: 1.5,}}>
       <View style={styles.container}>
@@ -10,9 +10,9 @@ const BaseButtonPay = ({ name, phone, note, address, onCartPress }) => {
           <Text style={styles.text}>
             Tổng thanh toán
           </Text>
-          <Text style={styles.textPrice}>12.000.000đ</Text>
+          <Text style={styles.textPrice}>{totalPrice}</Text>
         </View>
-        <BaseButton onPress={() => {}} text='Đặt hàng' style={{ width: 130, marginLeft: 10 }} />
+        <BaseButton disable={check} onPress={() => {onOrderPress()}} text='Đặt hàng' style={{ width: 130, marginLeft: 10 }} />
       </View>
     </View>
   );

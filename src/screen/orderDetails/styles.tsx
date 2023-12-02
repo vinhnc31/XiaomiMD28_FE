@@ -9,11 +9,12 @@ export default StyleSheet.create({
   },
   item: {
     backgroundColor:'white',
-    margin: 10,
+    marginHorizontal: 10,
     borderRadius: 10,
     borderWidth:.5,
     flexDirection:'row',
     elevation:3,
+    
   },view:{
     flexDirection:'row',
   },
@@ -27,8 +28,9 @@ export default StyleSheet.create({
     width: hs(100),
   },
   text: {
-    color: '#000000', // Màu văn bản
-    fontSize: 20,
+    marginVertical:5,
+    color: '#6D6D6D', // Màu văn bản
+    fontSize: 14,
     fontFamily: 'LibreBaskerville-Bold',
     width: hs(200),
   },
@@ -44,6 +46,8 @@ export default StyleSheet.create({
     fontFamily:'LibreBaskerville-DpdE'
   },
   viewItem:{
+    paddingVertical:ms(10),
+    justifyContent:'space-between',
     backgroundColor:'white',
     flexDirection:'column',
   },

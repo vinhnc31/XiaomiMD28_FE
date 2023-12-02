@@ -14,6 +14,7 @@ import {
   Platform,
   KeyboardAvoidingView,
 } from 'react-native';
+import {ms, vs, hs} from '@src/styles/scalingUtils';
 import {AppStackParam} from '@src/navigations/AppNavigation/stackParam';
 import styles from './styles';
 import {goBack, navigateToPage} from '@src/navigations/services';
@@ -27,8 +28,62 @@ interface Props {
   route: RouteProp<AppStackParam, APP_NAVIGATION.ORDERDETAIL>;
 }
 const OrderDetailScreen = (props: Props) => {
-  const [data, setData] = useState([]);
-  const [error, setError] = useState('');
+  const [title, setTitle] = useState('');
+  const [result, setResult] = useState([]);
+  const [titleContent, setTitleContent] = useState<string>('');
+  const [image, setImage] = useState();
+  const data = props.route.params?.item;
+  const getData = () => {
+    setResult(data.OrdersProducts);
+  };
+  useEffect(() => {
+    getData();
+    check();
+  }, []);
+  const sale=()=>{
+
+  }
+  const check = () => {
+    if (data.status === '0') {
+      setTitle('Chờ xác nhận !');
+      setTitleContent('Đơn đặt hàng đang được cửa hàng xác nhận.');
+      setImage(require('../../assets/images/todolist.png'));
+    }
+    if (data.status === '1') {
+      setTitle('Đã xác nhận đơn hàng !');
+      setTitleContent('Đơn hàng đang được đưa tới đơn vị vận chuyển.');
+      setImage(require('../../assets/images/delivery-service.png'));
+    }
+    if (data.status === '2') {
+      setTitle('Đang giao hàng !');
+      setTitleContent('Đơn hàng đang được đưa tới khách hàng.');
+      setImage(require('../../assets/images/transport.png'));
+    }
+    if (data.status === '3') {
+      setTitle('Đã nhận hàng !');
+      setTitleContent('Đơn hàng đã giao thành công.');
+      setImage(require('../../assets/images/booking1.png'));
+    }
+    if (data.status === '4') {
+      setTitle('Đã hủy đơn hàng !');
+      setTitleContent('Đơn hàng đã hủy thành công.');
+      setImage(require('../../assets/images/cancel.png'));
+    }
+  };
+  const date = (dateString: string) => {
+    const date = new Date(dateString);
+    const formattedDate = date.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+    const formattedTime = date.toLocaleTimeString('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+    return `${formattedDate} ${formattedTime}`;
+  };
+  console.log(result);
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white', flexDirection: 'column'}}>
       <BaseHeaderNoCart title="Thông tin đơn hàng" onBackPress={goBack} />
@@ -42,13 +97,19 @@ const OrderDetailScreen = (props: Props) => {
               justifyContent: 'space-between',
             }}>
             <View style={{flexDirection: 'column'}}>
-              <Text style={{fontSize: 20, color: 'white', fontFamily: 'LibreBaskerville-DpdE'}}>Chờ xác nhận !</Text>
+              <Text style={{fontSize: 20, color: 'white', fontFamily: 'LibreBaskerville-DpdE'}}>{title}</Text>
               <Text
-                style={{fontSize: 17, color: 'white', width: 250, marginTop: 20, fontFamily: 'LibreBaskerville-DpdE'}}>
-                Đơn đặt hàng đang được cửa hàng xác nhận.
+                style={{
+                  fontSize: 17,
+                  color: 'white',
+                  width: 250,
+                  marginTop: 20,
+                  fontFamily: 'LibreBaskerville-DpdE',
+                }}>
+                {titleContent}
               </Text>
             </View>
-            <Image source={require('../../assets/images/todolist.png')} style={{height: 100, width: 100}} />
+            <Image source={image || require('../../assets/images/error.png')} style={{height: 100, width: 100}} />
           </View>
           <View style={{flexDirection: 'row', margin: 10}}>
             <Image
@@ -58,10 +119,10 @@ const OrderDetailScreen = (props: Props) => {
             <Text style={{fontSize: 20, color: 'black', fontFamily: 'LibreBaskerville-DpdE'}}>Địa chỉ nhận hàng.</Text>
           </View>
           <View style={styles.container}>
-            <Text style={styles.textAddress}>Tên người nhận: hai</Text>
-            <Text style={styles.textAddress}>Số điện thoại: 0987654321</Text>
-            <Text style={styles.textAddress}>Ghi chú: khong co gi</Text>
-            <Text style={styles.textAddress}>Địa chỉ: ha noi</Text>
+            <Text style={styles.textAddress}>Tên người nhận: {data.Address['nameReceiver']}</Text>
+            <Text style={styles.textAddress}>Số điện thoại: {data.Address['phoneReceiver']}</Text>
+            <Text style={styles.textAddress}>Ghi chú: {data.Address['note']}</Text>
+            <Text style={styles.textAddress}>Địa chỉ: {data.Address['address']}</Text>
           </View>
           <View style={{height: 10, width: '100%', backgroundColor: '#F1F1F1', marginTop: 10}} />
           <View style={{flexDirection: 'row', margin: 10}}>
@@ -71,46 +132,86 @@ const OrderDetailScreen = (props: Props) => {
             />
             <Text style={{fontSize: 20, color: 'black', fontFamily: 'LibreBaskerville-DpdE'}}>Thông tin đơn hàng.</Text>
           </View>
-          <View style={{flexDirection: 'row', marginHorizontal: 10, marginBottom: 15}}>
-            <View style={{width: 100, height: 100, backgroundColor: 'red'}}></View>
-            <View style={{flexDirection: 'column', marginHorizontal: 10, justifyContent: 'space-between'}}>
-              <Text
-                style={{width: 270, color: 'black', fontSize: 20, fontFamily: 'LibreBaskerville-DpdE'}}
-                ellipsizeMode="tail"
-                numberOfLines={1}>
-                Điện thoại
-              </Text>
-              <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <View style={{flexDirection: 'row'}}>
-                  <Text style={{fontSize: 15, fontFamily: 'LibreBaskerville-DpdE'}}>Màu: </Text>
-                  <Text style={{fontSize: 15, fontFamily: 'LibreBaskerville-DpdE'}}>Xanh</Text>
+          <FlatList
+            data={result}
+            horizontal={false}
+            scrollEnabled={false}
+            showsVerticalScrollIndicator={false}
+            renderItem={({item}) => (
+              <View style={styles.viewItem}>
+                <View style={styles.item}>
+                  <Image source={{uri: item.productcolor['image']}} style={styles.image} resizeMode="stretch" />
+                  <View style={styles.viewItem}>
+                    <Text
+                      style={{
+                        color: 'black',
+                        fontSize: 18,
+                        width: '90%',
+                        fontFamily: 'LibreBaskerville-DpdE',
+                        marginBottom: 5,
+                      }}
+                      numberOfLines={1}
+                      ellipsizeMode="tail">
+                      {item.Product['name']}
+                    </Text>
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between', width: hs(220)}}>
+                      {item.productcolor != null ? (
+                        <Text ellipsizeMode="tail" numberOfLines={1} style={styles.text}>
+                          Màu sắc: {item.productcolor['Color']['nameColor']}
+                        </Text>
+                      ) : (
+                        <Text style={{width: hs(200)}}></Text>
+                      )}
+                      <Text style={styles.text}>x {item.quantity}</Text>
+                    </View>
+                    <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>
+                      {item.ProductColorConfig != null ? (
+                        <View style={{width: hs(220)}}>
+                          <Text style={styles.text}>
+                            Cấu hình: {item.ProductColorConfig.Config['nameConfig'].split(' ')[1]}
+                          </Text>
+                        </View>
+                      ) : (
+                        <View style={{width: hs(220)}}></View>
+                      )}
+                    </View>
+                    <View style={{width: hs(220), alignItems: 'flex-end'}}>
+                      <Text style={{fontSize: 15, color: 'red'}}>
+                        {item.ProductColorConfig['price'].toLocaleString('vi-VN', {
+                          style: 'currency',
+                          currency: 'VND',
+                        })}
+                      </Text>
+                    </View>
+                  </View>
                 </View>
-                <Text style={{fontSize: 15}}>x1</Text>
               </View>
-              <View style={{flexDirection: 'row'}}>
-                <Text style={{fontSize: 15, fontFamily: 'LibreBaskerville-DpdE'}}>Cấu hình: </Text>
-                <Text style={{fontSize: 15, fontFamily: 'LibreBaskerville-DpdE'}}>Ram 8G/128GB </Text>
-              </View>
-            </View>
-          </View>
+            )}
+          />
+
           <View style={{height: 1, width: '100%', backgroundColor: '#D9D9D9'}} />
           <View style={{flexDirection: 'row', margin: 10, justifyContent: 'space-between'}}>
-            <Text style={{fontSize: 18, fontFamily: 'LibreBaskerville-DpdE'}}>Tổng tiền hàng: </Text>
-            <Text style={{fontSize: 18, fontFamily: 'LibreBaskerville-DpdE'}}>6,150,000₫</Text>
+            <Text style={{fontSize: 15, fontFamily: 'LibreBaskerville-DpdE'}}>Tổng tiền hàng: </Text>
+            <Text style={{fontSize: 15, fontFamily: 'LibreBaskerville-DpdE'}}>
+              {data.total.toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+              })}
+            </Text>
           </View>
           <View style={{flexDirection: 'row', marginHorizontal: 10, justifyContent: 'space-between'}}>
-            <Text style={{fontSize: 18, fontFamily: 'LibreBaskerville-DpdE'}}>Giảm giá: </Text>
-            <Text style={{fontSize: 18, fontFamily: 'LibreBaskerville-DpdE'}}>6,150,000₫</Text>
+            <Text style={{fontSize: 15, fontFamily: 'LibreBaskerville-DpdE'}}>Giảm giá: </Text>
+            <Text style={{fontSize: 15, fontFamily: 'LibreBaskerville-DpdE'}}>6,150,000₫</Text>
           </View>
           <View style={{flexDirection: 'row', margin: 10, justifyContent: 'space-between'}}>
-            <Text style={{fontSize: 20, color: 'black', fontFamily: 'LibreBaskerville-Bold'}}>Thành tiền: </Text>
-            <Text style={{fontSize: 20, color: 'black', fontFamily: 'LibreBaskerville-Bold'}}>6,150,000₫</Text>
+            <Text style={{fontSize: 18, color: 'black', fontFamily: 'LibreBaskerville-Bold'}}>Thành tiền: </Text>
+            <Text style={{fontSize: 18, color: 'black', fontFamily: 'LibreBaskerville-Bold'}}>6,150,000₫</Text>
           </View>
-          <Text style={{fontSize: 15, fontFamily: 'LibreBaskerville-DpdE', marginHorizontal: 10}}>
+          <Text style={{fontSize: 13, fontFamily: 'LibreBaskerville-DpdE', marginHorizontal: 10}}>
             Vui lòng thanh toán <Text style={{color: 'red'}}>6,150,000₫</Text> khi nhận hàng
           </Text>
           <View style={{height: 10, width: '100%', backgroundColor: '#F1F1F1', marginVertical: 10}} />
-          <Text style={{fontSize: 20, fontFamily: 'LibreBaskerville-DpdE', marginHorizontal: 10, color: 'black'}}>
+          <Text style={{fontSize: 18, fontFamily: 'LibreBaskerville-DpdE', marginHorizontal: 10, color: 'black'}}>
             Phương thức thanh toán
           </Text>
           <Text style={{fontSize: 16, fontFamily: 'LibreBaskerville-DpdE', marginHorizontal: 10, marginVertical: 5}}>
@@ -118,12 +219,13 @@ const OrderDetailScreen = (props: Props) => {
           </Text>
           <View style={{height: 10, width: '100%', backgroundColor: '#F1F1F1', marginVertical: 10}} />
           <View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 10}}>
-            <Text style={{fontSize: 18, fontFamily: 'LibreBaskerville-DpdE', color: 'black'}}>Mã đơn hàng</Text>
-            <Text style={{fontSize: 18, fontFamily: 'LibreBaskerville-DpdE', color: 'black'}}>23123213</Text>
+            <Text style={{fontSize: 15, fontFamily: 'LibreBaskerville-DpdE', color: 'black'}}>Mã đơn hàng</Text>
+            <Text style={{fontSize: 15, fontFamily: 'LibreBaskerville-DpdE', color: 'black'}}>{data.id}</Text>
           </View>
-          <View style={{flexDirection: 'row', marginHorizontal: 10,marginVertical:5, justifyContent: 'space-between'}}>
-            <Text style={{fontSize: 18, fontFamily: 'LibreBaskerville-DpdE'}}>Thời gian đặt hàng  </Text>
-            <Text style={{fontSize: 18, fontFamily: 'LibreBaskerville-DpdE'}}>24/11/2023 08:03</Text>
+          <View
+            style={{flexDirection: 'row', marginHorizontal: 10, marginVertical: 5, justifyContent: 'space-between'}}>
+            <Text style={{fontSize: 13, fontFamily: 'LibreBaskerville-DpdE'}}>Thời gian đặt hàng </Text>
+            <Text style={{fontSize: 13, fontFamily: 'LibreBaskerville-DpdE'}}>{date(data.createdAt)}</Text>
           </View>
         </View>
       </ScrollView>

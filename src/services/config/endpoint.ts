@@ -34,6 +34,15 @@ const endpoint = {
   voucher:{
     default:"/api/promotion",
     getPromotion:"/api/promotion",
+  },
+  order:{
+    default:"/api/order",
+    getOrder:"/api/order",
+    postOrder:"/api/order",
+  },
+  pay:{
+    default:"/api/create_payment_url",
+    postPay:"/api/create_payment_url",
   }
 };
 

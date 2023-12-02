@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
-const BaseTextInput = ({ name, hintext, onChangeText }) => {
+const BaseTextInput = ({ name, hintext, onChangeText,editable }) => {
   return (
       <View style={{alignSelf: 'flex-start', width: '100%'}}>
         <Text style={{fontSize: 16}}>{hintext}</Text>
         <TextInput
+          editable={editable}
           placeholder= {hintext}
           style={styles.textInput}
           onChangeText={onChangeText}
