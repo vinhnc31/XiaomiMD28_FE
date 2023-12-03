@@ -147,8 +147,8 @@ const HomeScreen = (props: Props) => {
             </Text>
             <View style={styles.viewStar}>
               <Image style={styles.imgStar} source={R.images.iconStar} />
-              <Text style={styles.text}>4.9 </Text>
-              <Text style={styles.textCmt}>(50)</Text>
+              <Text style={styles.text}>{item.averageRating} </Text>
+              <Text style={styles.textCmt}>({item.commentCount})</Text>
             </View>
           </View>
         </View>
@@ -197,8 +197,8 @@ const HomeScreen = (props: Props) => {
               }}>
               <View style={styles.viewStar}>
                 <Image style={styles.imgStar} source={R.images.iconStar} />
-                <Text style={styles.text}>4.9</Text>
-                <Text style={styles.textCmt}>(50)</Text>
+                <Text style={styles.text}>{item.averageRating} </Text>
+                <Text style={styles.textCmt}>({item.commentCount})</Text>
               </View>
               <Text style={styles.text}>
               {new Intl.NumberFormat("vi-VN", config).format(

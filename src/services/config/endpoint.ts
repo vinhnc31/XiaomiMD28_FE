@@ -23,6 +23,11 @@ const endpoint = {
     getCart:"/api/cart/1",
     putCart:'/api/cart',
     deleteCart:'/api/cart'
+  },
+  
+  configuration: {
+    default: '/api/config',
+    getConfiguration: '/api/config',
   }
 };
 

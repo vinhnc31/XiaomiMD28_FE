@@ -16,11 +16,11 @@ const BaseHeader = ({ title, onBackPress, onCartPress, onFilterPress }:any) => {
           <Text numberOfLines={1} style={styles.title}>{title}</Text>
         </View>
 
-        <View style={{flex: 1, alignItems: 'flex-start'}}>
+        {/* <View style={{flex: 1, alignItems: 'flex-start'}}>
           <TouchableOpacity onPress={onFilterPress}>
             <Image source={R.images.iconFilter} style={styles.iconFilter} />
           </TouchableOpacity>
-        </View>
+        </View> */}
         <View style={{flex: 1, alignItems: 'flex-start'}}>
           <TouchableOpacity onPress={onCartPress}>
             <Image source={R.images.iconCartBlack} style={styles.icon} />

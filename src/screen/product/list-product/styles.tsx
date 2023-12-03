@@ -143,7 +143,7 @@ export default StyleSheet.create({
     borderRadius: 4,
     paddingHorizontal: 8,
     flex: 1, 
-    marginHorizontal: 8,
+    // marginHorizontal: 8,
     backgroundColor: '#D9D9D9',
     marginTop: 10
   },
@@ -159,11 +159,10 @@ export default StyleSheet.create({
   placeholderStyle: {
     fontSize: 14,
     fontFamily: 'LibreBaskerville-Regular',
-    color: 'black'
-    
+    color: 'black',
   },
   selectedTextStyle: {
-    fontSize: 14,
+    fontSize: 12,
     color: 'black',
     fontFamily: 'LibreBaskerville-Bold',
   },

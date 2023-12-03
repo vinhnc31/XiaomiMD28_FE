@@ -92,7 +92,7 @@ const InputBase = ({
               <View style={styles.input}>
                 {leftIcon && leftIcon.length > 0 && <BaseIcon name={leftIcon} size={24} color={Colors.black} />}
                 <TextInput
-                  style={{flex: 1, color: 'black', fontFamily: 'Lato-Bold', fontSize: ms(15)}}
+                  style={{flex: 1, color: 'black', fontFamily: 'LibreBaskerville-Bold', fontSize: ms(15)}}
                   value={value}
                   keyboardType={phoneNumber ? 'phone-pad' : 'default'}
                   onChangeText={onChangeText}
@@ -118,7 +118,7 @@ export default React.memo(InputBase);
 const styles = StyleSheet.create({
   title: {
     fontSize: ms(16),
-    fontFamily: 'Lato-Bold',
+    fontFamily: 'LibreBaskerville-Bold',
     color: Colors.black,
   },
   innerInput: {
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     color: Colors.primary,
     fontSize: ms(15),
 
-    fontFamily: 'Lato-SemiBold',
+    fontFamily: 'LibreBaskerville-Bold',
   },
 
   btnUpdate: {
