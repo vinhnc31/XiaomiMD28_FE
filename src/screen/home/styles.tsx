@@ -69,7 +69,7 @@ export default StyleSheet.create({
     marginTop: vs(8),
     marginBottom: vs(8),
     height: vs(140),
-    marginHorizontal: vs(16)
+    // marginHorizontal: vs(16)
   },
 
   contentWrapper: {
@@ -200,16 +200,17 @@ export default StyleSheet.create({
   },
 
   suggestItem: {
-    width: Dimensions.get('window').width / 2 - 24 ,
+    width: Dimensions.get('window').width / 2 - 16 ,
     // width: 170,
     height: vs(270),
     borderColor: '#F6F8F6',
     borderWidth: 1,
     alignItems: 'center',
-    marginHorizontal: vs(8),
-    marginVertical: vs(6),
+    marginHorizontal: vs(4),
+    marginVertical: vs(4),
     borderRadius: vs(10),
     backgroundColor: '#ffffff', 
+    padding: 12,
 
     elevation: 1, 
     shadowColor: '#817F7F', 
@@ -219,7 +220,7 @@ export default StyleSheet.create({
   }, 
 
   viewSuggestImage: {
-    flex: 6, 
+    flex: 7, 
     width: '100%',
     height: '100%',
     borderRadius: vs(20),
@@ -232,7 +233,6 @@ export default StyleSheet.create({
     width: '100%',
     height: '100%',
     borderRadius: vs(20),
-    paddingHorizontal: vs(12),
     justifyContent: 'space-around',
 
   },

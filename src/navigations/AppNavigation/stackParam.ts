@@ -10,6 +10,7 @@ export type AppStackParam = {
   ORDERDETAIL:undefined;
   PAY:undefined;
   EVALUATE:undefined;
+  SEARCH: undefined;
 };
 
 export type MenuStackParam = {

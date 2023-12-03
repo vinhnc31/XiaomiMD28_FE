@@ -20,6 +20,8 @@ import changepass from '@src/screen/account/changepass';
 import PayScreen from '@src/screen/pay/index';
 import EvaluateScreen from '@src/screen/evaluate/index';
 
+import search from '@src/screen/search';
+
 const Stack = createNativeStackNavigator<AppStackParam>();
 
 const AppNavigationScreen = () => {
@@ -79,6 +81,7 @@ const AppNavigationScreen = () => {
       <Stack.Screen name={APP_NAVIGATION.PAY} component={PayScreen} />
       <Stack.Screen name={APP_NAVIGATION.EVALUATE} component={EvaluateScreen} />
 
+      <Stack.Screen name={APP_NAVIGATION.SEARCH} component={search}/>
     </Stack.Navigator>
   );
 };

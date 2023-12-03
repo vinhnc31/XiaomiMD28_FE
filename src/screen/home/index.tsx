@@ -53,6 +53,8 @@ const HomeScreen = (props: Props) => {
   const [showAll, setShowAll] = useState(false);
   const displayedData = showAll ? dataProduct : dataProduct.slice(0, 3);
 
+  const displayedDataSuggest = showAll ? dataProduct : dataProduct.slice(0, 10);
+
   const [dataCategory, setDataCategory] = useState<CategoryModel[]>([]);
   const [showAllCategory, setShowAllCategory] = useState(false);
   const displayedDataCategory = showAllCategory ? dataCategory : dataCategory.slice(0, 5);
@@ -76,6 +78,7 @@ const HomeScreen = (props: Props) => {
       fetchDataProduct()
         .then(() => setRefreshing(false))
         .catch(() => setRefreshing(false));
+        
     } else {
       fetchDataCategory();
       fetchDataProduct()
@@ -126,9 +129,10 @@ const HomeScreen = (props: Props) => {
   }
 
   //Gợi ý hôm nay
-  function ListItemSuggest({ item }: { item: ProductModel }) {
+  function ListItemSuggest({ item, index }: { item: ProductModel, index: number }) {
     return (
-      <TouchableScale
+      <TouchableScale 
+        key={index}
         onPress={() => console.log('da chon 1 item', item.id)}
         activeScale={0.9}
         friction={9}
@@ -137,9 +141,8 @@ const HomeScreen = (props: Props) => {
           <View style={styles.viewSuggestImage}>
             <Image
               source={{ uri: item.images }}
-              style={{ width: '90%', height: '100%' }} />
+              style={{ width: '100%', height: '100%' }} />
           </View>
-          <View style={{ flex: 0.5 }} />
 
           <View style={styles.viewSuggestText}>
             <Text numberOfLines={1} style={styles.suggestTextName}>
@@ -152,8 +155,8 @@ const HomeScreen = (props: Props) => {
             </Text>
             <View style={styles.viewStar}>
               <Image style={styles.imgStar} source={R.images.iconStar} />
-              <Text style={styles.text}>4.9 </Text>
-              <Text style={styles.textCmt}>(50)</Text>
+              <Text style={styles.text}>{item.averageRating} </Text>
+              <Text style={styles.textCmt}>({item.commentCount})</Text>
             </View>
           </View>
         </View>
@@ -162,9 +165,9 @@ const HomeScreen = (props: Props) => {
   }
 
   // danh muc
-  function ListItemCategory({ item }: { item: CategoryModel }) {
+  function ListItemCategory({ item, index }: { item: CategoryModel, index: number}) {
     return (
-      <TouchableScale onPress={() => gotoListProduct(item.id, item.name)} activeScale={0.9} friction={9} tension={100}>
+      <TouchableScale key={index} onPress={() => gotoListProduct(item.id, item.name)} activeScale={0.9} friction={9} tension={100}>
         <View style={styles.categoryItem}>
           <View style={styles.viewCategoryImage}>
             <Image source={{ uri: item.image }} style={styles.categoryImage} />
@@ -180,9 +183,9 @@ const HomeScreen = (props: Props) => {
   }
 
   //danh sach yeu thich
-  function ListItemFavorite({ item }: { item: ProductModel }) {
+  function ListItemFavorite({ item, index }: { item: ProductModel, index: number }) {
     return (
-      <TouchableWithoutFeedback onPress={() => console.log('code Xem chi tiet data: ', item.name)}>
+      <TouchableWithoutFeedback key={index} onPress={() => console.log('code Xem chi tiet data: ', item.name)}>
         <View style={styles.item}>
           <Image source={{ uri: item.images }} style={styles.image} resizeMode="cover" />
           <View style={styles.overlay}>
@@ -202,8 +205,8 @@ const HomeScreen = (props: Props) => {
               }}>
               <View style={styles.viewStar}>
                 <Image style={styles.imgStar} source={R.images.iconStar} />
-                <Text style={styles.text}>4.9</Text>
-                <Text style={styles.textCmt}>(50)</Text>
+                <Text style={styles.text}>{item.averageRating} </Text>
+                <Text style={styles.textCmt}>({item.commentCount})</Text>
               </View>
               <Text style={styles.text}>
               {new Intl.NumberFormat("vi-VN", config).format(
@@ -219,7 +222,7 @@ const HomeScreen = (props: Props) => {
 
 
   return (
-    <SafeAreaView style={{ flex: 1, flexDirection: 'column' }}>
+    <SafeAreaView style={{ flex: 1, flexDirection: 'column'}}>
       <View style={styles.mainContainer}>
         <TouchableWithoutFeedback onPress={() => navigateToPage(APP_NAVIGATION.SEARCH)}>
           <View style={styles.inputContainer}>
@@ -247,7 +250,7 @@ const HomeScreen = (props: Props) => {
         </View>
       </View>
 
-      <View style={{ flex: 9, backgroundColor: '#FBEFE5' }}>
+      <View style={{ flex: 9, backgroundColor: '#FBEFE5', paddingHorizontal: 8 }}>
         {loading ? (
           <BaseLoading size={20} top={100} loading={true} />
         ) : (
@@ -255,20 +258,19 @@ const HomeScreen = (props: Props) => {
           <ScrollView
             indicatorStyle="black"
             showsVerticalScrollIndicator={false}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} 
+            />}>
 
-            <View style={{ height: vs(160), marginTop: vs(8), borderRadius: vs(50), marginHorizontal: vs(12) }}>
+            <View style={{ height: vs(160), marginTop: vs(8), borderRadius: vs(50)}}>
               <Swiper
                 loop={true}
-                showsButtons={false}
-                showsHorizontalScrollIndicator={true}
-                pagingEnabled={true}
-                autoplayTimeout={2}
-                autoplayDirection={true}
+                autoplayTimeout={3}
                 autoplay={true}
                 showsPagination={true} // Tắt chấm tròn mặc định
+                dotColor='gray'
+                activeDotColor='#FF6900'
               >
-                {dataCategory.map(item => (
+                {displayedDataCategory.map(item => (
                   <View style={styles.slide} key={item.id}>
                     <Image source={{ uri: item.image }} style={styles.image1} />
                   </View>
@@ -291,34 +293,34 @@ const HomeScreen = (props: Props) => {
                   data={displayedDataCategory}
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}
-                  renderItem={({ item }) => <ListItemCategory item={item} />}
+                  renderItem={({ item }) => <ListItemCategory item={item} index={0}  />}
                 />
               </View>
             </View>
 
-            <View style={{ width: '100%', marginTop: vs(16), marginBottom: vs(8), paddingHorizontal: vs(16) }}>
+            <View style={{ width: '100%', marginTop: vs(16), marginBottom: vs(8)}}>
               <Text style={styles.titleText}>Yêu thích nhiều nhất</Text>
               <FlatList
                 data={displayedData}
                 // keyExtractor={item => item.id.toString()}
                 horizontal={true}
                 contentContainerStyle={styles.flatListContainer}
-                renderItem={({ item }) => <ListItemFavorite item={item} />}
+                renderItem={({ item }) => <ListItemFavorite item={item} index={0} />}
                 scrollEnabled={false}
               />
             </View>
 
-            <View style={{ width: '100%', paddingBottom: vs(30), paddingHorizontal: vs(8) }}>
-              <Text style={[styles.titleText, { paddingHorizontal: vs(8) }]}>Gợi ý hôm nay</Text>
+            <View style={{ width: '100%', paddingBottom: vs(30)}}>
+              <Text style={[styles.titleText]}>Gợi ý hôm nay</Text>
               <FlatList
-                data={dataProduct}
+                data={displayedDataSuggest}
                 // keyExtractor={item => item.id.toString()}
                 columnWrapperStyle={{ justifyContent: 'space-between' }}
                 numColumns={2}
                 horizontal={false}
                 scrollEnabled={false}
                 contentContainerStyle={styles.flatListSuggestContainer}
-                renderItem={({ item }) => <ListItemSuggest item={item} />}
+                renderItem={({ item }) => <ListItemSuggest item={item} index={0} />}
               />
             </View>
 

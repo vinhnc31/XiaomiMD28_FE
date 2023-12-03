@@ -6,6 +6,8 @@ export interface ProductModel {
     quantity: number,
     images: string,
     CategoryId: number,
+    commentCount: number,
+    averageRating: string,
     createdAt: Date, // Sửa kiểu dữ liệu thành Date
     updatedAt: Date, // Sửa kiểu dữ liệu thành Date
 }

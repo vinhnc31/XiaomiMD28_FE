@@ -24,4 +24,6 @@ export const images = {
   signinGG: require('../assets/images/signGG.png'),
   cameraIconx2: require('../assets/images/iconCamera2x.png'),
   logoApp: require('../assets/images/logoApp.png'),
+  iconFilter: require('../assets/images/filter.png'),
+  imgNoResult: require('../assets/images/noResult.png'),
 };

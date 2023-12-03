@@ -43,6 +43,10 @@ const endpoint = {
   pay:{
     default:"/api/create_payment_url",
     postPay:"/api/create_payment_url",
+  },
+  configuration: {
+    default: '/api/config',
+    getConfiguration: '/api/config',
   }
 };
 
