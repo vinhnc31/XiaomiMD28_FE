@@ -41,4 +41,9 @@ export default class AccountService extends BaseService<IAccount> {
     const {data} = await http.post<IAccount>(`${url.default}/forgotPassword`, params);
     return data;
   }
+
+  public async loginGoogle(id_token:string) {
+    const {data} = await http.post<IAccount>(`${url.default}/login-google`, {id_token});
+    return data;
+  }
 }
