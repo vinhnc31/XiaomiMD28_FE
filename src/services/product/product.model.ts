@@ -17,6 +17,18 @@ export interface ProductDetailModel {
   description: string;
   images: string;
   CategoryId: number;
+  commentCount: number;
+  averageRating: string;
+  comments: [
+    {
+      images: string;
+      id: number;
+      commentBody: string;
+      star: number;
+      AccountId: number;
+      productId: number;
+    }
+  ]
   colorProducts: [
     {
       id: number;

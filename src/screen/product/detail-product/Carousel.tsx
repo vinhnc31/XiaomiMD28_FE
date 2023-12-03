@@ -3,6 +3,7 @@ import {ms, vs, hs} from '@src/styles/scalingUtils';
 import React, {useState, useEffect, useRef} from 'react';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 interface ColorItem {
   id: number;
@@ -22,9 +23,10 @@ const Carousel: React.FC<CarouselProps> = ({data, onColorChanged, colorIdButton}
   const swiperRef = useRef<FlatList<ColorItem>>(null);
   const [indexDot, setIndexDot] = useState(0);
   const [isButton, setIsButton] = useState(false);
+  console.log('dataaaaaaaaaaaaaaaaaaaa', data);
 
   useEffect(() => {
-    const index = data.findIndex((item) => item.colorId === colorIdButton);
+    const index = data.findIndex(item => item.colorId === colorIdButton);
     if (index !== -1 && swiperRef.current) {
       swiperRef.current.scrollToItem({
         item: data[index],
@@ -32,14 +34,14 @@ const Carousel: React.FC<CarouselProps> = ({data, onColorChanged, colorIdButton}
         viewPosition: 0.5, // Adjust this value as needed
       });
     }
-    console.log('iiiiiiiiiiiiiiiiiii', index)
-    console.log('bbbbbbbbbbbbbbbbbbb', isButton)
+    console.log('iiiiiiiiiiiiiiiiiii', index);
+    console.log('bbbbbbbbbbbbbbbbbbb', isButton);
     setIndexDot(index);
     setIsButton(true);
   }, [colorIdButton]);
 
   const handleColorChanged = (colorId: number) => {
-    setCurrentIndex(data.findIndex((item) => item.colorId === colorId));
+    setCurrentIndex(data.findIndex(item => item.colorId === colorId));
     if (onColorChanged) {
       onColorChanged(colorId);
       setIsButton(false);
@@ -85,7 +87,10 @@ const Carousel: React.FC<CarouselProps> = ({data, onColorChanged, colorIdButton}
 
       <View style={styles.pagination}>
         {data.map((_, index) => (
-          <View key={index} style={[styles.dot, (isButton ? index === indexDot : index === currentIndex) && styles.activeDot]} />
+          <View
+            key={index}
+            style={[styles.dot, (isButton ? index === indexDot : index === currentIndex) && styles.activeDot]}
+          />
         ))}
       </View>
     </View>
@@ -93,9 +98,9 @@ const Carousel: React.FC<CarouselProps> = ({data, onColorChanged, colorIdButton}
 };
 const styles = StyleSheet.create({
   image: {
-    width: hs(265),
-    height: vs(265),
-    resizeMode: 'cover',
+    width: hs(256),
+    height: vs(256),
+    resizeMode: 'contain',
     borderRadius: ms(5),
   },
   slide: {

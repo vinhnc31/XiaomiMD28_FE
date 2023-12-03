@@ -180,7 +180,7 @@ const HomeScreen = (props: Props) => {
   //danh sach yeu thich
   function ListItemFavorite({ item }: { item: ProductModel }) {
     return (
-      <TouchableWithoutFeedback onPress={() => {console.log('code Xem chi tiet data: ', item.name), goToDetails(item.id)}}>
+      <TouchableWithoutFeedback onPress={() => {console.log('code Xem chi tiet data: ', item.name), goToDetails(11 || 1)}}>
         <View style={styles.item}>
           <Image source={{ uri: item.images }} style={styles.image} resizeMode="cover" />
           <View style={styles.overlay}>

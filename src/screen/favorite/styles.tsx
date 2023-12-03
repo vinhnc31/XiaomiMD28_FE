@@ -122,7 +122,7 @@ export default StyleSheet.create({
   },
   imgFavourite: {
     width: hs(70),
-    height: vs(70),
+    height: vs(100),
   },
   productInfoContainer: {
     flex: 1.5,
@@ -142,7 +142,7 @@ export default StyleSheet.create({
   },
   imgStar: {
     width: hs(11),
-    height: vs(11),
+    height: vs(19),
     marginRight: ms(5),
   },
   textCmt: {

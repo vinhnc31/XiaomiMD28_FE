@@ -1,6 +1,7 @@
 import {ms, vs, hs} from '@src/styles/scalingUtils';
 import {Dimensions, StyleSheet} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 export default StyleSheet.create({
   mainContainer: {
@@ -10,23 +11,25 @@ export default StyleSheet.create({
     width: '100%',
   },
   container: {
-    marginBottom: vs(89),
+    //marginBottom: vs(60),
   },
   backContainer: {
     position: 'absolute',
     top: 0,
     zIndex: 1,
     marginTop: vs(20),
-    marginLeft: hs(20),
+    marginLeft: hs(15),
+  },
+  iconbackContainer: {
+    flex: 1,
+    width: vs(30),
+    height: vs(30),
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   iconBack: {
     width: hs(30),
-    height: vs(38),
-  },
-
-  icon: {
-    width: hs(30),
-    height: vs(30),
+    height: hs(30),
   },
 
   title: {
@@ -46,7 +49,7 @@ export default StyleSheet.create({
     marginTop: vs(10),
     height: vs(265),
     marginBottom: vs(30),
-    backgroundColor: '#EFEFEF',
+    backgroundColor: '#FFF',
   },
   image: {
     height: vs(50),
@@ -62,10 +65,13 @@ export default StyleSheet.create({
     right: vs(-10),
     bottom: 0,
   },
-  iconFavoriteContainer: {alignItems: 'flex-end', justifyContent: 'center'},
+  iconFavoriteContainer: {
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+  },
   imgFavourite: {
-    width: hs(100),
-    height: vs(100),
+    width: hs(80),
+    height: vs(110),
     marginRight: vs(10),
   },
   priceNameViewStarContainer: {
@@ -107,7 +113,12 @@ export default StyleSheet.create({
   },
   imgStar: {
     width: hs(13),
-    height: vs(15),
+    height: hs(13),
+    marginRight: hs(5),
+  },
+  imgStarCmt: {
+    width: hs(10),
+    height: hs(10),
     marginRight: hs(5),
   },
   textCmt: {
@@ -204,7 +215,7 @@ export default StyleSheet.create({
   },
   imgPlus: {
     width: hs(13),
-    height: vs(16),
+    height: hs(13),
   },
   // đánh giá về sp
   reviews: {
@@ -258,6 +269,7 @@ export default StyleSheet.create({
     fontSize: ms(12),
     fontFamily: 'LibreBaskerville-Bold',
   },
+  imgStarContainer: {marginLeft: hs(5), flexDirection: 'row', alignItems: 'center'},
   seeMoreReviews: {
     marginLeft: vs(15),
     flexDirection: 'row',
@@ -276,6 +288,18 @@ export default StyleSheet.create({
     height: vs(10),
     marginLeft: hs(1),
   },
+  btnSeeMoreComment: {
+    width: '100%',
+    height: vs(35),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  seeMoreComment: {
+    color: '#858383',
+    fontWeight: '400',
+    fontSize: ms(12),
+    fontFamily: 'LibreBaskerville-Bold',
+  },
 
   flatListContainer: {
     flex: 1,
@@ -284,10 +308,11 @@ export default StyleSheet.create({
 
   // mua hang vv
   BuyandAddtoCartContainer: {
+    backgroundColor: 'red',
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
-    height: vs(89),
+    height: vs(60),
   },
   leftContainerCart: {
     backgroundColor: '#2BBAA9',
@@ -308,7 +333,7 @@ export default StyleSheet.create({
   txtAddCart: {
     color: '#FFFFFF',
     fontWeight: '300',
-    fontSize: ms(11),
+    fontSize: ms(14),
     fontFamily: 'LibreBaskerville-Bold',
     marginLeft: hs(5),
   },
@@ -333,4 +358,151 @@ export default StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
   },
+
+  // model
+  centeredViewModal: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    height: 'auto',
+  },
+  modalView: {
+    width: '100%',
+    height: '55%',
+    flexDirection: 'column',
+    backgroundColor: 'white',
+    borderTopLeftRadius: ms(10),
+    borderTopRightRadius: ms(10),
+    borderWidth: 1,
+    borderColor: '#DCDCDC',
+    shadowColor: '#DCDCDC',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  //product info
+  productModal: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flex: 1,
+  },
+  productModalImage: {width: hs(80), height: vs(80), marginLeft: hs(10), marginTop: vs(20)},
+  productModalPriceQuantity: {flex: 1, marginLeft: hs(10), marginTop: vs(10), alignSelf: 'flex-end'},
+  productModalPriceText: {
+    marginTop: vs(5),
+    color: '#F00',
+    fontSize: ms(14),
+    fontWeight: '400',
+    fontFamily: 'LibreBaskerville-Bold',
+  },
+  productModalQuantityText: {
+    color: '#817F7F',
+    fontSize: ms(11),
+    fontWeight: '400',
+    fontFamily: 'LibreBaskerville-Bold',
+    marginBottom: vs(10),
+  },
+  btnCloseModal: {marginBottom: vs(40), marginRight: hs(10)},
+  iconCloseModal: {width: 30, height: 30},
+  // colors modal
+  modalProductColorContainer: {width: SCREEN_WIDTH - hs(25), marginLeft: hs(15)},
+  modalProductColorTitle: {
+    marginVertical: vs(10),
+    color: '#000',
+    fontSize: ms(11),
+    fontWeight: '400',
+    fontFamily: 'LibreBaskerville-Bold',
+  },
+  // thông số sản phẩm (ram)
+  modalProductConfigContainer: {width: SCREEN_WIDTH - hs(25), marginLeft: hs(15)},
+  modalProductConfigTitle: {
+    marginVertical: vs(10),
+    color: '#000',
+    fontSize: ms(11),
+    fontWeight: '400',
+    fontFamily: 'LibreBaskerville-Bold',
+  },
+  // số lượng muốn thêm
+  modalNumberProductContainer: {
+    flex: 0.5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: SCREEN_WIDTH - hs(25),
+    marginLeft: hs(15),
+    alignItems: 'center',
+  },
+  modalNumberProductTitle: {color: '#000', fontSize: ms(15), fontWeight: '400', fontFamily: 'LibreBaskerville-Bold'},
+  modalQuantityProductContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginRight: hs(16),
+    width: hs(100),
+    height: vs(30),
+  },
+  modalBtnMinusPlus: {
+    backgroundColor: '#E6E3E3',
+    width: hs(30),
+    height: vs(23),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalIconMinusPlus: {width: hs(13), height: vs(13)},
+  modalQuantiyTextContainer: {
+    alignItems: 'center', 
+    justifyContent: 'center',
+    alignContent: 'center',
+    backgroundColor: '#ECEAEA',
+    width: hs(32),
+    height: vs(23),
+  },
+  modalQuantiyText: {color: '#000', fontSize: ms(17), fontWeight: '400', fontFamily: 'LibreBaskerville-Bold'},
+
+  // btn them 
+  modalBtnAdd: {
+    marginTop: vs(12),
+    width: SCREEN_WIDTH - hs(25),
+    height: vs(55),
+    backgroundColor: '#FF6900',
+    borderRadius: ms(10),
+    marginBottom: vs(8),
+    justifyContent: 'center',
+    alignSelf: 'center',
+  },
+  modalBtnText: {
+    fontSize: ms(21),
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+
+  //renderItemComments
+  itemCmtContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: vs(15),
+    marginBottom: vs(8),
+  },
+  imgCmtAvatar: {width: hs(20), height: vs(20)},
+  txtCmtName: {
+    color: '#2A2A2A',
+    fontWeight: '400',
+    fontSize: ms(14),
+    fontFamily: 'LibreBaskerville-Bold',
+    marginLeft: hs(5),
+  },
+  imgStarCmtContainer: {flexDirection: 'row', alignItems: 'center', marginBottom: vs(8)},
+  txtCmtBody: {
+    marginBottom: vs(15),
+    color: '#2A2A2A',
+    fontWeight: '100',
+    fontSize: ms(12),
+    fontFamily: 'LibreBaskerville-Bold',
+  },
+  imgCmtBody: {width: hs(80), height: vs(80), marginBottom: vs(15)},
 });

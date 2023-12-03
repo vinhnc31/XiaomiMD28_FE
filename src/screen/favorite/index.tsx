@@ -80,7 +80,7 @@ const FavoriteScreen = (props: Props) => {
   
       // Filter out null values (failed product details fetch)
       const filteredProductDetails = productDetails.filter((product) => product !== null);
-      console.log('filteredProductDetails------------------', JSON.stringify(filteredProductDetails));
+      console.log('filteredProductDetails------------------', filteredProductDetails.length);
       setDataProductId(filteredProductDetails);
   
       setLoading(false);
@@ -92,9 +92,9 @@ const FavoriteScreen = (props: Props) => {
   
 
   const onRefresh = async () => {
-    setRefreshing(true);
+    //setRefreshing(true);
     await fetchViewFavoriteData();
-    setRefreshing(false);
+    //setRefreshing(false);
   };
 
   const getQuantitiys = (productData: any): number => {
@@ -119,12 +119,15 @@ const FavoriteScreen = (props: Props) => {
     navigateToPage(APP_NAVIGATION.DETAILSPRODUCT, {productId: id});
   };
 
+  const tets = dataProductId.filter((product) => product !== null);
+      console.log('filteredProductDetails------------------', tets?.id);
+
   const ProductItem = ({ item }: { item: ProductDetailModel }) => {
     if (!item) {
       console.error('Item is undefined');
       return null;
     }
-  
+
     return (
       <TouchableOpacity onPress={() => goToDetails(item.id)}>
         <View style={styles.item}>
@@ -149,7 +152,7 @@ const FavoriteScreen = (props: Props) => {
   
             <View style={styles.viewStar}>
               <Image style={styles.imgStar} source={require('../../assets/images/star4.png')} />
-              <Text style={styles.textStar}>4.9</Text>
+              <Text style={styles.textStar}>{item?.averageRating || 0.0}</Text>
               {/* Use the correct function name here */}
               <Text style={styles.textCmt}>({getQuantitiys(item) || '0'})</Text>
             </View>
@@ -158,7 +161,7 @@ const FavoriteScreen = (props: Props) => {
       </TouchableOpacity>
     );
   };
-
+  console.log('p----------------------', dataProductId);
 
   const renderNoDataMessage = () => {
     if (loading) {
@@ -208,7 +211,7 @@ const FavoriteScreen = (props: Props) => {
           <View style={styles.flatListContainer1}>
             <FlatList
               data={dataProductId}
-              keyExtractor={item => item?.id.toString()}
+              keyExtractor={(item, index) => index.toString()}
               horizontal={true}
               contentContainerStyle={styles.flatListContainer2}
               renderItem={({item}) => (
