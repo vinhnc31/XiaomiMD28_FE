@@ -14,7 +14,12 @@ import BaseInput from '@src/containers/components/Base/BaseInput';
 import {StatusBar} from 'react-native';
 import {hs, ms, vs} from '@src/styles/scalingUtils';
 import {BaseButton, BaseIcon, BaseText} from '@src/containers/components/Base';
-
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  NativeModuleError,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 interface Props {
   navigation: NativeStackNavigationProp<GuestStackParam>;
   route: RouteProp<GuestStackParam, GUEST_NAVIGATION.FORGOTPASS>;
@@ -58,6 +63,45 @@ const ForgotScreen = (props: Props) => {
 
   const hideKeyboard = () => {
     Keyboard.dismiss();
+  };
+
+  const _signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      await GoogleSignin.signOut();
+      const userInfo = await GoogleSignin.signIn();
+      const sv = new AccountService();
+      setLoading(true);
+      const res = await sv.loginGoogle(userInfo.idToken!);
+      // @ts-ignore
+      await dispatch(logInAction(res.data)).unwrap();
+      toast.showSuccess({messageText: 'Đăng nhập thành công'});
+      setLoading(false);
+    } catch (error) {
+      console.log('error: ', error);
+      toast.showThowError(error);
+      setLoading(false);
+      const typedError = error as NativeModuleError;
+      console.log('typedError: ', typedError.message);
+
+      switch (typedError.code) {
+        case statusCodes.SIGN_IN_CANCELLED:
+          // sign in was cancelled
+
+          break;
+        case statusCodes.IN_PROGRESS:
+          // operation (eg. sign in) already in progress
+
+          break;
+        case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+          // android only
+
+          break;
+
+        default:
+          break;
+      }
+    }
   };
 
   return (
@@ -111,7 +155,7 @@ const ForgotScreen = (props: Props) => {
                   <BaseText text="OR" />
                   <View style={{borderWidth: 0.5, borderColor: '#9A9A9A', flex: 1, height: 0.5}}></View>
                 </View>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={{
                     backgroundColor: '#007FFF',
                     flexDirection: 'row',
@@ -123,7 +167,14 @@ const ForgotScreen = (props: Props) => {
                   }}>
                   <BaseIcon name="logo-google" color={'white'} />
                   <BaseText text="Đăng nhập với Google" color={'white'} />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
+
+                <GoogleSigninButton
+                  size={GoogleSigninButton.Size.Wide}
+                  color={GoogleSigninButton.Color.Dark}
+                  onPress={_signIn}
+                  disabled={loading}
+                />
                 <View style={styles.bodyFooter}>
                   <Text style={styles.notAccount}>Bạn đã có tài khoản? </Text>
                   <TouchableOpacity onPress={goToLogin}>

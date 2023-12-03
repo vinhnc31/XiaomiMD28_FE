@@ -6,7 +6,7 @@ import {APP_NAVIGATION, GUEST_NAVIGATION, MENU_NAVIGATION} from '@src/navigation
 import {navigateToPage, pushToPage} from '@src/navigations/services';
 import R from '@src/res';
 import AccountService from '@src/services/account';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {ActivityIndicator, Image, Keyboard, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import styles from './styles';
@@ -18,7 +18,12 @@ import {useAppDispatch} from '@src/stores';
 import {logInAction} from '@src/stores/auth/auth.actions';
 import {images} from '@src/res/images';
 import GuestNavigation from '@src/navigations/GuestNavigation';
-
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  NativeModuleError,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 interface Props {
   navigation: NativeStackNavigationProp<GuestStackParam>;
   route: RouteProp<GuestStackParam, GUEST_NAVIGATION.LOGIN>;
@@ -29,8 +34,15 @@ const LogInComponent = (props: Props) => {
   const toast = useToast();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+
   const dispatch = useAppDispatch();
   const {navigation} = props;
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: '1023021056607-8ipdiimvi5c8rl7v8qbk4dhdimb2g80n.apps.googleusercontent.com',
+    });
+  }, []);
 
   const goToRegister = () => {
     navigateToPage(GUEST_NAVIGATION.REGISTER);
@@ -64,6 +76,46 @@ const LogInComponent = (props: Props) => {
     Keyboard.dismiss();
   };
 
+  const _signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      await GoogleSignin.signOut();
+      const userInfo = await GoogleSignin.signIn();
+      setLoading(true);
+      const sv = new AccountService();
+      const res = await sv.loginGoogle(userInfo.idToken!);
+      console.log('res: ', res);
+      // @ts-ignore
+      await dispatch(logInAction(res.data)).unwrap();
+      toast.showSuccess({messageText: 'Đăng nhập thành công'});
+      setLoading(false);
+    } catch (error) {
+      console.log('error: ', error);
+      toast.showThowError(error);
+      setLoading(false);
+      const typedError = error as NativeModuleError;
+      console.log('typedError: ', typedError.message);
+
+      switch (typedError.code) {
+        case statusCodes.SIGN_IN_CANCELLED:
+          // sign in was cancelled
+
+          break;
+        case statusCodes.IN_PROGRESS:
+          // operation (eg. sign in) already in progress
+
+          break;
+        case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+          // android only
+
+          break;
+
+        default:
+          break;
+      }
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={hideKeyboard}>
       <View style={{flex: 1}}>
@@ -94,7 +146,9 @@ const LogInComponent = (props: Props) => {
                     borderRadius={40}
                   />
                 </View>
-                <TouchableOpacity style={{marginVertical: vs(10), alignSelf: 'flex-end'}} onPress={() => navigateToPage(GUEST_NAVIGATION.FORGOTPASS)}>
+                <TouchableOpacity
+                  style={{marginVertical: vs(10), alignSelf: 'flex-end'}}
+                  onPress={() => navigateToPage(GUEST_NAVIGATION.FORGOTPASS)}>
                   <Text style={[styles.forgotPass, {textDecorationLine: 'underline'}]}>Quên mật khẩu?</Text>
                 </TouchableOpacity>
                 <BaseButton
@@ -116,7 +170,7 @@ const LogInComponent = (props: Props) => {
                   <BaseText text="OR" />
                   <View style={{borderWidth: 0.5, borderColor: '#9A9A9A', flex: 1, height: 0.5}}></View>
                 </View>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={{
                     backgroundColor: '#007FFF',
                     flexDirection: 'row',
@@ -128,7 +182,14 @@ const LogInComponent = (props: Props) => {
                   }}>
                   <BaseIcon name="logo-google" color={'white'} />
                   <BaseText text="Đăng nhập với Google" color={'white'} />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
+                <GoogleSigninButton
+                  size={GoogleSigninButton.Size.Wide}
+                  color={GoogleSigninButton.Color.Dark}
+                  onPress={_signIn}
+                  disabled={loading}
+                />
+
                 <View style={styles.bodyFooter}>
                   <Text style={styles.notAccount}>Bạn chưa có tài khoản? </Text>
                   <TouchableOpacity onPress={goToRegister}>
