@@ -1,7 +1,7 @@
 import {BaseService} from '@src/services/base.service';
 import endpoints from '@src/services/config/endpoint';
 import http from '@src/services/config/http';
-import { GetOrderModel, OrderModel } from './oder.model';
+import { GetOrderModel, OrderModel, Status } from './oder.model';
 const url = endpoints.order;
 export default class OrderService extends BaseService<OrderModel> {
     constructor() {
@@ -14,6 +14,10 @@ export default class OrderService extends BaseService<OrderModel> {
     }
     public async getOrder() {
         const {data} = await http.get<GetOrderModel>(url.getOrder);
+        return data;
+    }
+    public async putOrder(id:number,body:Status) {
+        const {data} = await http.put<Status>(`${url.getOrder}/${id}`,body);
         return data;
     }
 

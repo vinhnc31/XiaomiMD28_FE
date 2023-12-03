@@ -110,7 +110,7 @@ const EvaluateScreen = (props: Props) => {
           <TouchableOpacity
             onPress={() => onPressImage()}
             >
-              <Image source={avatarSource} style={{height: 100, width: 100, backgroundColor: '#E9E9E9',}} resizeMode={'cover'}/>
+              <Image source={avatarSource} style={{height: 100, width: 100, backgroundColor: '#E9E9E9',}} resizeMode={'center'}/>
             </TouchableOpacity>
           <PopupChooseMedias
             ref={chooseImageRef}

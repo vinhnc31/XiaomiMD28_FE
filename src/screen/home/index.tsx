@@ -33,6 +33,9 @@ import ProductService from '@src/services/product';
 import { ProductModel } from '@src/services/product/product.model';
 import R from '@src/res';
 import {vs} from '@src/styles/scalingUtils';
+import CartService from '@src/services/cart';
+import { useAuth } from '@src/hooks/useAuth';
+import { CartModel } from '@src/services/cart/cart.model';
 
 
 interface Props {
@@ -41,6 +44,7 @@ interface Props {
 }
 
 const HomeScreen = (props: Props) => {
+  const [data, setData] = useState<CartModel[]>([]);
   const [dataProduct, setDataProduct] = useState<ProductModel[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState('');
@@ -57,7 +61,8 @@ const HomeScreen = (props: Props) => {
   const animatedValues = limitedData.map(() => new Animated.Value(0));
 
   const [activeIndex, setActiveIndex] = useState(0);
-
+  const cartService = new CartService();
+  const {user}=useAuth();
   const config = {
     style: "currency",
     currency: "VND",
@@ -75,6 +80,7 @@ const HomeScreen = (props: Props) => {
       fetchDataCategory();
       fetchDataProduct()
     }
+    
   }, [refreshing]);
 
   const onRefresh = () => {
@@ -85,7 +91,7 @@ const HomeScreen = (props: Props) => {
     navigateToPage(APP_NAVIGATION.CATEGORY);
   };
   const goToCart = () => {
-    navigateToPage(APP_NAVIGATION.EVALUATE);
+    navigateToPage(APP_NAVIGATION.CART);
   };
 
   const gotoListProduct = (id, name) => {
@@ -96,6 +102,8 @@ const HomeScreen = (props: Props) => {
 
   const fetchDataCategory = async () => {
     try {
+      const resultCart = await cartService.fetchCart(user?.id!);
+      setData(resultCart.data);
       const categoryService = new CategoryService();
       const result = await categoryService.fetchCategory();
       setDataCategory(result.data);
@@ -226,7 +234,14 @@ const HomeScreen = (props: Props) => {
         <View style={styles.buttonContainer}>
           <BaseButton
             onPress={goToCart}
-            renderIcon={<Image style={{ width: vs(30), height: vs(30) }} source={R.images.iconCart} />}
+            renderIcon={
+            <View>
+              <Image style={{ width: vs(35), height: vs(35) }} source={R.images.iconCart}/>
+              <View style={{height: 20,width: 20, backgroundColor:'red',position:'absolute',right:-5,top:-5,borderRadius:20,alignItems:'center'}}>
+                <Text style={{color:'white'}}>{data.length}</Text>
+              </View>
+              </View>
+             }
             style={{ marginBottom: vs(10) }}
           />
         </View>

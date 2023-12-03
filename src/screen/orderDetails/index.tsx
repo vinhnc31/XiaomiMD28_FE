@@ -55,16 +55,11 @@ const OrderDetailScreen = (props: Props) => {
       setImage(require('../../assets/images/delivery-service.png'));
     }
     if (data.status === '2') {
-      setTitle('Đang giao hàng !');
-      setTitleContent('Đơn hàng đang được đưa tới khách hàng.');
-      setImage(require('../../assets/images/transport.png'));
-    }
-    if (data.status === '3') {
       setTitle('Đã nhận hàng !');
       setTitleContent('Đơn hàng đã giao thành công.');
       setImage(require('../../assets/images/booking1.png'));
     }
-    if (data.status === '4') {
+    if (data.status === '3') {
       setTitle('Đã hủy đơn hàng !');
       setTitleContent('Đơn hàng đã hủy thành công.');
       setImage(require('../../assets/images/cancel.png'));

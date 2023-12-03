@@ -24,3 +24,6 @@ export interface GetOrderModel {
   PayId: number;
   PromotionId: number;
 }
+export interface Status{
+  status:string
+}
