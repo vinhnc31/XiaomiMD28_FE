@@ -13,8 +13,10 @@ export function useAuth() {
     try {
       const sv = new AccountService();
       const user = await sv.fetchProfile();
-      console.log('user: ', user);
-      dispath(logInAction(user));
+      //@ts-ignore
+      console.log('user: ', user.data);
+      //@ts-ignore
+      dispath(logInAction(user.data));
       // if (redirect) {
       //   resetStack(APP_NAVIGATION.ROOT);
       // }

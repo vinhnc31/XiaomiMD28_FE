@@ -78,6 +78,7 @@ const AppNavigationScreen = () => {
       <Stack.Screen name={APP_NAVIGATION.CHANGE_PASS} component={changepass} />
       <Stack.Screen name={APP_NAVIGATION.PAY} component={PayScreen} />
       <Stack.Screen name={APP_NAVIGATION.EVALUATE} component={EvaluateScreen} />
+
     </Stack.Navigator>
   );
 };

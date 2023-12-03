@@ -23,4 +23,5 @@ export const images = {
   support: require('../assets/images/support.png'),
   signinGG: require('../assets/images/signGG.png'),
   cameraIconx2: require('../assets/images/iconCamera2x.png'),
+  logoApp: require('../assets/images/logoApp.png'),
 };
