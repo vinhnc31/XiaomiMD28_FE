@@ -22,8 +22,8 @@ export default StyleSheet.create({
   },
   iconbackContainer: {
     flex: 1,
-    width: vs(30),
-    height: vs(30),
+    width: vs(25),
+    height: vs(25),
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -60,9 +60,9 @@ export default StyleSheet.create({
     flexDirection: 'column',
     position: 'absolute',
     justifyContent: 'center',
-    top: vs(100),
+    top: vs(110),
     left: 0,
-    right: vs(-10),
+    right: 0,
     bottom: 0,
   },
   iconFavoriteContainer: {
@@ -76,8 +76,21 @@ export default StyleSheet.create({
   },
   priceNameViewStarContainer: {
     flex: 1.5,
-    height: vs(90),
-    marginHorizontal: hs(20),
+    marginHorizontal: hs(15),
+  },
+  noDataContainer: {
+    marginTop: vs(12),
+    backgroundColor: '#FFFFFF',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  noDataText: {
+    color: 'black', // Màu văn bản
+    fontSize: ms(18),
+    fontFamily: 'LibreBaskerville-Bold',
+    marginBottom: vs(250),
   },
   nameContainer: {flex: 1, justifyContent: 'center', marginBottom: 8},
   text: {
@@ -113,13 +126,19 @@ export default StyleSheet.create({
     marginBottom: vs(20),
   },
   imgStar: {
-    width: vs(13),
-    height: vs(13),
+    width: hs(13),
+    height: hs(13),
     marginRight: hs(5),
+    marginBottom: vs(3),
   },
   imgStarCmt: {
-    width: hs(10),
-    height: hs(10),
+    width: vs(15),
+    height: vs(15),
+    marginRight: hs(5),
+  },
+  imgStar2Cmt: {
+    width: vs(13),
+    height: vs(13),
     marginRight: hs(5),
   },
   textCmt: {
@@ -142,8 +161,8 @@ export default StyleSheet.create({
   // phan chọn màu
   flatListColorsContainer: {
     flex: 1,
-    marginHorizontal: hs(20),
-    marginBottom: vs(15),
+    marginHorizontal: hs(15),
+    marginBottom: vs(18),
   },
   mainDescription: {flex: 1, backgroundColor: '#FFFFFF', marginBottom: vs(10)},
   btnColorsContainer: {
@@ -175,7 +194,7 @@ export default StyleSheet.create({
   // part 2
   // mo ta chi tiet
   descriptionContainer: {
-    marginHorizontal: hs(20),
+    marginHorizontal: hs(15),
   },
   descriptionTitle: {
     fontSize: ms(15),
@@ -215,8 +234,8 @@ export default StyleSheet.create({
     marginRight: hs(5),
   },
   imgPlus: {
-    width: hs(13),
-    height: hs(13),
+    width: vs(15),
+    height: vs(15),
   },
   // đánh giá về sp
   reviews: {

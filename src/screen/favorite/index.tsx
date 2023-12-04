@@ -3,8 +3,8 @@ import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {AppStackParam, MenuStackParam} from '@src/navigations/AppNavigation/stackParam';
 import {APP_NAVIGATION, MENU_NAVIGATION} from '@src/navigations/routes';
-import React, {useEffect, useState, } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 import {
   SafeAreaView,
   Text,
@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 
 import styles from './styles';
+import {ms, vs, hs} from '@src/styles/scalingUtils';
 import {BaseButton} from '@src/containers/components/Base';
 import {BaseLoading} from '@src/containers/components/Base/BaseLoading';
 import {navigateToPage} from '@src/navigations/services';
@@ -29,7 +30,6 @@ import {ProductDetailModel} from '@src/services/product/product.model';
 import {useAuth} from '@src/hooks/useAuth';
 import BaseHeaderNoBack from '@src/containers/components/Base/BaseHeaderNoBack';
 import Toast from 'react-native-toast-message';
-
 
 type ScreenNavigationProps = CompositeNavigationProp<
   BottomTabNavigationProp<MenuStackParam, MENU_NAVIGATION.FAVORITE>,
@@ -52,6 +52,8 @@ const FavoriteScreen = (props: Props) => {
   const {user} = useAuth();
   const accountId = user?.id || '';
 
+  const [dataFavoriteProductNull, setDataFavoriteProductNull] = useState<FavoriteModel[]>([]);
+
   useEffect(() => {
     fetchViewFavoriteData();
   }, [accountId, refreshing]);
@@ -64,11 +66,8 @@ const FavoriteScreen = (props: Props) => {
 
       fetchData();
 
-      return () => {
-
-      };
-
-    }, [refreshing])
+      return () => {};
+    }, [refreshing]),
   );
 
   const fetchViewFavoriteData = async () => {
@@ -87,13 +86,19 @@ const FavoriteScreen = (props: Props) => {
         result.data.map(async favorite => {
           try {
             const productResult = await productService.getProductId(favorite.productId);
+
             return {...productResult.data, favoriteId: favorite.id};
           } catch (productError) {
-            console.error(`Error fetching product ${favorite.productId}:`, productError);
+            console.log('Error fetching product----  ', productError);
             return null;
           }
         }),
       );
+
+      // lọc các favorite có productId là null;
+      const favoritesWithNullProductId = result.data.filter(favorite => favorite.productId === null);
+      console.log('favoritesWithNullProductId:', favoritesWithNullProductId);
+      setDataFavoriteProductNull(favoritesWithNullProductId);
 
       // Filter out null values (failed product details fetch)
       const filteredProductDetails = productDetails.filter(product => product !== null);
@@ -137,6 +142,7 @@ const FavoriteScreen = (props: Props) => {
     try {
       // Xóa mục khỏi danh sách dataProductId
       setDataProductId(prevData => prevData.filter(item => item.favoriteId !== favoriteId));
+      setDataFavoriteProductNull(prevData => prevData.filter(item => item.id !== favoriteId));
 
       const favoriteService = new FavoriteService();
       await favoriteService.deleteFavorite(favoriteId);
@@ -167,7 +173,11 @@ const FavoriteScreen = (props: Props) => {
       <TouchableOpacity onPress={() => goToDetailProduct(item.id)}>
         <View style={styles.item}>
           <View style={styles.imageContainer}>
-            <Image source={{uri: item?.images}} style={styles.image} />
+            {item.images ? (
+              <Image source={{uri: item.images}} style={styles.image} />
+            ) : (
+              <Image source={require('../../assets/images/noDataStar.png')} style={styles.image} />
+            )}
 
             <View style={styles.overlay}>
               <View style={styles.imgFavouriteContainer}>
@@ -192,6 +202,57 @@ const FavoriteScreen = (props: Props) => {
               <Text style={styles.textCmt}>({getQuantitiys(item) || '0'})</Text>
             </View>
           </View>
+          
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  const ProductNullItem = ({item}: {item: FavoriteModel}) => {
+    return (
+      <TouchableOpacity onPress={() => handleFavoritePress(item.id)}>
+        <View style={styles.item}>
+          <View style={styles.imageContainer}>
+            <Image source={require('../../assets/images/noDataStar.png')} style={styles.image} />
+
+            <View style={styles.overlay}>
+              <View style={styles.imgFavouriteContainer}>
+                <TouchableOpacity onPress={() => handleFavoritePress(item.id)}>
+                  <Image style={styles.imgFavourite} source={require('../../assets/images/heart2.png')} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+
+          <View style={styles.productInfoContainer}>
+            <View style={styles.productNameContainer}>
+              <Text numberOfLines={1} style={styles.text}>
+                không tìm thấy sản phẩm
+              </Text>
+            </View>
+
+            <View style={styles.viewStar}>
+              <Image style={styles.imgStar} source={require('../../assets/images/star4.png')} />
+              <Text style={styles.textStar}>0</Text>
+              {/* Use the correct function name here */}
+              <Text style={styles.textCmt}>0</Text>
+            </View>
+          </View>
+          
+          <View
+            style={{
+              flex: 1,
+              position: 'absolute',
+              backgroundColor: 'rgba(212, 204, 203, 0.7)',
+              width: '100%',
+              height: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderWidth: 1,
+              borderColor: '#DDDDDD'
+            }}>
+              <Text style={{fontSize: ms(18), color: '#000000', fontFamily: 'LibreBaskerville-Bold'}}>Nhấn để xóa khỏi yêu thích</Text>
+            </View>
         </View>
       </TouchableOpacity>
     );
@@ -209,6 +270,7 @@ const FavoriteScreen = (props: Props) => {
     if (dataFavorites.length === 0) {
       return (
         <View style={styles.noDataContainer}>
+          <Image style={{width: hs(120), height: hs(120)}} source={require('../../assets/images/noDataStar.png')} />
           <Text style={styles.noDataText}>Không có sản phẩm yêu thích</Text>
         </View>
       );
@@ -238,6 +300,21 @@ const FavoriteScreen = (props: Props) => {
               renderItem={({item}) => (
                 <View style={styles.ProductItemContainer}>
                   <ProductItem item={item} />
+                </View>
+              )}
+              scrollEnabled={false}
+            />
+          </View>
+
+          <View style={styles.flatListContainer1}>
+            <FlatList
+              data={dataFavoriteProductNull}
+              keyExtractor={(item, index) => index.toString()}
+              horizontal={true}
+              contentContainerStyle={styles.flatListContainer2}
+              renderItem={({item}) => (
+                <View style={styles.ProductItemContainer}>
+                  <ProductNullItem item={item} />
                 </View>
               )}
               scrollEnabled={false}

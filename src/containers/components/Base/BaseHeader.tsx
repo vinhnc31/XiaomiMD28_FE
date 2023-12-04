@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import {ms, vs, hs} from '@src/styles/scalingUtils';
 import R from '@src/res'
 
 const BaseHeader = ({ title, onBackPress, onCartPress }:any) => {
@@ -30,20 +31,20 @@ const BaseHeader = ({ title, onBackPress, onCartPress }:any) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    height: 60,
+    height: vs(60),
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: 'white',
   },
   icon: {
-    width: 30,
-    height:30,
+    width: vs(30),
+    height: vs(30),
   },
   title: {
-    fontSize: 18,
+    fontSize: ms(18),
     fontFamily: 'LibreBaskerville-Bold',
     color: 'black',
-    marginLeft: 20
+    marginLeft: hs(20)
   },
 });
 

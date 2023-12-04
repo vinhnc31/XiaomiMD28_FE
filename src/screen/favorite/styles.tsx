@@ -17,7 +17,7 @@ export default StyleSheet.create({
 
   flatListContainer1: { 
     width: SCREEN_WIDTH, 
-    marginVertical: vs(10),  
+    marginVertical: vs(10), 
   },
 
   titleContainer: {
@@ -106,6 +106,7 @@ export default StyleSheet.create({
     resizeMode: 'contain',
     borderRadius: ms(5),
   },
+
   overlay: {
     flex: 1,
     flexDirection: 'column',
@@ -156,6 +157,7 @@ export default StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#FFFFFF'
   },
 
   noDataText: {

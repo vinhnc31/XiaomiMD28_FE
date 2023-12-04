@@ -55,40 +55,13 @@ const DetailsScreen = (props: Props) => {
   const AccountId = user?.id || '';
   const [favoriteId, setFavoriteId] = useState(0);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [noData, setNoData] = useState(true);
 
   // { phân sang phần comment
-  const [page, setPage] = useState(1);
-  const [pageSize, setpageSize] = useState(20);
-  const initialCommentsToShow = 3;
-  const [commentsToShow, setCommentsToShow] = useState(initialCommentsToShow);
+  const commentsToShow = 3;
   const startIndex = 0;
-  const endIndex = page + pageSize;
   const getProductCommentsToShow = () => getProductComment(productIdData).slice(startIndex, commentsToShow);
-  const handleSeeMoreComments = () => {
-    // Increase the number of comments to show by pageSize
-    setCommentsToShow(prev => prev + pageSize);
-    setPage(prevPage => prevPage + 1);
-  };
-  const goToReviewProduct = () => {
-    navigateToPage(APP_NAVIGATION.REVIEWPRODUCT, {});
-    //goToDetails(item.id)
-  };
-  // }
 
-  // useEffect(() => {
-  //   checkIfProductIsFavorite()
-  //   // Chỉ kích hoạt làm mới nếu refreshing đã được đặt thành true
-  //   setLoading(false);
-  //   if (refreshing) {
-  //     fetchDataProduct()
-  //     .then(() =>  checkIfProductIsFavorite())
-  //       .then(() => setRefreshing(false))
-  //       .catch(() => setRefreshing(false));
-  //   } else {
-  //     fetchDataProduct();
-  //     checkIfProductIsFavorite();
-  //   }
-  // }, [productId, refreshing]); // Sử dụng mảng phụ thuộc để chỉ kích hoạt khi refreshing thay đổi
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -96,13 +69,13 @@ const DetailsScreen = (props: Props) => {
         await fetchDataProduct();
         await checkIfProductIsFavorite();
       } catch (error) {
-        setError('err');
+        setError('fetchData err');
       } finally {
         setLoading(false);
         setRefreshing(false);
       }
     };
-
+    
     fetchData();
     // Gọi hàm checkIfProductIsFavorite ngay khi vào trang
     checkIfProductIsFavorite();
@@ -114,17 +87,22 @@ const DetailsScreen = (props: Props) => {
       const productService = new ProductService();
       const result = await productService.getProductId(productId);
 
-      console.log('---------------products data id:', productId, '-----------', result.data);
+      console.log('---------------products data id:', productId, '-----Object.keys(result.data)------', Object.keys(result.data));
       setProductIdData(result.data);
-      setLoading(false);
+      if (result.data && Object.keys(result.data).length > 0) {
+        // `result.data` không rỗng
+        setNoData(false);
+      } else {
+        // `result.data` rỗng hoặc là một giá trị "falsy"
+        setNoData(true);
+      }
     } catch (error) {
-      setLoading(false);
+      setLoading(true);
       setError('err');
     }
   };
 
   const onRefresh = async () => {
-    setPage(1);
     await fetchDataProduct();
   };
 
@@ -210,7 +188,7 @@ const DetailsScreen = (props: Props) => {
       // Kiểm tra xem sản phẩm đã có trong danh sách yêu thích hay chưa
       const isProductInFavorites = favorites.some(favorite => {
         if (favorite.productId === productId) {
-          console.log('Favorite ID:----', favorite.id);
+          //console.log('Favorite ID:----', favorite.id);
           setFavoriteId(favorite.id);
           return true; // Returning true means the product is found in favorites
         }
@@ -219,21 +197,20 @@ const DetailsScreen = (props: Props) => {
 
       // Cập nhật trạng thái isFavorite
       setIsFavorite(isProductInFavorites);
-      setLoading(false);
     } catch (error) {
       console.log('Error checking liked products:', error);
-      setLoading(false);
+      setLoading(true);
     }
   };
 
-  const formatPrice = priceNumber => {
+  const formatPrice = (priceNumber: number) => {
     const formatter = new Intl.NumberFormat('vi-VN', {
       style: 'currency',
       currency: 'VND',
       minimumFractionDigits: 0, // Số lẻ tối thiểu là 0
     });
     return formatter.format(priceNumber);
-  };
+  }; 
 
   const dataSlider = (
     productData: ProductDetailModel,
@@ -270,6 +247,7 @@ const DetailsScreen = (props: Props) => {
     return (
       <View key={item.id} style={styles.btnColorsContainer}>
         <TouchableOpacity
+          activeOpacity={0.8}
           onPress={() => handleColorChange(item.colorId)}
           style={[
             styles.btnColors,
@@ -284,8 +262,17 @@ const DetailsScreen = (props: Props) => {
   };
 
   // lay dữ data comments trong data product
-  const getProductComment = productData => {
-    let dataComment = [];
+  const getProductComment = (productData: ProductDetailModel) => {
+    let dataComment: {
+      id: number;
+      images: string;
+      commentBody: string;
+      star: number;
+      AccountId: number;
+      productId: number;
+      // Thêm tên sản phẩm vào đối tượng comment
+      productName: string;
+    }[] = [];
 
     if (productData && productData.comments && Array.isArray(productData.comments)) {
       dataComment = productData.comments.map(comment => ({
@@ -295,23 +282,21 @@ const DetailsScreen = (props: Props) => {
         star: comment.star,
         AccountId: comment.AccountId,
         productId: comment.productId,
+        // Thêm tên sản phẩm vào đối tượng comment
+        productName: productData.name,
       }));
     }
 
     return dataComment;
   };
 
-  console.log('cmt-----------------------', getProductComment(productIdData));
+  //console.log('cmt-----------------------', getProductComment(productIdData));
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedRAM, setSelectedRAM] = useState('');
-  const [selectedQuantity, setSelectedQuantity] = useState(1);
-
-  const handleRAMChange = ram => {
+  const handleRAMChange = (ram: string) => {
     setSelectedRAM(ram);
   };
 
-  const handleQuantityChange = quantity => {
+  const handleQuantityChange = (quantity: number) => {
     setSelectedQuantity(quantity);
   };
 
@@ -320,7 +305,7 @@ const DetailsScreen = (props: Props) => {
 
     return (
       <View>
-        <TouchableOpacity>
+        <TouchableOpacity activeOpacity={0.8} onPress={goToReviewProduct}>
           <View>
             <View>
               <View style={{flexDirection: 'row'}}>
@@ -356,7 +341,7 @@ const DetailsScreen = (props: Props) => {
                       marginLeft: hs(10),
                       alignSelf: 'center',
                     }}>
-                    Điện thoại Xiaomi 14Điện thoại Xiaomi 14
+                    {item?.productName || ''}
                   </Text>
                 </View>
               </View>
@@ -368,7 +353,7 @@ const DetailsScreen = (props: Props) => {
                   {[...Array(5 - Math.floor(item?.star)).keys()].map(index => (
                     <Image
                       key={index}
-                      style={styles.imgStarCmt}
+                      style={styles.imgStar2Cmt}
                       source={require('../../../assets/images/star2.png')} // Use star2.png for remaining stars
                     />
                   ))}
@@ -390,10 +375,19 @@ const DetailsScreen = (props: Props) => {
     );
   };
 
+  const goToReviewProduct = () => {
+    navigateToPage(APP_NAVIGATION.REVIEWPRODUCT, {commentProductData: getProductComment(productIdData)});
+  };
+
+  
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedRAM, setSelectedRAM] = useState('');
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
+  
   return (
     <SafeAreaView style={styles.mainContainer}>
       <View style={styles.backContainer}>
-        <TouchableOpacity onPress={handleBackPress} style={styles.iconbackContainer}>
+        <TouchableOpacity activeOpacity={0.8} onPress={handleBackPress} style={styles.iconbackContainer}>
           <Image source={require('../../../assets/images/back.png')} style={styles.iconBack} />
         </TouchableOpacity>
       </View>
@@ -403,312 +397,330 @@ const DetailsScreen = (props: Props) => {
         </View>
       ) : (
         <>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={['dummyData']} // Bạn có thể cung cấp một số dữ liệu giả mạo hoặc sử dụng một mục đơn làm đại diện
-            keyExtractor={() => 'dummyKey'} // Sử dụng một hàm trích xuất khóa giả mạo
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-            renderItem={() => (
-              <>
-                <View style={styles.item}>
-                  <View style={styles.imageContainer}>
-                    {!dataSlider(productIdData) || dataSlider(productIdData).length === 0 ? (
-                      <Image
-                        source={{uri: productIdData?.images} || require('../../../assets/images/noimage.jpg')}
-                        style={{
-                          width: hs(256),
-                          height: vs(256),
-                          resizeMode: 'contain',
-                          borderRadius: ms(5),
-                          alignSelf: 'center',
-                        }}
-                      />
-                    ) : (
-                      <Carousel
-                        data={dataSlider(productIdData) || []}
-                        onColorChanged={colorId => {
-                          // Xử lý thông tin vị trí ở đây, ví dụ: console.log(index);
-                          console.log('index-----------------z', colorId);
-                          setcolorIdSlider(colorId);
-                        }}
-                        colorIdButton={colorIdButtonSlider}
-                      />
-                    )}
-                  </View>
+          {noData
+            ? (
+            <View style={styles.noDataContainer}>
+              <Image style={{width: hs(120), height: hs(120)}} source={require('../../../assets/images/noDataStar.png')} />
+              <Text style={styles.noDataText}>không tìm thấy sản phẩm</Text>
+            </View>)
+            : (
+                <>
+                  <FlatList
+                    showsVerticalScrollIndicator={false}
+                    data={['dummyData']} // Bạn có thể cung cấp một số dữ liệu giả mạo hoặc sử dụng một mục đơn làm đại diện
+                    keyExtractor={() => 'dummyKey'} // Sử dụng một hàm trích xuất khóa giả mạo
+                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                    renderItem={() => (
+                      <>
+                        <View style={styles.item}>
+                          <View style={styles.imageContainer}>
+                            {!dataSlider(productIdData) || dataSlider(productIdData).length === 0 ? (
+                              <Image
+                                source={{uri: productIdData?.images} || require('../../../assets/images/noimage.jpg')}
+                                style={{
+                                  width: hs(256),
+                                  height: vs(256),
+                                  resizeMode: 'contain',
+                                  borderRadius: ms(5),
+                                  alignSelf: 'center',
+                                }}
+                              />
+                            ) : (
+                              <Carousel
+                                data={dataSlider(productIdData) || []}
+                                onColorChanged={colorId => {
+                                  // Xử lý thông tin vị trí ở đây, ví dụ: console.log(index);
+                                  console.log('index-----------------z', colorId);
+                                  setcolorIdSlider(colorId);
+                                }}
+                                colorIdButton={colorIdButtonSlider}
+                              />
+                            )}
+                          </View>
 
-                  <View style={styles.overlayIconFavorite}>
-                    <View style={styles.iconFavoriteContainer}>
-                      <TouchableOpacity
-                        disabled={isButtonDisabled} // Disable the button based on the loading state
-                        onPress={() => {
-                          console.log('code logic button tymm <3');
-                          handleFavoritePress();
-                        }}>
-                        <Image
-                          style={styles.imgFavourite}
-                          source={
-                            isFavorite
-                              ? require('../../../assets/images/heart2.png')
-                              : require('../../../assets/images/heart1.png')
-                          }
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
+                          <View style={styles.overlayIconFavorite}>
+                            <View style={styles.iconFavoriteContainer}>
+                              <TouchableOpacity
+                                activeOpacity={0.8}
+                                disabled={isButtonDisabled} // Disable the button based on the loading state
+                                onPress={() => {
+                                  console.log('code logic button tymm <3');
+                                  handleFavoritePress();
+                                }}>
+                                <Image
+                                  style={styles.imgFavourite}
+                                  source={
+                                    isFavorite
+                                      ? require('../../../assets/images/heart2.png')
+                                      : require('../../../assets/images/heart1.png')
+                                  }
+                                />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
 
-                  <View style={styles.priceNameViewStarContainer}>
-                    <Text style={styles.priceText}>{formatPrice(productIdData?.price || 0)}</Text>
+                          <View style={styles.priceNameViewStarContainer}>
+                            <Text style={styles.priceText}>{formatPrice(productIdData?.price || 0)}</Text>
 
-                    <View style={styles.nameContainer}>
-                      <Text style={styles.textName}>{productIdData?.name || ''}</Text>
-                    </View>
-
-                    <View style={styles.viewStar}>
-                      <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
-                      <Text style={styles.textStar}>{productIdData?.averageRating || 0.0}</Text>
-                      <Text style={styles.textCmt}>({getQuantitys(productIdData) || 0})</Text>
-                      <Text style={styles.textSell}>| Đã bán : </Text>
-                      <Text style={styles.textSellNumber}>123</Text>
-                    </View>
-                  </View>
-
-                  <View style={styles.flatListColorsContainer}>
-                    <FlatList
-                      horizontal
-                      pagingEnabled
-                      showsHorizontalScrollIndicator={false}
-                      data={dataSlider(productIdData) || []}
-                      keyExtractor={item => item.id.toString()}
-                      renderItem={renderItemNameColors}
-                    />
-                  </View>
-                </View>
-
-                <View style={styles.mainDescription}>
-                  <View style={styles.descriptionContainer}>
-                    <Text style={styles.descriptionTitle}>Mô tả về sản phẩm</Text>
-                    {showFullDescription ? (
-                      <View>
-                        <Text style={styles.descriptionText}>{productIdData?.description || ''}</Text>
-                      </View>
-                    ) : (
-                      <View>
-                        <Text style={styles.descriptionText} numberOfLines={10}>
-                          {productIdData?.description || ''}
-                        </Text>
-                      </View>
-                    )}
-
-                    {showFullDescription ? (
-                      <TouchableOpacity onPress={() => setShowFullDescription(false)}>
-                        <View style={styles.seeMore}>
-                          <Text style={styles.seeMoreText}>Ẩn bớt</Text>
-                        </View>
-                      </TouchableOpacity>
-                    ) : (
-                      <TouchableOpacity onPress={() => setShowFullDescription(true)}>
-                        <View style={styles.seeMore}>
-                          <Text style={styles.seeMoreText}>Xem thêm</Text>
-                          <Image style={styles.imgPlus} source={R.images.iconPlus || require('../../../assets/images/noimage.jpg')} />
-                        </View>
-                      </TouchableOpacity>
-                    )}
-                  </View>
-                </View>
-
-                <View style={styles.reviews}>
-                  <View style={styles.reviewBody}>
-                    <TouchableOpacity onPress={goToReviewProduct}>
-                      <View style={styles.reviewsContainer}>
-                        <View style={styles.reviewsContainer2}>
-                          <View style={styles.reviewsTitle}>
-                            <View style={styles.reviewsTitleContainer}>
-                              <Text style={styles.reviewTitleText}>Đánh giá của khác hàng</Text>
-                              <Text style={styles.numberReviews}>({productIdData?.commentCount || 0})</Text>
+                            <View style={styles.nameContainer}>
+                              <Text style={styles.textName}>{productIdData?.name || ''}</Text>
                             </View>
 
-                            <View style={styles.starPoint}>
-                              <Text style={styles.pointText}>
-                                {parseFloat(productIdData?.averageRating).toFixed(1) || '0.0'}
-                              </Text>
-                              <Text style={styles.pointText}> / 5 </Text>
-                              <View style={styles.imgStarContainer}>
-                                {isNaN(parseFloat(productIdData?.averageRating)) ||
-                                !isFinite(productIdData?.averageRating) ? (
-                                  <>
-                                    {Array.from({length: 5}).map((_, index) => (
-                                      <Image
-                                        key={index}
-                                        style={styles.imgStarCmt}
-                                        source={require('../../../assets/images/star4.png')}
-                                      />
-                                    ))}
-                                  </>
-                                ) : (
-                                  <>
-                                    {[...Array(Math.floor(parseFloat(productIdData?.averageRating))).keys()].map(
-                                      index => (
-                                        <Image
-                                          key={index}
-                                          style={styles.imgStarCmt}
-                                          source={require('../../../assets/images/star4.png')}
-                                        />
-                                      ),
-                                    )}
-                                    {[...Array(5 - Math.floor(parseFloat(productIdData?.averageRating))).keys()].map(
-                                      index => (
-                                        <Image
-                                          key={index}
-                                          style={styles.imgStarCmt}
-                                          source={require('../../../assets/images/star2.png')} // Use star2.png for remaining stars
-                                        />
-                                      ),
-                                    )}
-                                  </>
-                                )}
+                            <View style={styles.viewStar}>
+                              <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
+                              <Text style={styles.textStar}>{productIdData?.averageRating || 0.0}</Text>
+                              <Text style={styles.textCmt}>({getQuantitys(productIdData) || 0})</Text>
+                              <Text style={styles.textSell}>| Đã bán : </Text>
+                              <Text style={styles.textSellNumber}>123</Text>
+                            </View>
+                          </View>
+
+                          <View style={styles.flatListColorsContainer}>
+                            <FlatList
+                              horizontal
+                              pagingEnabled
+                              showsHorizontalScrollIndicator={false}
+                              data={dataSlider(productIdData) || []}
+                              keyExtractor={item => item.id.toString()}
+                              renderItem={renderItemNameColors}
+                            />
+                          </View>
+                        </View>
+
+                        <View style={styles.mainDescription}>
+                          <View style={styles.descriptionContainer}>
+                            <Text style={styles.descriptionTitle}>Mô tả về sản phẩm</Text>
+                            {showFullDescription ? (
+                              <View>
+                                <Text style={styles.descriptionText}>{productIdData?.description || ''}</Text>
                               </View>
-                            </View>
-                          </View>
+                            ) : (
+                              <View>
+                                <Text style={styles.descriptionText} numberOfLines={10}>
+                                  {productIdData?.description || ''}
+                                </Text>
+                              </View>
+                            )}
 
-                          <View style={styles.seeMoreReviews}>
-                            <Text style={styles.seeMoreReviewsText}>Xem thêm</Text>
-                            <Image style={styles.imgNext} source={require('../../../assets/images/nextD.png')} />
+                            {showFullDescription ? (
+                              <TouchableOpacity activeOpacity={0.8} onPress={() => setShowFullDescription(false)}>
+                                <View style={styles.seeMore}>
+                                  <Text style={styles.seeMoreText}>Ẩn bớt</Text>
+                                </View>
+                              </TouchableOpacity>
+                            ) : (
+                              <TouchableOpacity activeOpacity={0.8} onPress={() => setShowFullDescription(true)}>
+                                <View style={styles.seeMore}>
+                                  <Text style={styles.seeMoreText}>Xem thêm</Text>
+                                  <Image
+                                    style={styles.imgPlus}
+                                    source={R.images.iconPlus || require('../../../assets/images/noimage.jpg')}
+                                  />
+                                </View>
+                              </TouchableOpacity>
+                            )}
                           </View>
                         </View>
+
+                        <View style={styles.reviews}>
+                          <View style={styles.reviewBody}>
+                            <TouchableOpacity activeOpacity={0.8} onPress={goToReviewProduct}>
+                              <View style={styles.reviewsContainer}>
+                                <View style={styles.reviewsContainer2}>
+                                  <View style={styles.reviewsTitle}>
+                                    <View style={styles.reviewsTitleContainer}>
+                                      <Text style={styles.reviewTitleText}>Đánh giá của khác hàng</Text>
+                                      <Text style={styles.numberReviews}>({productIdData?.commentCount || 0})</Text>
+                                    </View>
+
+                                    <View style={styles.starPoint}>
+                                      <Text style={styles.pointText}>
+                                        {parseFloat(productIdData?.averageRating).toFixed(1) || '0.0'}
+                                      </Text>
+                                      <Text style={styles.pointText}> / 5 </Text>
+                                      <View style={styles.imgStarContainer}>
+                                        {isNaN(parseFloat(productIdData?.averageRating)) ||
+                                        !isFinite(productIdData?.averageRating) ? (
+                                          <>
+                                            {Array.from({length: 5}).map((_, index) => (
+                                              <Image
+                                                key={index}
+                                                style={styles.imgStarCmt}
+                                                source={require('../../../assets/images/star4.png')}
+                                              />
+                                            ))}
+                                          </>
+                                        ) : (
+                                          <>
+                                            {[
+                                              ...Array(Math.floor(parseFloat(productIdData?.averageRating))).keys(),
+                                            ].map(index => (
+                                              <Image
+                                                key={index}
+                                                style={styles.imgStarCmt}
+                                                source={require('../../../assets/images/star4.png')}
+                                              />
+                                            ))}
+                                            {[
+                                              ...Array(5 - Math.floor(parseFloat(productIdData?.averageRating))).keys(),
+                                            ].map(index => (
+                                              <Image
+                                                key={index}
+                                                style={styles.imgStar2Cmt}
+                                                source={require('../../../assets/images/star2.png')} // Use star2.png for remaining stars
+                                              />
+                                            ))}
+                                          </>
+                                        )}
+                                      </View>
+                                    </View>
+                                  </View>
+
+                                  <View style={styles.seeMoreReviews}>
+                                    <Text style={styles.seeMoreReviewsText}>Xem thêm</Text>
+                                    <Image
+                                      style={styles.imgNext}
+                                      source={require('../../../assets/images/nextD.png')}
+                                    />
+                                  </View>
+                                </View>
+                              </View>
+                            </TouchableOpacity>
+                            <View style={styles.borderBottom}></View>
+
+                            <FlatList
+                              pagingEnabled
+                              showsHorizontalScrollIndicator={false}
+                              data={getProductComment(productIdData) ? getProductCommentsToShow() : []}
+                              keyExtractor={item => item.id.toString()}
+                              renderItem={renderItemComments}
+                            />
+                          </View>
+                        </View>
+                      </>
+                    )}
+                    nestedScrollEnabled // Bật tính năng cuộn lồng
+                  />
+
+                  <View style={styles.BuyandAddtoCartContainer}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        console.log('them vao gio hang');
+                        setModalVisible(true);
+                      }}
+                      style={styles.leftContainerCart}
+                      activeOpacity={0.8}>
+                      <View style={styles.leftRowCart}>
+                        <Image style={styles.imgAddCart} source={require('../../../assets/images/add-to-cart.png')} />
+                        <Text style={styles.txtAddCart}>Thêm vào giỏ hàng</Text>
                       </View>
                     </TouchableOpacity>
-                    <View style={styles.borderBottom}></View>
 
-                    <FlatList
-                      pagingEnabled
-                      showsHorizontalScrollIndicator={false}
-                      data={productIdData ? getProductCommentsToShow() : []}
-                      keyExtractor={item => item.id.toString()}
-                      renderItem={renderItemComments}
-                    />
-                    {commentsToShow < getProductComment(productIdData).length && (
-                      <TouchableOpacity style={styles.btnSeeMoreComment} onPress={handleSeeMoreComments}>
-                        <Text style={styles.seeMoreReviewsText}>Xem thêm</Text>
-                      </TouchableOpacity>
-                    )}
-                  </View>
-                </View>
-              </>
-            )}
-            nestedScrollEnabled // Bật tính năng cuộn lồng
-          />
-
-          <View style={styles.BuyandAddtoCartContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                console.log('them vao gio hang');
-                setModalVisible(true);
-              }}
-              style={styles.leftContainerCart}
-              activeOpacity={0.8}>
-              <View style={styles.leftRowCart}>
-                <Image style={styles.imgAddCart} source={require('../../../assets/images/add-to-cart.png')} />
-                <Text style={styles.txtAddCart}>Thêm vào giỏ hàng</Text>
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => {
-                console.log('mua ngay');
-                setModalVisible(true);
-              }}
-              style={styles.rightContainerBuy}
-              activeOpacity={0.8}>
-              <Text style={styles.textBuy}>Mua ngay</Text>
-            </TouchableOpacity>
-          </View>
-
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              console.log('Modal has been closed.');
-              setModalVisible(!modalVisible);
-            }}>
-            <View style={styles.centeredViewModal}>
-              <View style={styles.modalView}>
-                <View style={styles.productModal}>
-                  <Image source={require('../../../assets/images/demo.jpg')} style={styles.productModalImage} />
-                  <View style={styles.productModalPriceQuantity}>
-                    <Text style={styles.productModalPriceText}>{formatPrice(productIdData?.price || 0)}</Text>
-                    <Text style={styles.productModalQuantityText}>Kho: {getQuantitys(productIdData) || 0}</Text>
-                  </View>
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => setModalVisible(!modalVisible)}
-                    style={styles.btnCloseModal}>
-                    <Image source={require('../../../assets/images/closewhite.png')} style={styles.iconCloseModal} />
-                  </TouchableOpacity>
-                </View>
-                <Text style={[styles.borderBottom]}></Text>
-
-                {/* Màu */}
-                <View style={styles.modalProductColorContainer}>
-                  <Text style={styles.modalProductColorTitle}>Màu</Text>
-                  <View style={{}}>
-                    <FlatList
-                      horizontal
-                      pagingEnabled
-                      showsHorizontalScrollIndicator={false}
-                      data={dataSlider(productIdData) || []}
-                      keyExtractor={item => item.id.toString()}
-                      renderItem={renderItemNameColors}
-                    />
-                  </View>
-                </View>
-
-                {/* RAM */}
-                <View style={styles.modalProductConfigContainer}>
-                  <Text style={styles.modalProductConfigTitle}>Ram</Text>
-                  <View style={{}}>
-                    <FlatList
-                      horizontal
-                      pagingEnabled
-                      showsHorizontalScrollIndicator={false}
-                      data={dataSlider(productIdData) || []}
-                      keyExtractor={item => item.id.toString()}
-                      renderItem={renderItemNameColors}
-                    />
-                  </View>
-                </View>
-                <Text style={styles.borderBottom}></Text>
-
-                {/* Số lượng */}
-                <View style={styles.modalNumberProductContainer}>
-                  <Text style={styles.modalNumberProductTitle}>Số lượng</Text>
-                  <View style={styles.modalQuantityProductContainer}>
-                    <TouchableOpacity activeOpacity={0.8} style={styles.modalBtnMinusPlus}>
-                      <Image source={require('../../../assets/images/minus.png')} style={styles.modalIconMinusPlus} />
+                    <TouchableOpacity
+                      onPress={() => {
+                        console.log('mua ngay');
+                        setModalVisible(true);
+                      }}
+                      style={styles.rightContainerBuy}
+                      activeOpacity={0.8}>
+                      <Text style={styles.textBuy}>Mua ngay</Text>
                     </TouchableOpacity>
-                    <View style={styles.modalQuantiyTextContainer}>
-                      <Text style={styles.modalQuantiyText}>1</Text>
+                  </View>
+
+                  <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                      console.log('Modal has been closed.');
+                      setModalVisible(!modalVisible);
+                    }}>
+                    <View style={styles.centeredViewModal}>
+                      <View style={styles.modalView}>
+                        <View style={styles.productModal}>
+                          <Image source={require('../../../assets/images/demo.jpg')} style={styles.productModalImage} />
+                          <View style={styles.productModalPriceQuantity}>
+                            <Text style={styles.productModalPriceText}>{formatPrice(productIdData?.price || 0)}</Text>
+                            <Text style={styles.productModalQuantityText}>Kho: {getQuantitys(productIdData) || 0}</Text>
+                          </View>
+                          <TouchableOpacity
+                            activeOpacity={0.8}
+                            onPress={() => setModalVisible(!modalVisible)}
+                            style={styles.btnCloseModal}>
+                            <Image
+                              source={require('../../../assets/images/closewhite.png')}
+                              style={styles.iconCloseModal}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                        <Text style={[styles.borderBottom]}></Text>
+
+                        {/* Màu */}
+                        <View style={styles.modalProductColorContainer}>
+                          <Text style={styles.modalProductColorTitle}>Màu</Text>
+                          <View style={{}}>
+                            <FlatList
+                              horizontal
+                              pagingEnabled
+                              showsHorizontalScrollIndicator={false}
+                              data={dataSlider(productIdData) || []}
+                              keyExtractor={item => item.id.toString()}
+                              renderItem={renderItemNameColors}
+                            />
+                          </View>
+                        </View>
+
+                        {/* RAM */}
+                        <View style={styles.modalProductConfigContainer}>
+                          <Text style={styles.modalProductConfigTitle}>Ram</Text>
+                          <View style={{}}>
+                            <FlatList
+                              horizontal
+                              pagingEnabled
+                              showsHorizontalScrollIndicator={false}
+                              data={dataSlider(productIdData) || []}
+                              keyExtractor={item => item.id.toString()}
+                              renderItem={renderItemNameColors}
+                            />
+                          </View>
+                        </View>
+                        <Text style={styles.borderBottom}></Text>
+
+                        {/* Số lượng */}
+                        <View style={styles.modalNumberProductContainer}>
+                          <Text style={styles.modalNumberProductTitle}>Số lượng</Text>
+                          <View style={styles.modalQuantityProductContainer}>
+                            <TouchableOpacity activeOpacity={0.8} style={styles.modalBtnMinusPlus}>
+                              <Image
+                                source={require('../../../assets/images/minus.png')}
+                                style={styles.modalIconMinusPlus}
+                              />
+                            </TouchableOpacity>
+                            <View style={styles.modalQuantiyTextContainer}>
+                              <Text style={styles.modalQuantiyText}>1</Text>
+                            </View>
+                            <TouchableOpacity activeOpacity={0.8} style={styles.modalBtnMinusPlus}>
+                              <Image
+                                source={require('../../../assets/images/plusblack.png')}
+                                style={styles.modalIconMinusPlus}
+                              />
+                            </TouchableOpacity>
+                          </View>
+                        </View>
+                        <Text style={[styles.borderBottom, {flex: 0.01}]}></Text>
+                        <TouchableOpacity
+                          activeOpacity={0.8}
+                          style={styles.modalBtnAdd}
+                          onPress={() => {
+                            console.log('mua hoặc add to cart');
+                          }}>
+                          <Text style={styles.modalBtnText}>Thêm</Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
-                    <TouchableOpacity activeOpacity={0.8} style={styles.modalBtnMinusPlus}>
-                      <Image
-                        source={require('../../../assets/images/plusblack.png')}
-                        style={styles.modalIconMinusPlus}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-                <Text style={[styles.borderBottom, {flex: 0.01}]}></Text>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  style={styles.modalBtnAdd}
-                  onPress={() => {
-                    console.log('mua hoặc add to cart');
-                  }}>
-                  <Text style={styles.modalBtnText}>Thêm</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
+                  </Modal>
+                </>
+              )}
         </>
       )}
     </SafeAreaView>

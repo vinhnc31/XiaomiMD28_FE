@@ -23,7 +23,7 @@ const Carousel: React.FC<CarouselProps> = ({data, onColorChanged, colorIdButton}
   const swiperRef = useRef<FlatList<ColorItem>>(null);
   const [indexDot, setIndexDot] = useState(0);
   const [isButton, setIsButton] = useState(false);
-  console.log('dataaaaaaaaaaaaaaaaaaaa', data);
+  //console.log('dataaaaaaaaaaaaaaaaaaaa', data);
 
   if (!data || data.length === 0) {
     return;
@@ -38,8 +38,8 @@ const Carousel: React.FC<CarouselProps> = ({data, onColorChanged, colorIdButton}
         viewPosition: 0.5, // Adjust this value as needed
       });
     }
-    console.log('iiiiiiiiiiiiiiiiiii', index);
-    console.log('bbbbbbbbbbbbbbbbbbb', isButton);
+    // console.log('iiiiiiiiiiiiiiiiiii', index);
+    // console.log('bbbbbbbbbbbbbbbbbbb', isButton);
     setIndexDot(index);
     setIsButton(true);
   }, [colorIdButton]);
