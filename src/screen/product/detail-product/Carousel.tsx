@@ -25,6 +25,10 @@ const Carousel: React.FC<CarouselProps> = ({data, onColorChanged, colorIdButton}
   const [isButton, setIsButton] = useState(false);
   console.log('dataaaaaaaaaaaaaaaaaaaa', data);
 
+  if (!data || data.length === 0) {
+    return;
+  }
+
   useEffect(() => {
     const index = data.findIndex(item => item.colorId === colorIdButton);
     if (index !== -1 && swiperRef.current) {
@@ -77,7 +81,11 @@ const Carousel: React.FC<CarouselProps> = ({data, onColorChanged, colorIdButton}
         keyExtractor={item => item.id.toString()}
         renderItem={({item, index}) => (
           <View key={item.id} style={styles.slide}>
-            <Image source={{uri: item.image}} style={styles.image} />
+            {item.image ? (
+              <Image source={{uri: item.image}} style={styles.image} />
+            ) : (
+              <Image source={require('../../../assets/images/noimage.jpg')} style={styles.image} />
+            )}
           </View>
         )}
         onMomentumScrollEnd={handleMomentumScrollEnd}

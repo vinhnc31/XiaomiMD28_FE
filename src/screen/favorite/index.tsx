@@ -3,7 +3,8 @@ import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {AppStackParam, MenuStackParam} from '@src/navigations/AppNavigation/stackParam';
 import {APP_NAVIGATION, MENU_NAVIGATION} from '@src/navigations/routes';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   SafeAreaView,
   Text,
@@ -18,7 +19,6 @@ import {
 
 import styles from './styles';
 import {BaseButton} from '@src/containers/components/Base';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {BaseLoading} from '@src/containers/components/Base/BaseLoading';
 import {navigateToPage} from '@src/navigations/services';
 import TouchableScale from 'react-native-touchable-scale';
@@ -27,6 +27,9 @@ import {FavoriteModel} from '@src/services/favorite/favorite.model';
 import ProductService from '@src/services/product';
 import {ProductDetailModel} from '@src/services/product/product.model';
 import {useAuth} from '@src/hooks/useAuth';
+import BaseHeaderNoBack from '@src/containers/components/Base/BaseHeaderNoBack';
+import Toast from 'react-native-toast-message';
+
 
 type ScreenNavigationProps = CompositeNavigationProp<
   BottomTabNavigationProp<MenuStackParam, MENU_NAVIGATION.FAVORITE>,
@@ -48,58 +51,70 @@ const FavoriteScreen = (props: Props) => {
 
   const {user} = useAuth();
   const accountId = user?.id || '';
-  //const accountId = 1;
 
   useEffect(() => {
     fetchViewFavoriteData();
   }, [accountId, refreshing]);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchData = async () => {
+        await fetchViewFavoriteData();
+      };
+
+      fetchData();
+
+      return () => {
+
+      };
+
+    }, [refreshing])
+  );
+
   const fetchViewFavoriteData = async () => {
     try {
       setLoading(true);
-  
+
       const favoriteService = new FavoriteService();
       const result = await favoriteService.fetchFavorite(accountId);
       setDataFavorites(result.data);
-  
+
       // Instantiate ProductService
       const productService = new ProductService();
-  
+
       // Fetch product details using Promise.all
       const productDetails = await Promise.all(
-        result.data.map(async (favorite) => {
+        result.data.map(async favorite => {
           try {
             const productResult = await productService.getProductId(favorite.productId);
-            return productResult.data;
+            return {...productResult.data, favoriteId: favorite.id};
           } catch (productError) {
             console.error(`Error fetching product ${favorite.productId}:`, productError);
             return null;
           }
-        })
+        }),
       );
-  
+
       // Filter out null values (failed product details fetch)
-      const filteredProductDetails = productDetails.filter((product) => product !== null);
+      const filteredProductDetails = productDetails.filter(product => product !== null);
       console.log('filteredProductDetails------------------', filteredProductDetails.length);
       setDataProductId(filteredProductDetails);
-  
+
       setLoading(false);
     } catch (error) {
       setLoading(false);
       setError('Error fetching data: ' + error);
     }
   };
-  
 
   const onRefresh = async () => {
-    //setRefreshing(true);
     await fetchViewFavoriteData();
-    //setRefreshing(false);
+    setLoading(false);
   };
 
   const getQuantitiys = (productData: any): number => {
     let totalQuantity = 0;
-  
+
     if (productData && productData.colorProducts && Array.isArray(productData.colorProducts)) {
       productData.colorProducts.forEach((colorProduct: any) => {
         if (colorProduct && colorProduct.colorConfigs && Array.isArray(colorProduct.colorConfigs)) {
@@ -113,43 +128,63 @@ const FavoriteScreen = (props: Props) => {
     }
     return totalQuantity;
   };
-  
 
-  const goToDetails = (id: number) => {
+  const goToDetailProduct = (id: number) => {
     navigateToPage(APP_NAVIGATION.DETAILSPRODUCT, {productId: id});
   };
 
-  const tets = dataProductId.filter((product) => product !== null);
-      console.log('filteredProductDetails------------------', tets?.id);
+  const handleRemoveFavorite = async (favoriteId: number) => {
+    try {
+      // Xóa mục khỏi danh sách dataProductId
+      setDataProductId(prevData => prevData.filter(item => item.favoriteId !== favoriteId));
 
-  const ProductItem = ({ item }: { item: ProductDetailModel }) => {
+      const favoriteService = new FavoriteService();
+      await favoriteService.deleteFavorite(favoriteId);
+    } catch (error) {
+      console.error('Lỗi khi xóa sản phẩm yêu thích:', error);
+      setLoading(false);
+    }
+  };
+
+  const handleFavoritePress = async (favoriteId: number) => {
+    try {
+      await handleRemoveFavorite(favoriteId);
+      Toast.show({
+        text1: 'Xóa thành công khỏi mục yêu thích',
+        type: 'success',
+      });
+    } catch (error) {
+      console.log('Lỗi: ', error);
+    }
+  };
+
+  const ProductItem = ({item}: {item: ProductDetailModel & {favoriteId: number}}) => {
     if (!item) {
       console.error('Item is undefined');
       return null;
     }
-
     return (
-      <TouchableOpacity onPress={() => goToDetails(item.id)}>
+      <TouchableOpacity onPress={() => goToDetailProduct(item.id)}>
         <View style={styles.item}>
           <View style={styles.imageContainer}>
-            <Image source={{ uri: item?.images }} style={styles.image} />
-  
+            <Image source={{uri: item?.images}} style={styles.image} />
+
             <View style={styles.overlay}>
               <View style={styles.imgFavouriteContainer}>
-                <TouchableOpacity onPress={() => console.log('code logic button tymm <3')}>
+                <TouchableOpacity onPress={() => handleFavoritePress(item.favoriteId)}>
                   <Image style={styles.imgFavourite} source={require('../../assets/images/heart2.png')} />
                 </TouchableOpacity>
               </View>
             </View>
           </View>
-  
+
           <View style={styles.productInfoContainer}>
             <View style={styles.productNameContainer}>
               <Text numberOfLines={1} style={styles.text}>
                 {item?.name}
               </Text>
             </View>
-  
+
             <View style={styles.viewStar}>
               <Image style={styles.imgStar} source={require('../../assets/images/star4.png')} />
               <Text style={styles.textStar}>{item?.averageRating || 0.0}</Text>
@@ -161,7 +196,6 @@ const FavoriteScreen = (props: Props) => {
       </TouchableOpacity>
     );
   };
-  console.log('p----------------------', dataProductId);
 
   const renderNoDataMessage = () => {
     if (loading) {
@@ -183,24 +217,11 @@ const FavoriteScreen = (props: Props) => {
     return null;
   };
 
+  const handleCartPress = () => {};
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.titleContainer}>
-        <View style={styles.textTitle}>
-          <View style={styles.titleTextContainer}>
-            <Text style={styles.title}>Yêu thích</Text>
-          </View>
-        </View>
-
-        <View style={styles.buttonContainer}>
-          <BaseButton
-            onPress={() => console.log('gio hang')}
-            renderIcon={<Icon name="shopping-cart" size={30} color="black" />}
-            style={{backgroundColor: '#F1F1F1'}}
-          />
-        </View>
-      </View>
-      <View style={styles.borderBottom}></View>
+      <BaseHeaderNoBack title={'Yêu thích'} onCartPress={handleCartPress} />
 
       {renderNoDataMessage()}
       {dataFavorites.length > 0 && (

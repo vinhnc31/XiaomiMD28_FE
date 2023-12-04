@@ -45,7 +45,7 @@ const DetailsScreen = (props: Props) => {
 
   const [showFullDescription, setShowFullDescription] = useState(false);
 
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [colorIdSlider, setcolorIdSlider] = useState(0);
   const [colorIdButtonSlider, setcolorIdButtonSlider] = useState(0);
 
@@ -54,6 +54,7 @@ const DetailsScreen = (props: Props) => {
   const {user} = useAuth();
   const AccountId = user?.id || '';
   const [favoriteId, setFavoriteId] = useState(0);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   // { phân sang phần comment
   const [page, setPage] = useState(1);
@@ -68,23 +69,44 @@ const DetailsScreen = (props: Props) => {
     setCommentsToShow(prev => prev + pageSize);
     setPage(prevPage => prevPage + 1);
   };
+  const goToReviewProduct = () => {
+    navigateToPage(APP_NAVIGATION.REVIEWPRODUCT, {});
+    //goToDetails(item.id)
+  };
   // }
 
+  // useEffect(() => {
+  //   checkIfProductIsFavorite()
+  //   // Chỉ kích hoạt làm mới nếu refreshing đã được đặt thành true
+  //   setLoading(false);
+  //   if (refreshing) {
+  //     fetchDataProduct()
+  //     .then(() =>  checkIfProductIsFavorite())
+  //       .then(() => setRefreshing(false))
+  //       .catch(() => setRefreshing(false));
+  //   } else {
+  //     fetchDataProduct();
+  //     checkIfProductIsFavorite();
+  //   }
+  // }, [productId, refreshing]); // Sử dụng mảng phụ thuộc để chỉ kích hoạt khi refreshing thay đổi
   useEffect(() => {
-    // Chỉ kích hoạt làm mới nếu refreshing đã được đặt thành true
-    setLoading(false);
-    if (refreshing) {
-      fetchDataProduct()
-        .then(() => setRefreshing(false))
-        .catch(() => setRefreshing(false));
-    } else {
-      fetchDataProduct();
-    }
-  }, [productId, refreshing]); // Sử dụng mảng phụ thuộc để chỉ kích hoạt khi refreshing thay đổi
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        await fetchDataProduct();
+        await checkIfProductIsFavorite();
+      } catch (error) {
+        setError('err');
+      } finally {
+        setLoading(false);
+        setRefreshing(false);
+      }
+    };
 
-  useEffect(() => {
-    checkIfProductIsFavorite(); // Call a function to check if the product is liked
-  }, [productId]); // Fetch liked products whenever productId changes
+    fetchData();
+    // Gọi hàm checkIfProductIsFavorite ngay khi vào trang
+    checkIfProductIsFavorite();
+  }, [productId, refreshing]);
 
   const fetchDataProduct = async () => {
     try {
@@ -128,44 +150,28 @@ const DetailsScreen = (props: Props) => {
 
   const handleFavoritePress = async () => {
     try {
+      // Disable the button while handling the press
+      setIsButtonDisabled(true);
+
       const favoriteService = new FavoriteService();
       const favoriteResult = await favoriteService.fetchFavorite(AccountId);
       const favorites = favoriteResult.data;
 
-      // Kiểm tra xem sản phẩm đã có trong danh sách yêu thích hay chưa
-      const isProductInFavorites = favorites.some(favorite => {
-        if (favorite.productId === productId) {
-          console.log('Favorite ID:', favorite.id);
-          setFavoriteId(favorite.id);
-          return true; // Returning true means the product is found in favorites
-        }
-        return false; // Continue searching
-      });
-
       if (isFavorite) {
         // Nếu sản phẩm đã có trong danh sách yêu thích, thì xóa nó đi
-        //const removeResult = await favoriteService.deleteFavorite(favoriteId);
-        //console.log('xóa yêu thích -----', removeResult?.status);
-        console.log('product có id { ', productId, ' } đã có trong yêu thích');
+        const removeResult = await favoriteService.deleteFavorite(favoriteId);
+        console.log('xóa yêu thích -----', removeResult?.status);
 
-        // if (removeResult?.status === 201) {
-        //   Toast.show({
-        //     text1: 'Xóa thành công khỏi mục yêu thích',
-        //     type: 'success',
-        //   });
-        //   setIsFavorite(false);
-        // }
-        Toast.show({
-          text1: 'Thông báo',
-          type: 'success',
-          visibilityTime: 1500,
-          position: 'top',
-          text2: 'Xóa thành công khỏi mục yêu thích',
-          autoHide: true,
-          topOffset: 20,
-          //keyboardOffset: 1,
-        });
-        return;
+        if (removeResult) {
+          Toast.show({
+            text1: 'Xóa thành công khỏi mục yêu thích',
+            type: 'success',
+          });
+          setIsFavorite(false);
+        } else {
+          // Xử lý trường hợp không thành công nếu cần
+          console.log('Xóa yêu thích không thành công');
+        }
       } else {
         // Nếu sản phẩm chưa có trong danh sách yêu thích, thêm nó vào
         const addPavoriteResult = await favoriteService.addFavorite({
@@ -173,19 +179,24 @@ const DetailsScreen = (props: Props) => {
           AccountId,
         });
         console.log('Thêm vào danh sách yêu thích thành công', addPavoriteResult.status);
-        if (addPavoriteResult.status === 201) {
-          setIsFavorite(true);
+        if (addPavoriteResult) {
           Toast.show({
             text1: 'Đã thêm thành công vào danh sách yêu thích',
             type: 'success',
           });
+          setIsFavorite(true);
+          setFavoriteId(addPavoriteResult.data.id); // Lưu ID mới tạo được
         }
-        return;
       }
-      setLoading(false);
+
+      // After adding/removing from favorites, fetch the updated data
+      //await fetchDataProduct();
+      await checkIfProductIsFavorite();
     } catch (error) {
       console.log('error: ', error);
-      setLoading(false);
+    } finally {
+      // Enable the button again after handling the press
+      setIsButtonDisabled(false);
     }
   };
 
@@ -196,10 +207,22 @@ const DetailsScreen = (props: Props) => {
       const favoriteResult = await favoriteService.fetchFavorite(AccountId);
       const favorites = favoriteResult.data;
 
-      const isProductInFavorites = favorites.some(favorite => favorite.productId === productId);
+      // Kiểm tra xem sản phẩm đã có trong danh sách yêu thích hay chưa
+      const isProductInFavorites = favorites.some(favorite => {
+        if (favorite.productId === productId) {
+          console.log('Favorite ID:----', favorite.id);
+          setFavoriteId(favorite.id);
+          return true; // Returning true means the product is found in favorites
+        }
+        return false; // Continue searching
+      });
+
+      // Cập nhật trạng thái isFavorite
       setIsFavorite(isProductInFavorites);
+      setLoading(false);
     } catch (error) {
       console.log('Error checking liked products:', error);
+      setLoading(false);
     }
   };
 
@@ -300,7 +323,7 @@ const DetailsScreen = (props: Props) => {
         <TouchableOpacity>
           <View>
             <View>
-              <View style={{flexDirection: 'row', }}>
+              <View style={{flexDirection: 'row'}}>
                 <View style={styles.itemCmtContainer}>
                   <Image style={styles.imgCmtAvatar} source={require('../../../assets/images/user.png')} />
                   <Text style={styles.txtCmtName}>NameID :{item?.AccountId || ''}</Text>
@@ -357,7 +380,7 @@ const DetailsScreen = (props: Props) => {
               <Text numberOfLines={3} style={styles.txtCmtBody}>
                 {item?.commentBody || ''}
               </Text>
-              {item.images ? <Image style={styles.imgCmtBody} source={{uri: item.images}} /> : ''}
+              {item.images ? <Image style={styles.imgCmtBody} source={{uri: item.images}} /> : null}
             </View>
           </View>
         </TouchableOpacity>
@@ -389,7 +412,18 @@ const DetailsScreen = (props: Props) => {
               <>
                 <View style={styles.item}>
                   <View style={styles.imageContainer}>
-                    {dataSlider(productIdData).length === [] ? (
+                    {!dataSlider(productIdData) || dataSlider(productIdData).length === 0 ? (
+                      <Image
+                        source={{uri: productIdData?.images} || require('../../../assets/images/noimage.jpg')}
+                        style={{
+                          width: hs(256),
+                          height: vs(256),
+                          resizeMode: 'contain',
+                          borderRadius: ms(5),
+                          alignSelf: 'center',
+                        }}
+                      />
+                    ) : (
                       <Carousel
                         data={dataSlider(productIdData) || []}
                         onColorChanged={colorId => {
@@ -399,24 +433,13 @@ const DetailsScreen = (props: Props) => {
                         }}
                         colorIdButton={colorIdButtonSlider}
                       />
-                    ) : (
-                      <Image
-                        source={{uri: productIdData?.images}}
-                        style={{
-                          width: hs(256),
-                          height: vs(256),
-                          resizeMode: 'contain',
-                          borderRadius: ms(5),
-                          alignItems: 'center',
-                          alignSelf: 'center',
-                        }}
-                      />
                     )}
                   </View>
 
                   <View style={styles.overlayIconFavorite}>
                     <View style={styles.iconFavoriteContainer}>
                       <TouchableOpacity
+                        disabled={isButtonDisabled} // Disable the button based on the loading state
                         onPress={() => {
                           console.log('code logic button tymm <3');
                           handleFavoritePress();
@@ -486,7 +509,7 @@ const DetailsScreen = (props: Props) => {
                       <TouchableOpacity onPress={() => setShowFullDescription(true)}>
                         <View style={styles.seeMore}>
                           <Text style={styles.seeMoreText}>Xem thêm</Text>
-                          <Image style={styles.imgPlus} source={R.images.iconPlus} />
+                          <Image style={styles.imgPlus} source={R.images.iconPlus || require('../../../assets/images/noimage.jpg')} />
                         </View>
                       </TouchableOpacity>
                     )}
@@ -495,7 +518,7 @@ const DetailsScreen = (props: Props) => {
 
                 <View style={styles.reviews}>
                   <View style={styles.reviewBody}>
-                    <TouchableOpacity onPress={handleSeeMoreComments}>
+                    <TouchableOpacity onPress={goToReviewProduct}>
                       <View style={styles.reviewsContainer}>
                         <View style={styles.reviewsContainer2}>
                           <View style={styles.reviewsTitle}>

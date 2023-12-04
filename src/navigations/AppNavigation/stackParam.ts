@@ -8,6 +8,7 @@ export type AppStackParam = {
   VOUCHER:undefined;
   HISTORYORDER:undefined;
   ORDERDETAIL:undefined;
+  REVIEWPRODUCT:undefined;
 };
 
 export type MenuStackParam = {

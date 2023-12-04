@@ -28,12 +28,12 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   iconBack: {
-    width: hs(30),
-    height: hs(30),
+    width: vs(30),
+    height: vs(30),
   },
 
   title: {
-    fontSize: ms(22),
+    fontSize: ms(18),
     fontFamily: 'LibreBaskerville-Bold',
     color: 'black',
     marginLeft: hs(20),
@@ -70,12 +70,13 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   imgFavourite: {
-    width: hs(80),
-    height: vs(110),
+    width: hs(60),
+    height: hs(60),
     marginRight: vs(10),
   },
   priceNameViewStarContainer: {
     flex: 1.5,
+    height: vs(90),
     marginHorizontal: hs(20),
   },
   nameContainer: {flex: 1, justifyContent: 'center', marginBottom: 8},
@@ -87,7 +88,7 @@ export default StyleSheet.create({
   },
   textName: {
     marginTop: vs(5),
-    fontSize: ms(20),
+    fontSize: ms(18),
     color: '#000',
     fontWeight: '400',
     fontFamily: 'LibreBaskerville-Bold',
@@ -101,7 +102,7 @@ export default StyleSheet.create({
   priceText: {
     marginTop: vs(5),
     color: '#F00',
-    fontSize: ms(20),
+    fontSize: ms(18),
     fontWeight: '400',
     fontFamily: 'LibreBaskerville-Bold',
   },
@@ -112,8 +113,8 @@ export default StyleSheet.create({
     marginBottom: vs(20),
   },
   imgStar: {
-    width: hs(13),
-    height: hs(13),
+    width: vs(13),
+    height: vs(13),
     marginRight: hs(5),
   },
   imgStarCmt: {
@@ -129,7 +130,7 @@ export default StyleSheet.create({
   },
   textSell: {
     color: '#817F7F', // Màu văn bản
-    fontSize: ms(14),
+    fontSize: ms(13),
     fontFamily: 'LibreBaskerville-Bold',
     marginLeft: 5,
   },
@@ -165,7 +166,7 @@ export default StyleSheet.create({
     elevation: 4,
   },
   txtNameColors: {
-    fontSize: ms(12),
+    fontSize: ms(13),
     fontFamily: 'LibreBaskerville-Bold',
     fontWeight: '400',
     marginHorizontal: hs(14),
@@ -177,7 +178,7 @@ export default StyleSheet.create({
     marginHorizontal: hs(20),
   },
   descriptionTitle: {
-    fontSize: ms(14),
+    fontSize: ms(15),
     color: '#000',
     fontWeight: '200',
     fontFamily: 'LibreBaskerville-Bold',
@@ -185,7 +186,7 @@ export default StyleSheet.create({
     marginBottom: vs(10),
   },
   descriptionText: {
-    fontSize: ms(12),
+    fontSize: ms(13),
     color: '#646464',
     fontWeight: '400',
     fontFamily: 'LibreBaskerville-Bold',
@@ -204,7 +205,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: vs(15),
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#E8E8E8',
   },
   seeMoreText: {
     color: '#000',
@@ -266,7 +267,7 @@ export default StyleSheet.create({
   pointText: {
     color: '#000',
     fontWeight: '400',
-    fontSize: ms(12),
+    fontSize: ms(13),
     fontFamily: 'LibreBaskerville-Bold',
   },
   imgStarContainer: {marginLeft: hs(5), flexDirection: 'row', alignItems: 'center'},
@@ -280,7 +281,7 @@ export default StyleSheet.create({
   seeMoreReviewsText: {
     color: '#858383',
     fontWeight: '400',
-    fontSize: ms(12),
+    fontSize: ms(13),
     fontFamily: 'LibreBaskerville-Bold',
   },
   imgNext: {
@@ -297,7 +298,7 @@ export default StyleSheet.create({
   seeMoreComment: {
     color: '#858383',
     fontWeight: '400',
-    fontSize: ms(12),
+    fontSize: ms(13),
     fontFamily: 'LibreBaskerville-Bold',
   },
 
@@ -333,7 +334,7 @@ export default StyleSheet.create({
   txtAddCart: {
     color: '#FFFFFF',
     fontWeight: '300',
-    fontSize: ms(14),
+    fontSize: ms(13),
     fontFamily: 'LibreBaskerville-Bold',
     marginLeft: hs(5),
   },
@@ -401,7 +402,7 @@ export default StyleSheet.create({
   },
   productModalQuantityText: {
     color: '#817F7F',
-    fontSize: ms(11),
+    fontSize: ms(13),
     fontWeight: '400',
     fontFamily: 'LibreBaskerville-Bold',
     marginBottom: vs(10),
@@ -413,7 +414,7 @@ export default StyleSheet.create({
   modalProductColorTitle: {
     marginVertical: vs(10),
     color: '#000',
-    fontSize: ms(11),
+    fontSize: ms(13),
     fontWeight: '400',
     fontFamily: 'LibreBaskerville-Bold',
   },
@@ -422,7 +423,7 @@ export default StyleSheet.create({
   modalProductConfigTitle: {
     marginVertical: vs(10),
     color: '#000',
-    fontSize: ms(11),
+    fontSize: ms(13),
     fontWeight: '400',
     fontFamily: 'LibreBaskerville-Bold',
   },
@@ -475,7 +476,7 @@ export default StyleSheet.create({
     alignSelf: 'center',
   },
   modalBtnText: {
-    fontSize: ms(21),
+    fontSize: ms(18),
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
@@ -488,7 +489,7 @@ export default StyleSheet.create({
     marginTop: vs(15),
     marginBottom: vs(8),
   },
-  imgCmtAvatar: {width: hs(20), height: vs(20)},
+  imgCmtAvatar: {width: vs(20), height: vs(20)},
   txtCmtName: {
     color: '#2A2A2A',
     fontWeight: '400',
@@ -501,7 +502,7 @@ export default StyleSheet.create({
     marginBottom: vs(15),
     color: '#2A2A2A',
     fontWeight: '100',
-    fontSize: ms(12),
+    fontSize: ms(13),
     fontFamily: 'LibreBaskerville-Bold',
   },
   imgCmtBody: {width: hs(80), height: vs(80), marginBottom: vs(15)},

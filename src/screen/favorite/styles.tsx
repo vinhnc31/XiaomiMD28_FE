@@ -7,7 +7,7 @@ const SCREEN_HEIGHT = Dimensions.get('window').height;
 export default StyleSheet.create({
   container: {
     backgroundColor: '#F1F1F1',
-    marginBottom: 60,
+    marginBottom: vs(60),
   },
   borderBottom: {
     width: SCREEN_WIDTH,
@@ -121,8 +121,8 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   imgFavourite: {
-    width: hs(70),
-    height: vs(100),
+    width: hs(60),
+    height: hs(60),
   },
   productInfoContainer: {
     flex: 1.5,
