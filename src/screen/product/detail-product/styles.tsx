@@ -161,22 +161,25 @@ export default StyleSheet.create({
   // phan chọn màu
   flatListColorsContainer: {
     flex: 1,
+    height: vs(40),
     marginHorizontal: hs(15),
     marginBottom: vs(18),
   },
   mainDescription: {flex: 1, backgroundColor: '#FFFFFF', marginBottom: vs(10)},
   btnColorsContainer: {
     flex: 1,
-    marginRight: hs(5),
+    height: vs(40),
+    flexDirection: 'row',
   },
   btnColors: {
-    height: vs(30),
+    marginRight: hs(10),
+    height: vs(35),
     alignItems: 'center',
     alignSelf: 'center',
     alignContent: 'center',
     justifyContent: 'center',
     borderRadius: ms(6),
-    borderWidth: 0.3,
+    borderWidth: 0.4,
     borderColor: '#000',
     shadowColor: '#000',
     shadowOffset: {width: 0, height: 4},

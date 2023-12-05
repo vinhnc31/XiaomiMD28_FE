@@ -27,8 +27,8 @@ export interface ProductDetailModel {
       star: number;
       AccountId: number;
       productId: number;
-    }
-  ]
+    },
+  ];
   colorProducts: [
     {
       id: number;
