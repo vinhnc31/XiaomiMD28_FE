@@ -50,9 +50,9 @@ const OrderDetailScreen = (props: Props) => {
       setImage(require('../../assets/images/todolist.png'));
     }
     if (data.status === '1') {
-      setTitle('Đã xác nhận đơn hàng !');
-      setTitleContent('Đơn hàng đang được đưa tới đơn vị vận chuyển.');
-      setImage(require('../../assets/images/delivery-service.png'));
+      setTitle('Đang giao hàng !');
+      setTitleContent('Đơn hàng đang được đưa tới khách hàng.');
+      setImage(require('../../assets/images/transport.png'));
     }
     if (data.status === '2') {
       setTitle('Đã nhận hàng !');
@@ -141,7 +141,7 @@ const OrderDetailScreen = (props: Props) => {
                       style={{
                         color: 'black',
                         fontSize: 18,
-                        width: '90%',
+                        width: '70%',
                         fontFamily: 'LibreBaskerville-DpdE',
                         marginBottom: 5,
                       }}
@@ -172,7 +172,7 @@ const OrderDetailScreen = (props: Props) => {
                     </View>
                     <View style={{width: hs(220), alignItems: 'flex-end'}}>
                       <Text style={{fontSize: 15, color: 'red'}}>
-                        {item.ProductColorConfig['price'].toLocaleString('vi-VN', {
+                        {(item.ProductColorConfig? item.ProductColorConfig['price']:item.Product['price']).toLocaleString('vi-VN', {
                           style: 'currency',
                           currency: 'VND',
                         })}
@@ -183,7 +183,6 @@ const OrderDetailScreen = (props: Props) => {
               </View>
             )}
           />
-
           <View style={{height: 1, width: '100%', backgroundColor: '#D9D9D9'}} />
           <View style={{flexDirection: 'row', margin: 10, justifyContent: 'space-between'}}>
             <Text style={{fontSize: 15, fontFamily: 'LibreBaskerville-DpdE'}}>Tổng tiền hàng: </Text>
@@ -196,14 +195,23 @@ const OrderDetailScreen = (props: Props) => {
           </View>
           <View style={{flexDirection: 'row', marginHorizontal: 10, justifyContent: 'space-between'}}>
             <Text style={{fontSize: 15, fontFamily: 'LibreBaskerville-DpdE'}}>Giảm giá: </Text>
-            <Text style={{fontSize: 15, fontFamily: 'LibreBaskerville-DpdE'}}>6,150,000₫</Text>
+            <Text style={{fontSize: 15, fontFamily: 'LibreBaskerville-DpdE'}}>{((data.Promotion ? data.Promotion["discount"] : 0) /100 * data.total).toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+              })}</Text>
           </View>
           <View style={{flexDirection: 'row', margin: 10, justifyContent: 'space-between'}}>
             <Text style={{fontSize: 18, color: 'black', fontFamily: 'LibreBaskerville-Bold'}}>Thành tiền: </Text>
-            <Text style={{fontSize: 18, color: 'black', fontFamily: 'LibreBaskerville-Bold'}}>6,150,000₫</Text>
+            <Text style={{fontSize: 18, color: 'black', fontFamily: 'LibreBaskerville-Bold'}}>{(data.total - ((data.Promotion ? data.Promotion["discount"] : 0)/100 * data.total)).toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+              })}</Text>
           </View>
           <Text style={{fontSize: 13, fontFamily: 'LibreBaskerville-DpdE', marginHorizontal: 10}}>
-            Vui lòng thanh toán <Text style={{color: 'red'}}>6,150,000₫</Text> khi nhận hàng
+            Vui lòng thanh toán <Text style={{color: 'red'}}>{(data.total - ((data.Promotion ? data.Promotion["discount"] : 0)/100 * data.total)).toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND',
+              })}</Text> khi nhận hàng
           </Text>
           <View style={{height: 10, width: '100%', backgroundColor: '#F1F1F1', marginVertical: 10}} />
           <Text style={{fontSize: 18, fontFamily: 'LibreBaskerville-DpdE', marginHorizontal: 10, color: 'black'}}>

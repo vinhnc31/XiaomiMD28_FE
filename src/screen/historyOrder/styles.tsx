@@ -69,7 +69,7 @@ export default StyleSheet.create({
     flexDirection:'row',marginHorizontal:15,marginVertical:10,justifyContent:'space-between'
   },
   textQuantity:{color:'#6D6D6D',fontSize:16},
-  buttonCancer:{backgroundColor:'#FF6900',width: 80,height: 40,},
+  buttonCancer:{backgroundColor:'#FF6900',width: 100,height: 40,},
   modalWrap: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.7)',

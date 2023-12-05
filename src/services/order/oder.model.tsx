@@ -27,3 +27,6 @@ export interface GetOrderModel {
 export interface Status{
   status:string
 }
+export interface StatusOrder{
+  statusOrder:number
+}

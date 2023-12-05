@@ -103,18 +103,19 @@ const PayDetailScreen = (props: Props) => {
           const updatedCartData = cartData.filter(item => item.id !== itemId.id);
           await AsyncStorage.setItem('cartData', JSON.stringify(updatedCartData));
         }
-        const result = await cartService.deleteCart(itemId.id);
-        console.log(result);
+        await cartService.deleteCart(itemId.id);
       } catch (error) {
         console.error('Error deleting item from AsyncStorage', error);
       }
     });
     console.log(itemId);
-    toast.showSuccess({messageText: 'Đặt hàng thành công'});
-    navigateToPage(MENU_NAVIGATION.HOME);
+    if(value =="1"){
+      toast.showSuccess({messageText: 'Đặt hàng thành công'});
+      navigateToPage(MENU_NAVIGATION.HOME);
+    }
   };
-  const payVNPay = () => {
-    // onPay;
+  const payVNPay = async() => {
+    onPay();
     navigateToPage(APP_NAVIGATION.PAY, {sumPay});
   };
   return (
@@ -160,10 +161,12 @@ const PayDetailScreen = (props: Props) => {
                   <Text ellipsizeMode="tail" numberOfLines={1} style={styles.text}>
                     {item.Product['name']}
                   </Text>
-                  <View style={{flexDirection: 'row'}}>
+                  {item.productcolor?<View style={{flexDirection: 'row'}}>
                     <Text style={styles.textColor}>Màu sắc: </Text>
                     <Text style={styles.textColor}>{item.productcolor.Color['nameColor']}</Text>
                   </View>
+                  :null
+                  }
                   <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                     <Text style={styles.textPrice}>
                       {item.ProductColorConfig['price'].toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}

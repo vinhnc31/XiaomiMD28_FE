@@ -11,6 +11,7 @@ import {hs, ms, vs} from '@src/styles/scalingUtils';
 import OrderService from '@src/services/order';
 import { PayModel } from '@src/services/pay/pay.mode';
 import PayService from '@src/services/pay';
+import { WebView } from 'react-native-webview';
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
   route: RouteProp<AppStackParam, APP_NAVIGATION.PAY>;
@@ -34,7 +35,7 @@ const PayScreen = (props: Props) => {
     }
   }
   const postPay=()=>{
-    payService.postPay({amount:totalPriceProduct,orderId:data.id,bankCode:1})
+    payService.postPay({amount:totalPriceProduct,orderId:data.id,bankCode:""})
   }
   useEffect(()=>{featchData();},[])
   return (
@@ -80,4 +81,7 @@ const PayScreen = (props: Props) => {
     </SafeAreaView>
   );
 };
+const MyWebComponent = () => {
+  return <WebView source={{ uri: 'https://www.youtube.com/watch?v=rxie3NgRHVc' }} style={{ flex: 1 }} />;
+}
 export default React.memo(PayScreen);

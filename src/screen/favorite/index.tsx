@@ -22,6 +22,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import {BaseLoading} from '@src/containers/components/Base/BaseLoading';
 import {navigateToPage} from '@src/navigations/services';
 import TouchableScale from 'react-native-touchable-scale';
+import CartService from '@src/services/cart';
+import { useAuth } from '@src/hooks/useAuth';
+import { CartModel } from '@src/services/cart/cart.model';
 
 type ScreenNavigationProps = CompositeNavigationProp<
   BottomTabNavigationProp<MenuStackParam, MENU_NAVIGATION.FAVORITE>,
@@ -35,16 +38,23 @@ interface Props {
 
 const FavoriteScreen = (props: Props) => {
   const [data, setData] = useState<Favorites[]>([]);
+  const [dataCart, setDataCart] = useState<CartModel[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState('');
   const [refreshing, setRefreshing] = useState(false);
-
+  const cartService = new CartService();
+  const {user} = useAuth();
   type Favorites = {
     id: string;
     name: string;
     image: string;
   };
+  const featchCart = async () => {
+    const resultCart = await cartService.fetchCart(user?.id!);
+    setDataCart(resultCart.data);
+  };
   useEffect(() => {
+    featchCart();
     // Chỉ kích hoạt làm mới nếu refreshing đã được đặt thành true
     setLoading(false);
     if (refreshing) {
@@ -95,7 +105,22 @@ const FavoriteScreen = (props: Props) => {
         <View style={styles.buttonContainer}>
           <BaseButton
             onPress={() => console.log('Press')}
-            renderIcon={<Icon name="shopping-cart" size={30} color="black" />}
+            renderIcon={<View>
+              <Icon name="shopping-cart" size={35} color="black" />
+              <View
+                  style={{
+                    height: 20,
+                    width: 20,
+                    backgroundColor: 'red',
+                    position: 'absolute',
+                    right: -8,
+                    top: -5,
+                    borderRadius: 20,
+                    alignItems: 'center',
+                  }}>
+                  <Text style={{color: 'white'}}>{dataCart.length}</Text>
+                </View>
+            </View>}
             style={{backgroundColor: 'white', marginBottom: 8}}
           />
         </View>

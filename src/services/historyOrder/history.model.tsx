@@ -3,6 +3,7 @@ export interface HistoryOrderModel {
   message: string;
   total: number;
   status: string;
+  statusOrder: number;
   createdAt: string;
   updatedAt: string;
   AccountId: number;
@@ -56,4 +57,14 @@ export interface HistoryOrderModel {
     updatedAt: string;
     AccountId: number;
   }>;
+  Promotion: {
+    id: number;
+    name: string;
+    image: string;
+    discount: number;
+    startDate: string;
+    endDate: string;
+    createdAt: string;
+    updatedAt: string;
+  };
 }

@@ -47,6 +47,10 @@ const endpoint = {
   configuration: {
     default: '/api/config',
     getConfiguration: '/api/config',
+  },
+  evaluate: {
+    default: '/api/comment',
+    getEvaluate: '/api/comment',
   }
 };
 

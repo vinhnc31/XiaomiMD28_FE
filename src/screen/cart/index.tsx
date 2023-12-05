@@ -198,12 +198,12 @@ const CartScreen = (props: Props) => {
                       onValueChange={() => toggleCheckbox(item.id)}
                     />
                   <View style={styles.view}>
-                    <Image source={{uri: item.productcolor['image']}} style={styles.image} resizeMode="stretch" />
+                    <Image source={{uri: (item.productcolor?item.productcolor['image']:item.Product["images"])}} style={styles.image} resizeMode="stretch" />
                     <View style={styles.viewText}>
                       <Text ellipsizeMode="tail" numberOfLines={1} style={styles.text}>
                         {item.Product['name']}
                       </Text>
-                      <Text style={styles.textPrice}>{item.ProductColorConfig['price'].toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}</Text>
+                      <Text style={styles.textPrice}>{(item.ProductColorConfig ? item.ProductColorConfig['price'] :item.Product["price"]).toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}</Text>
                       <View style={styles.viewCount}>
                         <TouchableOpacity
                           disabled={item.quantity <= 1 ? true : false}

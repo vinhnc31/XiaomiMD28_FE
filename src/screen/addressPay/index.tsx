@@ -198,7 +198,7 @@ const AddressPayScreen = (props: Props) => {
               </TouchableOpacity>
             )}
           />
-          <TouchableOpacity style={{alignItems: 'center'}} onPress={() => openModal()}>
+          <TouchableOpacity style={{alignItems: 'center',marginTop:10}} onPress={() => openModal()}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <Image
                 style={{width: 30, height: 30, marginRight: 10}}
