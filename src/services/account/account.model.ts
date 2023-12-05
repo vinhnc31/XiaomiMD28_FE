@@ -21,6 +21,7 @@ export type AuthStatus = 'idle' | 'pending' | 'resolved' | 'rejected';
 export interface ILoginData {
   email: string;
   password: string;
+  fcmToken: string | undefined;
 }
 
 export interface IRegisterData {
