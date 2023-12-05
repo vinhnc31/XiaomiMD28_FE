@@ -8,13 +8,14 @@ import {SafeAreaView, TextInput, View} from 'react-native';
 import useToast from '@src/hooks/useToast';
 import AccountService from '@src/services/account';
 import {APP_NAVIGATION} from '@src/navigations/routes';
+import BaseInput from '@src/containers/components/Base/BaseInput';
 
 const ChangePass = () => {
   const {user} = useAuth();
 
   const toast = useToast();
   const [state, setState] = useState({
-    pass: user?.password || '',
+    pass: '',
     newPassword: '',
     reNewPassword: '',
     loading: false,
@@ -47,44 +48,34 @@ const ChangePass = () => {
       <View style={{marginHorizontal: hs(30), marginVertical: vs(30)}}>
         <BaseText text="Mật khẩu cũ" fontSize={ms(20)} />
 
-        <TextInput
-          value={state.pass}
-          style={{
-            backgroundColor: 'white',
-            borderRadius: ms(20),
-            marginVertical: vs(20),
-            color: 'black',
-            paddingHorizontal: hs(10),
-          }}
+        <BaseInput
+          leftIcon={'key-outline'}
+          title="Mật khẩu cũ"
+          valuePassword={state.pass}
           onChangeText={text => setState(prev => ({...prev, pass: text}))}
+          password
+          borderRadius={40}
         />
 
         <BaseText text="Mật khẩu mới" fontSize={ms(20)} />
-
-        <TextInput
-          value={state.newPassword}
-          style={{
-            backgroundColor: 'white',
-            borderRadius: ms(20),
-            marginVertical: vs(20),
-            color: 'black',
-            paddingHorizontal: hs(10),
-          }}
+        <BaseInput
+          leftIcon={'key-outline'}
+          title="Mật khẩu mới"
+          valuePassword={state.newPassword}
           onChangeText={text => setState(prev => ({...prev, newPassword: text}))}
+          password
+          borderRadius={40}
         />
 
         <BaseText text="Nhập lại mật khẩu mới" fontSize={ms(20)} />
 
-        <TextInput
-          value={state.reNewPassword}
-          style={{
-            backgroundColor: 'white',
-            borderRadius: ms(20),
-            marginVertical: vs(20),
-            color: 'black',
-            paddingHorizontal: hs(10),
-          }}
+        <BaseInput
+          leftIcon={'key-outline'}
+          title="Nhập lại mật khẩu mới"
+          valuePassword={state.reNewPassword}
           onChangeText={text => setState(prev => ({...prev, reNewPassword: text}))}
+          password
+          borderRadius={40}
         />
 
         <BaseButton text="Xác nhận" onPress={onPress} loading={state.loading} />

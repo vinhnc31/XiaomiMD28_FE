@@ -56,7 +56,7 @@ const InputBase = ({
           <View style={styles.input}>
             {leftIcon && leftIcon.length > 0 && <BaseIcon name={leftIcon} size={24} color={Colors.black} />}
             <TextInput
-              style={{color: Colors.black, fontFamily: 'Lato-Bold', fontSize: ms(15)}}
+              style={{color: Colors.black, fontFamily: 'Lato-Bold',flex:1, fontSize: ms(15)}}
               value={valuePassword}
               onChangeText={onChangeText}
               placeholder={title}
