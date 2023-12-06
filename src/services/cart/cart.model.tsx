@@ -53,3 +53,11 @@ export interface deleteItem {
 export interface putItem {
   quantity: number;
 }
+
+export interface postItemCart {
+  productId: number;
+  AccountId: number;
+  quantity: number;
+  ProductColorId: number;
+  ProductColorConfigId: number;
+}

@@ -23,5 +23,10 @@ export default class ProductService extends BaseService<ProductModel> {
         const { data } = await http.get<ProductDetailModel>(`${url.getProductId}/${productId}`);
         return data;
     }
+
+    public async getCommentProductId(productId: number) {
+        const { data } = await http.get<ProductDetailModel>(`${url.getCommentProductId}/${productId}`);
+        return data;
+    }
     
 }

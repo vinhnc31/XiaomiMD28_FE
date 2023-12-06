@@ -40,7 +40,7 @@ export default StyleSheet.create({
     height: vs(35),
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: vs(5),
+    marginVertical: vs(5),
   },
   seeMoreReviewsText: {
     color: '#858383',

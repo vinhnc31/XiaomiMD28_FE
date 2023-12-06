@@ -313,7 +313,8 @@ export default StyleSheet.create({
   },
   btnSeeMoreComment: {
     width: '100%',
-    height: vs(35),
+    marginTop: vs(15),
+    height: vs(20),
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -466,12 +467,12 @@ export default StyleSheet.create({
     alignItems: 'center',
     marginRight: hs(16),
     width: hs(100),
-    height: vs(30),
+    height: vs(40),
   },
   modalBtnMinusPlus: {
     backgroundColor: '#E6E3E3',
     width: hs(30),
-    height: vs(23),
+    height: vs(35),
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -482,7 +483,7 @@ export default StyleSheet.create({
     alignContent: 'center',
     backgroundColor: '#ECEAEA',
     width: hs(32),
-    height: vs(23),
+    height: vs(35),
   },
   modalQuantiyText: {color: '#000', fontSize: ms(17), fontWeight: '400', fontFamily: 'LibreBaskerville-Bold'},
 

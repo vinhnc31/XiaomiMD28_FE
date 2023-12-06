@@ -57,3 +57,19 @@ export interface ProductDetailModel {
   createdAt: Date; // Sửa kiểu dữ liệu thành Date
   updatedAt: Date; // Sửa kiểu dữ liệu thành Date
 }
+
+export interface CommentProductId {
+  images: string;
+  id: number;
+  commentBody: string;
+  star: number;
+  createdAt: Date;
+  updatedAt: Date;
+  AccountId: number;
+  productId: number;
+  Account: {
+    id: number;
+    avatar: string;
+    name: string;
+  }
+}

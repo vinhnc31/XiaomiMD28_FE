@@ -2,8 +2,8 @@ import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import BaseHeader from '@src/containers/components/Base/BaseHeader';
 import {GuestStackParam} from '@src/navigations/GuestNavigation/stackParam';
-import {GUEST_NAVIGATION} from '@src/navigations/routes';
-import {goBack} from '@src/navigations/services';
+import {GUEST_NAVIGATION, APP_NAVIGATION} from '@src/navigations/routes';
+import {navigateToPage, goBack} from '@src/navigations/services';
 import React, {useEffect, useState, useRef} from 'react';
 import {FlatList, Image, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 
@@ -20,15 +20,22 @@ interface Props {
 const ReviewProductScreen = (props: Props) => {
   const route = props.route;
   const commentData = route.params ? route.params.commentProductData : undefined;
+  const productName = route.params ? route.params.productName : undefined;
 
   // { phân sang phần comment
   const [page, setPage] = useState(1);
   const [pageSize, setpageSize] = useState(40);
-  const initialCommentsToShow = 40;
+  const initialCommentsToShow = 3;
   const [commentsToShow, setCommentsToShow] = useState(initialCommentsToShow);
   const startIndex = 0;
   const endIndex = page + pageSize;
-  const getProductCommentsToShow = () => commentData.slice(startIndex, commentsToShow);
+  //const getProductCommentsToShow = () => commentData.slice(startIndex, commentsToShow);
+  const getProductCommentsToShow = () => {
+    return commentData.slice(startIndex, commentsToShow).map(comment => ({
+      ...comment,
+      productName: productName,
+    }));
+  };
   const handleSeeMoreComments = () => {
     // Increase the number of comments to show by pageSize
     setCommentsToShow(prev => prev + pageSize);
@@ -38,10 +45,11 @@ const ReviewProductScreen = (props: Props) => {
     goBack();
   };
 
-  const handleCartPress = () => {};
+  const handleCartPress = () => {
+    navigateToPage(GUEST_NAVIGATION.CART);
+  };
 
   const renderItemComments = ({item, index}) => {
-    // Kiểm tra xem colorId của item có trùng với colorIdSlider hay không
 
     return (
       <View style={{marginHorizontal: hs(10)}}>
@@ -50,8 +58,12 @@ const ReviewProductScreen = (props: Props) => {
             <View>
               <View style={{flexDirection: 'row', marginTop: vs(7)}}>
                 <View style={styles.itemCmtContainer}>
-                  <Image style={styles.imgCmtAvatar} source={require('../../../assets/images/user.png')} />
-                  <Text style={styles.txtCmtName}>{'Người dùng '}{item?.AccountId || ''}</Text>
+                  {item.Account.avatar == '' ? (
+                    <Image style={styles.imgCmtAvatar} source={require('../../../assets/images/user.png')} />
+                  ) : (
+                    <Image style={styles.imgCmtAvatar} source={{uri: item.Account.avatar}} />
+                  )}
+                  <Text style={styles.txtCmtName}>{item?.Account.name || ''}</Text>
                 </View>
                 <View
                   style={{
@@ -102,9 +114,7 @@ const ReviewProductScreen = (props: Props) => {
             </View>
 
             <View style={{marginVertical: vs(10)}}>
-              <Text style={styles.txtCmtBody}>
-                {item?.commentBody || ''}
-              </Text>
+              <Text style={styles.txtCmtBody}>{item?.commentBody || ''}</Text>
               {item.images ? <Image style={styles.imgCmtBody} source={{uri: item.images}} /> : null}
             </View>
           </View>
@@ -119,7 +129,7 @@ const ReviewProductScreen = (props: Props) => {
     if (commentData.length === 0) {
       return (
         <View style={styles.noDataContainer}>
-          <Image style={{width: hs(120), height: hs(120)}} source={require('../../../assets/images/noDataStar.png')}/>
+          <Image style={{width: hs(120), height: hs(120)}} source={require('../../../assets/images/noDataStar.png')} />
           <Text style={styles.noDataText}>Chưa có đánh giá</Text>
         </View>
       );
@@ -152,6 +162,7 @@ const ReviewProductScreen = (props: Props) => {
           />
           {commentsToShow < commentData.length && (
             <>
+            <Text style={styles.borderBottom}></Text>
               <TouchableOpacity activeOpacity={0.8} style={styles.btnSeeMoreComment} onPress={handleSeeMoreComments}>
                 <Text style={styles.seeMoreReviewsText}>Xem thêm</Text>
               </TouchableOpacity>
