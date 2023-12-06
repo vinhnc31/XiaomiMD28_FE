@@ -24,8 +24,8 @@ const ReviewProductScreen = (props: Props) => {
 
   // { phân sang phần comment
   const [page, setPage] = useState(1);
-  const [pageSize, setpageSize] = useState(40);
-  const initialCommentsToShow = 3;
+  const [pageSize, setpageSize] = useState(30);
+  const initialCommentsToShow = 30;
   const [commentsToShow, setCommentsToShow] = useState(initialCommentsToShow);
   const startIndex = 0;
   const endIndex = page + pageSize;
