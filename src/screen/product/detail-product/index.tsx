@@ -92,7 +92,6 @@ const DetailsScreen = (props: Props) => {
 
   const fetchDataProduct = async () => {
     try {
-      setLoading(true);
       const productService = new ProductService();
       const result = await productService.getProductId(productId);
 
@@ -136,7 +135,20 @@ const DetailsScreen = (props: Props) => {
   };
 
   const onRefresh = async () => {
-    await fetchDataProduct();
+    const RefreshData = async () => {
+      try {
+        await fetchDataProduct();
+        await checkIfProductIsFavorite();
+        await fetchDataCommentProduct();
+      } catch (error) {
+        setError('fetchData err');
+      } finally {
+        setLoading(false);
+        setRefreshing(false);
+      }
+    };
+
+    RefreshData();
   };
 
   const getQuantitys = (productData: ProductDetailModel): number => {
