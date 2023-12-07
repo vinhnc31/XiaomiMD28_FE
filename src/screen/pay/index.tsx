@@ -24,12 +24,12 @@ const PayScreen = (props: Props) => {
   const featchData =  async ()=>{
     try {
      const result= await orderService.getOrder();
-    for (let i = result.data.length - 1; i >= 0; i--) {
+     for (let i = 0; i < result.data.length; i++) {
       if (result.data[i]["PayId"] === 2) {
-        setData(result.data[i]);
-        break;
+         setData(result.data[i]);
+         break;
       }
-    }
+     }
     } catch (error) {
       console.log(error)
     }
