@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import BaseHeader from '@src/containers/components/Base/BaseHeader';
+import BaseHeaderLisPrd from '@src/containers/components/Base/BaseHeaderListPrd';
 import { GuestStackParam } from '@src/navigations/GuestNavigation/stackParam';
 import { APP_NAVIGATION, GUEST_NAVIGATION } from '@src/navigations/routes';
 import ProductService from '@src/services/product';
@@ -101,10 +101,38 @@ const ProductListScreen = (props: Props) => {
     }
   };
 
+  const fetchProducts = async () => {
+    try {
+      setLoadingData(true); // Bắt đầu tải dữ liệu
+      const productService = new ProductService();
+      const productList = await productService.getProductByIdCategory(categoryId);
+      console.log('Product: ', productList.data.length);
+      setProducts(productList.data);
+      setHasData(productList.data.length > 0); // Cập nhật trạng thái có dữ liệu hay không
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setLoadingData(false); // Kết thúc tải dữ liệu, có hoặc không có dữ liệu
+    }
+  };
+
+  const fetchConfig = async () => {
+    try {
+      const categoryService = new ConfigurationService();
+      const result = await categoryService.fetchConfiguration();
+      setConfiguration(result.data);
+      console.log(result.data.length);
+    } catch (error) {
+      setError('err');
+    }
+  };
+
     // Trong hàm áp dụng lọc
   const applyFilter = () => {
     const minPrice = parseInt(minimum);
     const maxPrice = parseInt(max);
+    setValueConfiguration(null);
+    setValueColor(null);
     getProductByPrice(minPrice, maxPrice, categoryId);
     console.log("price: ", minPrice, maxPrice, categoryId);
   };
@@ -148,31 +176,7 @@ const ProductListScreen = (props: Props) => {
     maximumFractionDigits: 9,
   };
 
-  const fetchProducts = async () => {
-    try {
-      setLoadingData(true); // Bắt đầu tải dữ liệu
-      const productService = new ProductService();
-      const productList = await productService.getProductByIdCategory(categoryId);
-      console.log('Product: ', productList.data.length);
-      setProducts(productList.data);
-      setHasData(productList.data.length > 0); // Cập nhật trạng thái có dữ liệu hay không
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    } finally {
-      setLoadingData(false); // Kết thúc tải dữ liệu, có hoặc không có dữ liệu
-    }
-  };
-
-  const fetchConfig = async () => {
-    try {
-      const categoryService = new ConfigurationService();
-      const result = await categoryService.fetchConfiguration();
-      setConfiguration(result.data);
-      console.log(result.data.length);
-    } catch (error) {
-      setError('err');
-    }
-  };
+ 
 
   const sortProducts = (order: 'asc' | 'desc') => {
     const sortedProducts = [...products].sort((a, b) => {
@@ -243,14 +247,15 @@ const ProductListScreen = (props: Props) => {
 
   return (
     <SafeAreaView style={{ flex: 1, flexDirection: 'column', backgroundColor: 'white' }}>
-      <BaseHeader
+      <BaseHeaderLisPrd
         title={route.params!.name}
         onCartPress={handleCartPress}
         onBackPress={handleBackPress}
-      // onFilterPress={toggleModal}
+      onFilterPress={toggleModal}
       />
 
       <ScrollView style={{ paddingHorizontal: 8, backgroundColor: '#FBEFE5' }} showsVerticalScrollIndicator={false}>
+        
         <View style={styles.viewFilter}>
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
             <BaseButton
@@ -411,8 +416,11 @@ const ProductListScreen = (props: Props) => {
             <Text style={{ fontSize: 20, fontFamily: 'LibreBaskerville-Bold', color: 'black' }}>Không có sản phẩm</Text>
           </View>}
       </ScrollView>
+      </SafeAreaView>
+  );
+};
 
-      <Modal
+      {/* <Modal
         transparent={true}
         animationType="slide"
         visible={isModalVisible}
@@ -440,9 +448,7 @@ const ProductListScreen = (props: Props) => {
             </TouchableOpacity>
           </View>
         </View>
-      </Modal>
-    </SafeAreaView>
-  );
-};
+      </Modal> */}
+
 
 export default React.memo(ProductListScreen);
