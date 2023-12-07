@@ -24,6 +24,7 @@ import {
   NativeModuleError,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
+import messaging, {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
 interface Props {
   navigation: NativeStackNavigationProp<GuestStackParam>;
   route: RouteProp<GuestStackParam, GUEST_NAVIGATION.LOGIN>;
@@ -34,14 +35,21 @@ const LogInComponent = (props: Props) => {
   const toast = useToast();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-
+  const [fcmToken, setFcmToken] = useState<string>();
   const dispatch = useAppDispatch();
-  const {navigation} = props;
+
+  const onSubcribeNotify = async () => {
+    const token = await messaging().getToken();
+    console.log('fcmToken: ', token);
+    if (!token) return;
+    setFcmToken(token);
+  };
 
   useEffect(() => {
     GoogleSignin.configure({
       webClientId: '1023021056607-8ipdiimvi5c8rl7v8qbk4dhdimb2g80n.apps.googleusercontent.com',
     });
+    onSubcribeNotify();
   }, []);
 
   const goToRegister = () => {
@@ -59,6 +67,7 @@ const LogInComponent = (props: Props) => {
       const res = await sv.logIn({
         email,
         password,
+        fcmToken,
       });
       console.log('res: ', res);
       // @ts-ignore

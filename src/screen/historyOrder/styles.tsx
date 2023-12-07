@@ -12,8 +12,9 @@ export default StyleSheet.create({
     fontWeight: 'bold',
   },
   item: {
+    paddingVertical:10,
     backgroundColor: 'white',
-    margin: 5,
+    margin: 10,
     borderRadius: 10,
     borderWidth: 0.5,
     flexDirection: 'row',
@@ -29,12 +30,13 @@ export default StyleSheet.create({
   text: {
     fontSize: 15,
     fontFamily: 'LibreBaskerville-DpdE',
-    width: hs(200),
   },
   textStatus: {
+    marginHorizontal:15,
+    marginTop:5,
+    alignSelf:'flex-end',
     fontSize: 15,
     fontFamily: 'LibreBaskerville-DpdE',
-    width: hs(200),
     color:'#FF0000'
   },
   textPrice: {
@@ -49,13 +51,13 @@ export default StyleSheet.create({
     fontFamily: 'LibreBaskerville-DpdE',
   },
   viewItem: {
+    width:Dimensions.get("window").width,
     justifyContent:'space-around',
     paddingHorizontal:10,
     flexDirection: 'column',
-    paddingVertical:5
   },
   buttonText: {
-    margin: 10,
+    margin: vs(10),
     width: hs(350),
   },
   flatListContainer: {
@@ -67,7 +69,7 @@ export default StyleSheet.create({
     flexDirection:'row',marginHorizontal:15,marginVertical:10,justifyContent:'space-between'
   },
   textQuantity:{color:'#6D6D6D',fontSize:16},
-  buttonCancer:{backgroundColor:'#FF6900',width: 80,height: 40,},
+  buttonCancer:{backgroundColor:'#FF6900',width: 100,height: 40,},
   modalWrap: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.7)',

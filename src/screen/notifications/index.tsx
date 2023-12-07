@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { Text, SafeAreaView, Button, View, StyleSheet, TouchableOpacity, Dimensions, FlatList, Image } from 'react-native';
+import { Text, SafeAreaView, Button, View, StyleSheet, TouchableOpacity, Dimensions, FlatList, Image, Modal, TextInput } from 'react-native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -9,6 +9,9 @@ import { MENU_NAVIGATION } from '@src/navigations/routes';
 import { BottomPopup } from '../../containers/components/Base/BottomPopup'
 import { CategoryModel } from '@src/services/category/category.model';
 import CategoryService from '@src/services/category';
+
+import { ProductModel } from '@src/services/product/product.model';
+import ProductService from '@src/services/product';
 
 export type ScreenNavigationProps = CompositeNavigationProp<
   BottomTabNavigationProp<MenuStackParam, MENU_NAVIGATION.NOTIFICATIONS>,
@@ -20,22 +23,17 @@ interface Props {
   route: RouteProp<MenuStackParam, MENU_NAVIGATION.NOTIFICATIONS>;
 }
 
-const { width } = Dimensions.get('window');
 
-const images = [
-  'https://example.com/image1.jpg',
-  'https://example.com/image2.jpg',
-  'https://example.com/image3.jpg',
-];
 
 const NotificationScreen = (props: Props) => {
 
  
   return (
 
-  <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
+    <View style={{ flex: 1, justifyContent: 'space-around' }}>
       
     </View>
+
   );
 };
 

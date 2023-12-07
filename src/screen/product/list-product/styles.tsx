@@ -3,35 +3,6 @@ import {Dimensions, StyleSheet} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 export default StyleSheet.create({
-  mainContainer: {
-    flexDirection: 'row',
-    height: vs(60),
-    paddingHorizontal: vs(8),
-  },
-  inputContainer: {
-    flex: 9,
-    marginLeft: vs(8),
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    borderWidth: 1,
-    height: vs(48),
-    marginVertical: vs(8),
-    borderRadius: vs(16),
-    borderColor: '#EEEAEA',
-    backgroundColor: '#F0F0F0',
-  },
-  buttonContainer: {
-    flex: 1.5,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: ms(16),
-    fontFamily: 'LibreBaskerville-Regular',
-    color: '#7F7D7D',
-  },
 
   //Gợi ý hôm nay
   flatListSuggestContainer: {
@@ -39,14 +10,12 @@ export default StyleSheet.create({
   },
 
   suggestItem: {
-    width: Dimensions.get('window').width / 2 - 24,
-    // width: 170,
-    height: vs(256),
+    width: Dimensions.get('window').width / 2 - 12,
+    height: vs(270),
     borderColor: '#F6F8F6',
     borderWidth: 1,
     alignItems: 'center',
-    marginHorizontal: vs(8),
-    marginVertical: vs(6),
+    marginVertical: vs(4),
     borderRadius: vs(10),
     backgroundColor: '#ffffff',
 
@@ -55,10 +24,11 @@ export default StyleSheet.create({
     shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.2,
     shadowRadius: 2,
+    padding: 12
   },
 
   viewSuggestImage: {
-    flex: 6,
+    flex: 7,
     width: '100%',
     height: '100%',
     borderRadius: vs(20),
@@ -71,7 +41,6 @@ export default StyleSheet.create({
     width: '100%',
     height: '100%',
     borderRadius: vs(20),
-    paddingHorizontal: vs(12),
     justifyContent: 'space-around',
   },
   suggestTextName: {
@@ -95,7 +64,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  imgStar: {width: vs(12), height: vs(12)},
+  imgStar: {width: vs(15), height: vs(15), marginBottom: vs(3), marginRight: vs(2)},
   textCmt: {
     color: '#817F7F', // Màu văn bản
     fontSize: vs(14),
@@ -104,8 +73,9 @@ export default StyleSheet.create({
 
  
   viewFilter: {
+    flexDirection: 'column',
     width: '100%',
-    height: 100,
+    // height: 150,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#D9D9D9',
@@ -122,9 +92,9 @@ export default StyleSheet.create({
 
 
   buttonText: {
-    color: '#fff',
-    fontSize: ms(20),
-    fontFamily: 'Lato-Bold',
+    color: '#000000',
+    fontSize: ms(13),
+    fontFamily: 'LibreBaskerville-Bold',
   },
   button: {
     height: vs(48),
@@ -134,5 +104,78 @@ export default StyleSheet.create({
     justifyContent: 'center',
     marginTop: vs(10),
     flexDirection: 'row',
+  },
+
+
+
+  modalContainer: {
+    flex: 1,
+    marginTop: vs(27),
+    // justifyContent: 'center',
+    // alignItems: 'flex-start',
+    backgroundColor: 'white',
+  },
+
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderWidth: 2,
+    borderColor: 'black',
+    borderRadius: 5,
+    marginRight: 8,
+  },
+  checked: {
+    backgroundColor: 'blue', // Màu nền khi checkbox được chọn
+    borderColor: 'blue', // Màu viền khi checkbox được chọn
+  },
+  label: {
+    fontSize: 16,
+  },
+
+  //
+  dropdown: {
+    height: 45,
+    borderColor: 'gray',
+    borderRadius: 4,
+    paddingHorizontal: 8,
+    flex: 1, 
+    // marginHorizontal: 8,
+    backgroundColor: '#D9D9D9',
+    marginTop: 10
+  },
+  dropdown1: {
+    height: 45,
+    borderColor: 'gray',
+    borderRadius: 4,
+    paddingHorizontal: 8,
+    flex: 1, 
+    backgroundColor: '#D9D9D9',
+    marginTop: 10
+  },
+  placeholderStyle: {
+    fontSize: 14,
+    fontFamily: 'LibreBaskerville-Regular',
+    color: 'black',
+  },
+  selectedTextStyle: {
+    fontSize: 12,
+    color: 'black',
+    fontFamily: 'LibreBaskerville-Bold',
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  dropdownOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+  },
+  dropdownOptionText: {
+    color: 'red'
   },
 });

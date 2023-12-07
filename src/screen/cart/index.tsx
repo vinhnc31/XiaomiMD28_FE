@@ -2,7 +2,7 @@ import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {APP_NAVIGATION, GUEST_NAVIGATION} from '@src/navigations/routes';
 import React, {useEffect, useState} from 'react';
-import {Text, SafeAreaView, View, FlatList, Image, TouchableOpacity, ScrollView, TextInput, Alert} from 'react-native';
+import {Text, SafeAreaView, View, FlatList, Image, TouchableOpacity, ScrollView, TextInput, Alert, RefreshControl} from 'react-native';
 import Checkbox from '@react-native-community/checkbox';
 import {AppStackParam} from '@src/navigations/AppNavigation/stackParam';
 import styles from './styles';
@@ -27,6 +27,7 @@ const CartScreen = (props: Props) => {
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const cartService = new CartService();
   const handleDeleteItem = (itemId:number) => {
+    console.log(itemId)
     Alert.alert(
       'Xác nhận xóa',
       'Bạn có chắc chắn muốn xóa sản phẩm này không?',
@@ -133,7 +134,7 @@ const CartScreen = (props: Props) => {
     selectedItems.forEach((itemId) => {
       const selectedItem = data.find((item) => item.id === itemId);
       if (selectedItem) {
-        totalPrice += selectedItem.Product['price'] * selectedItem.quantity;
+        totalPrice += selectedItem.ProductColorConfig['price'] * selectedItem.quantity;
       }
     });
 
@@ -149,6 +150,9 @@ const CartScreen = (props: Props) => {
       fetchData();
     }
   }, [refreshing]);
+  const onRefresh = () => {
+    fetchData();
+  };
   const getSelectedItems = () => {
     return data.filter((item) => selectedItems.includes(item.id));
   };
@@ -165,16 +169,23 @@ const CartScreen = (props: Props) => {
         }}
       />
       <View style={{flex: 1}}>
-        {loading ? (
+        {loading  ? (
           <BaseLoading size={20} top={100} loading={true} />
         ) : data.length === 0 ? (
+          <ScrollView indicatorStyle="black" showsVerticalScrollIndicator={false} 
+          refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
           <View style={styles.flatListContainer}>
             <View style={{alignItems: 'center', marginTop: 100}}>
               <Image source={require('../../assets/images/group84.png')} style={{width: 170, height: 170}}></Image>
             </View>
           </View>
+          </ScrollView>
         ) : (
-          <ScrollView indicatorStyle="black" showsVerticalScrollIndicator={false}>
+          <ScrollView indicatorStyle="black" showsVerticalScrollIndicator={false} 
+          refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          >
             <FlatList
               data={data}
               horizontal={true}
@@ -187,12 +198,12 @@ const CartScreen = (props: Props) => {
                       onValueChange={() => toggleCheckbox(item.id)}
                     />
                   <View style={styles.view}>
-                    <Image source={{uri: item.productcolor['image']}} style={styles.image} resizeMode="stretch" />
+                    <Image source={{uri: (item.productcolor?item.productcolor['image']:item.Product["images"])}} style={styles.image} resizeMode="stretch" />
                     <View style={styles.viewText}>
                       <Text ellipsizeMode="tail" numberOfLines={1} style={styles.text}>
                         {item.Product['name']}
                       </Text>
-                      <Text style={styles.textPrice}>{item.Product['price'].toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}</Text>
+                      <Text style={styles.textPrice}>{(item.ProductColorConfig ? item.ProductColorConfig['price'] :item.Product["price"]).toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}</Text>
                       <View style={styles.viewCount}>
                         <TouchableOpacity
                           disabled={item.quantity <= 1 ? true : false}

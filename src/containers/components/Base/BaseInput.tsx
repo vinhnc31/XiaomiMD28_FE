@@ -19,6 +19,8 @@ interface Props {
   leftIcon: string;
   borderRadius?: number;
   style?: StyleProp<ViewStyle>; // Thêm style cho Props
+  onSubmitEditing?: () => void;
+  onEndEditing?: () => void;
 }
 
 const InputBase = ({
@@ -36,6 +38,8 @@ const InputBase = ({
   leftIcon = '',
   borderRadius,
   style,
+  onSubmitEditing,
+  onEndEditing,
 }: Props) => {
   const [isSecureTextEntry, setIsSecureTextEntry] = useState(true);
 
@@ -52,7 +56,7 @@ const InputBase = ({
           <View style={styles.input}>
             {leftIcon && leftIcon.length > 0 && <BaseIcon name={leftIcon} size={24} color={Colors.black} />}
             <TextInput
-              style={{color: Colors.black, fontFamily: 'Lato-Bold', fontSize: ms(15)}}
+              style={{color: Colors.black, fontFamily: 'Lato-Bold',flex:1, fontSize: ms(15)}}
               value={valuePassword}
               onChangeText={onChangeText}
               placeholder={title}
@@ -88,7 +92,7 @@ const InputBase = ({
               <View style={styles.input}>
                 {leftIcon && leftIcon.length > 0 && <BaseIcon name={leftIcon} size={24} color={Colors.black} />}
                 <TextInput
-                  style={{flex: 1, color: 'black', fontFamily: 'Lato-Bold', fontSize: ms(15)}}
+                  style={{flex: 1, color: 'black', fontFamily: 'LibreBaskerville-Bold', fontSize: ms(15)}}
                   value={value}
                   keyboardType={phoneNumber ? 'phone-pad' : 'default'}
                   onChangeText={onChangeText}
@@ -97,6 +101,8 @@ const InputBase = ({
                   selectTextOnFocus={isEditable}
                   multiline={multiline}
                   numberOfLines={multiline ? 12 : 1}
+                  onSubmitEditing={onSubmitEditing} // Thêm onSubmitEditing vào đây
+                  onEndEditing={onEndEditing}
                 />
               </View>
             </View>
@@ -112,7 +118,7 @@ export default React.memo(InputBase);
 const styles = StyleSheet.create({
   title: {
     fontSize: ms(16),
-    fontFamily: 'Lato-Bold',
+    fontFamily: 'LibreBaskerville-Bold',
     color: Colors.black,
   },
   innerInput: {
@@ -139,7 +145,7 @@ const styles = StyleSheet.create({
     color: Colors.primary,
     fontSize: ms(15),
 
-    fontFamily: 'Lato-SemiBold',
+    fontFamily: 'LibreBaskerville-Bold',
   },
 
   btnUpdate: {

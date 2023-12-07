@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "602876282926",
+    "project_id": "xioami-md28",
+    "storage_bucket": "xioami-md28.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:602876282926:android:b7e3af407c59d3c0a037bf",
+        "android_client_info": {
+          "package_name": "com.xiaomimd28_fe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "602876282926-rn6kcc2otj32a25be6gi1nld75bslahm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzJKFqO5PiQi4fZHY4bW-oIriW4uGSIUs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "602876282926-rn6kcc2otj32a25be6gi1nld75bslahm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

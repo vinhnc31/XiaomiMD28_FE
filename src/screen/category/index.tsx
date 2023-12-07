@@ -27,7 +27,7 @@ const CategoryScreen = (props: Props) => {
   };
 
   const handleCartPress = () => {
-    navigateToPage(APP_NAVIGATION.CART);
+    navigateToPage(APP_NAVIGATION.CART)
   };
   
 
@@ -63,13 +63,13 @@ const CategoryScreen = (props: Props) => {
         />
       </View>
 
-      <View style={{flex: 1, paddingHorizontal: 16}}>
+      <View style={{flex: 1}}>
         <FlatList
           data={data}
-          keyExtractor={(item) => item.id.toString()}
+          // keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
           renderItem={({ item, index }) => (
-            <TouchableScale onPress={() => goToProductListById(item.id, item.name)} activeScale={0.9} friction={9} tension={100}>
+            <TouchableScale key={index} onPress={() => goToProductListById(item.id, item.name)} activeScale={0.9} friction={9} tension={100}>
               <View style={styles.viewItemCategory}>
                 <View style={{ flex: 2 }}>
                   {item.image ? (

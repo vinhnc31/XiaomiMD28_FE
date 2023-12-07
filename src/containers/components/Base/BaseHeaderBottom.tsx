@@ -6,7 +6,6 @@ import { navigateToPage } from '@src/navigations/services';
 import { APP_NAVIGATION } from '@src/navigations/routes';
 
 const BaseHeaderBottom = ({disabled, value, onValueChange, SumText, check, data}: any) => {
-  console.log(check)
   return (
     <View>
       <View style={{borderColor: '#D9D9D9', borderWidth: 1.5}} />
