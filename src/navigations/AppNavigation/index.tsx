@@ -21,6 +21,7 @@ import PayScreen from '@src/screen/pay/index';
 import EvaluateScreen from '@src/screen/evaluate/index';
 
 import search from '@src/screen/search';
+import reviewProduct from '@src/screen/product/review-product/index';
 
 const Stack = createNativeStackNavigator<AppStackParam>();
 
@@ -82,6 +83,7 @@ const AppNavigationScreen = () => {
       <Stack.Screen name={APP_NAVIGATION.EVALUATE} component={EvaluateScreen} />
 
       <Stack.Screen name={APP_NAVIGATION.SEARCH} component={search}/>
+      <Stack.Screen name={APP_NAVIGATION.REVIEWPRODUCT} component={reviewProduct} />
     </Stack.Navigator>
   );
 };

@@ -1,7 +1,7 @@
 import {BaseService} from '@src/services/base.service';
 import endpoints from '@src/services/config/endpoint';
 import http from '@src/services/config/http';
-import {CartModel, deleteItem, putItem} from "@src/services/cart/cart.model";
+import {CartModel, deleteItem, putItem, postItemCart} from "@src/services/cart/cart.model";
 const url = endpoints.cart;
 export default class CartService extends BaseService<CartModel> {
     constructor() {
@@ -18,6 +18,12 @@ export default class CartService extends BaseService<CartModel> {
     }
     public async deleteCart(id:number) {
         const {data} = await http.delete<CartModel>(`${url.deleteCart}/${id}`);
+        return data;
+    }
+
+
+    public async postCart(body: postItemCart) {
+        const {data} = await http.post<CartModel>(`${url.postCart}`,body);
         return data;
     }
 

@@ -180,10 +180,16 @@ const HomeScreen = (props: Props) => {
     );
   }
 
+  // chuyển sang màn chi tiết
+  const goToDetailProducts = (id: number) => {
+    navigateToPage(APP_NAVIGATION.DETAILSPRODUCT, {productId: id});
+    //goToDetails(item.id)
+  };
+
   //danh sach yeu thich
   function ListItemFavorite({item, index}: {item: ProductModel; index: number}) {
     return (
-      <TouchableWithoutFeedback key={index} onPress={() => console.log('code Xem chi tiet data: ', item.name)}>
+      <TouchableWithoutFeedback onPress={() => {console.log('code Xem chi tiet data: ', item.name), goToDetailProducts(item.id)}}>
         <View style={styles.item}>
           <Image source={{uri: item.images}} style={styles.image} resizeMode="cover" />
           <View style={styles.overlay}>

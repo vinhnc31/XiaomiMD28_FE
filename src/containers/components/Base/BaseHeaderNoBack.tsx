@@ -3,25 +3,14 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import {ms, vs, hs} from '@src/styles/scalingUtils';
 import R from '@src/res'
 
-const BaseHeader = ({ title, onBackPress, onCartPress, onFilterPress }:any) => {
+const BaseHeaderNoBack = ({ title, onCartPress }:any) => {
   return (
     <View>
       <View style={styles.container}>
-        <View style={{flex: 1, alignItems: 'flex-end'}}>
-          <TouchableOpacity onPress={onBackPress}>
-            <Image source={R.images.iconBack} style={styles.icon} />
-          </TouchableOpacity>
-        </View>
-
         <View style={{flex: 8, alignItems: 'flex-start', justifyContent: 'center'}}>
           <Text numberOfLines={1} style={styles.title}>{title}</Text>
         </View>
 
-        {/* <View style={{flex: 1, alignItems: 'flex-start'}}>
-          <TouchableOpacity onPress={onFilterPress}>
-            <Image source={R.images.iconFilter} style={styles.iconFilter} />
-          </TouchableOpacity>
-        </View> */}
         <View style={{flex: 1, alignItems: 'flex-start'}}>
           <TouchableOpacity onPress={onCartPress}>
             <Image source={R.images.iconCartBlack} style={styles.icon} />
@@ -43,11 +32,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     width: vs(30),
-    height: vs(30),
-  },
-  iconFilter: {
-    width: 28,
-    height:28,
+    height:vs(30),
   },
   title: {
     fontSize: ms(18),
@@ -57,4 +42,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BaseHeader;
+export default BaseHeaderNoBack;
