@@ -95,12 +95,6 @@ const DetailsScreen = (props: Props) => {
       const productService = new ProductService();
       const result = await productService.getProductId(productId);
 
-      console.log(
-        '---------------products data id:',
-        result.data ,
-        '-----Object.keys(result.data)------',
-        Object.keys(result.data),
-      );
       setProductIdData(result.data);
       if (result.data && Object.keys(result.data).length > 0) {
         // `result.data` không rỗng
@@ -120,7 +114,6 @@ const DetailsScreen = (props: Props) => {
       const productService = new ProductService();
       const result = await productService.getCommentProductId(productId);
 
-      console.log('getCommentProductId---', Object.keys(result.data));
       setCommentProductIdData(result.data);
     } catch (error) {
       setError('err' + error);
@@ -184,6 +177,10 @@ const DetailsScreen = (props: Props) => {
         } else {
           // Xử lý trường hợp không thành công nếu cần
           console.log('Xóa yêu thích không thành công');
+          Toast.show({
+            text1: 'Bỏ yêu thích không thành công !',
+            type: 'error',
+          });
         }
       } else {
         // Nếu sản phẩm chưa có trong danh sách yêu thích, thêm nó vào
@@ -393,6 +390,7 @@ const DetailsScreen = (props: Props) => {
             setSelectedColorId(item?.id || null); //btn
 
             setIsBtnAddToCart(false);
+            setIsCountAdd(false);
             setSelectedColorConfigId(0);
             setIsRenderColorConfigId(item?.colorConfigs.length === 0 ? true : false);
             const has = selectedColorId === item.id ? false : true;
@@ -433,6 +431,7 @@ const DetailsScreen = (props: Props) => {
               const has = selectedColorConfigId === configItem.configId ? false : true;
               setIsBtnAddToCart(true);
               setHasColorConfigId(has);
+              setIsCountAdd(true);
             }}
             style={[
               styles.btnColors,
@@ -462,13 +461,13 @@ const DetailsScreen = (props: Props) => {
 
   const handleDecrease = () => {
     // Giảm số lượng, nhưng không thể nhỏ hơn 1
-    if (hasColorId && hasColorConfigId) {
+    if (hasColorId && hasColorConfigId && isCountAdd) {
       setSelectedCountModal(prevCount => Math.max(prevCount - 1, 1));
     }
   };
   const handleIncrease = () => {
     // Tăng số lượng
-    if (hasColorId && hasColorConfigId) {
+    if (hasColorId && hasColorConfigId && isCountAdd) {
       setSelectedCountModal(prevCount => Math.min(prevCount + 1, selectedQuantityModal || 1));
     }
   };
@@ -477,55 +476,54 @@ const DetailsScreen = (props: Props) => {
   const [selectedColorConfigId, setSelectedColorConfigId] = useState(0);
   const [hasColorId, setHasColorId] = useState<boolean>(false);
   const [hasColorConfigId, setHasColorConfigId] = useState<boolean>(false);
+  const [isCountAdd, setIsCountAdd] = useState<boolean>(false);
   const [isRenderColorConfigId, setIsRenderColorConfigId] = useState<boolean>(true);
 
   const handleAddToCart = async () => {
-    try {
-      if (selectedCountModal && productColorIdModal && ProductColorConfigIdModal) {
-        const cartService = new CartService();
-
-        const addCartData = {
-          productId: productIdData?.id,
-          AccountId: AccountId,
-          quantity: selectedCountModal,
-          ProductColorId: productColorIdModal,
-          ProductColorConfigId: ProductColorConfigIdModal,
-        };
-
-        console.log('addCartData---', addCartData);
-
-        if (hasColorId && hasColorConfigId) {
+    if (hasColorId && hasColorConfigId && isCountAdd) {
+      try {
+        if (selectedCountModal && productColorIdModal && ProductColorConfigIdModal) {
+          const cartService = new CartService();
+  
+          const addCartData = {
+            productId: productIdData?.id,
+            AccountId: AccountId,
+            quantity: selectedCountModal,
+            ProductColorId: productColorIdModal,
+            ProductColorConfigId: ProductColorConfigIdModal,
+          };
+  
           const result = await cartService.postCart(addCartData);
-
-          console.log('result---', result);
-
-          // Hiển thị toast khi thành công
+  
+            console.log('result---', result);
+  
+            // Hiển thị toast khi thành công
+            Toast.show({
+              type: 'success',
+              position: 'top',
+              text1: 'Thành công',
+              text2: 'Đã thêm vào giỏ hàng',
+            });
+        } else {
+          // Handle the case where one or more of the required variables are missing
           Toast.show({
-            type: 'success',
+            type: 'error',
             position: 'top',
-            text1: 'Thành công',
-            text2: 'Đã thêm vào giỏ hàng',
+            text1: 'Thông báo',
+            text2: 'Vui lòng chọn đầy đủ thông tin trước khi thêm vào giỏ hàng !',
           });
         }
-      } else {
-        // Handle the case where one or more of the required variables are missing
+      } catch (error) {
+        console.log('error: ', error);
+  
+        // Hiển thị toast khi có lỗi
         Toast.show({
           type: 'error',
           position: 'top',
           text1: 'Thông báo',
-          text2: 'Vui lòng chọn đầy đủ thông tin trước khi thêm vào giỏ hàng !',
+          text2: 'Không thể thêm vào giỏ hàng !',
         });
-      }
-    } catch (error) {
-      console.log('error: ', error);
-
-      // Hiển thị toast khi có lỗi
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'Thông báo',
-        text2: 'Không thể thêm vào giỏ hàng !',
-      });
+      }  
     }
   };
 
@@ -551,6 +549,7 @@ const DetailsScreen = (props: Props) => {
     setHasColorConfigId(false);
     setIsBtnAddToCart(false);
     setIsRenderColorConfigId(true);
+    setIsCountAdd(false);
   };
 
   useEffect(() => {
@@ -649,6 +648,7 @@ const DetailsScreen = (props: Props) => {
                         <View style={styles.viewStar}>
                           <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
                           <Text style={styles.textStar}>{productIdData?.averageRating || 0.0}</Text>
+                          <Text style={styles.textSell}>| Kho : </Text>
                           <Text style={styles.textCmt}>({getQuantitys(productIdData) || 0})</Text>
                           {/* <Text style={styles.textSell}>| Đã bán : </Text>
                           <Text style={styles.textSellNumber}>123</Text> */}
@@ -924,7 +924,7 @@ const DetailsScreen = (props: Props) => {
                                 type: 'error',
                                 position: 'top',
                                 text1: 'Thông báo',
-                                text2: 'Vui lòng chọn màu có hàng !',
+                                text2: 'Vui lòng chọn đầy đủ thông tin !',
                                 visibilityTime: 1500,
                               });
                             }

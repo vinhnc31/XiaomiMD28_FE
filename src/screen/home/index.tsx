@@ -100,6 +100,9 @@ const HomeScreen = (props: Props) => {
     navigateToPage(APP_NAVIGATION.PRODUCTLIST, {categoryId: id, name: name});
     console.log(id);
   };
+  const goToDetailProducts = (id: number) => {
+    navigateToPage(APP_NAVIGATION.DETAILSPRODUCT, {productId: id});
+  };
 
   const featchCart = async () => {
     const resultCart = await cartService.fetchCart(user?.id!);
@@ -132,7 +135,7 @@ const HomeScreen = (props: Props) => {
     return (
       <TouchableScale
         key={index}
-        onPress={() => console.log('da chon 1 item', item.id)}
+        onPress={() => console.log('da chon 1 item', goToDetailProducts(item.id))}
         activeScale={0.9}
         friction={9}
         tension={100}>
@@ -180,11 +183,7 @@ const HomeScreen = (props: Props) => {
     );
   }
 
-  // chuyển sang màn chi tiết
-  const goToDetailProducts = (id: number) => {
-    navigateToPage(APP_NAVIGATION.DETAILSPRODUCT, {productId: id});
-    //goToDetails(item.id)
-  };
+  
 
   //danh sach yeu thich
   function ListItemFavorite({item, index}: {item: ProductModel; index: number}) {
