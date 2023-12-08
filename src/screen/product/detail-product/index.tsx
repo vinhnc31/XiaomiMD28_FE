@@ -58,7 +58,7 @@ const DetailsScreen = (props: Props) => {
   const AccountId = user?.id || '';
   const [favoriteId, setFavoriteId] = useState(0);
   const [isBtnAddToCart, setIsBtnAddToCart] = useState<boolean>(false);
-  const [noData, setNoData] = useState(true);
+  const [noData, setNoData] = useState(false);
 
   // { phân sang phần comment
   const commentsToShow = 3;
@@ -97,7 +97,7 @@ const DetailsScreen = (props: Props) => {
 
       console.log(
         '---------------products data id:',
-        productId,
+        result.data ,
         '-----Object.keys(result.data)------',
         Object.keys(result.data),
       );
@@ -122,15 +122,9 @@ const DetailsScreen = (props: Props) => {
 
       console.log('getCommentProductId---', Object.keys(result.data));
       setCommentProductIdData(result.data);
-      if (result.data && Object.keys(result.data).length > 0) {
-        // `result.data` không rỗng
-        setNoData(false);
-      } else {
-        // `result.data` rỗng hoặc là một giá trị "falsy"
-        setNoData(true);
-      }
     } catch (error) {
       setError('err' + error);
+      setNoData(true);
     }
   };
 
@@ -656,8 +650,8 @@ const DetailsScreen = (props: Props) => {
                           <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
                           <Text style={styles.textStar}>{productIdData?.averageRating || 0.0}</Text>
                           <Text style={styles.textCmt}>({getQuantitys(productIdData) || 0})</Text>
-                          <Text style={styles.textSell}>| Đã bán : </Text>
-                          <Text style={styles.textSellNumber}>123</Text>
+                          {/* <Text style={styles.textSell}>| Đã bán : </Text>
+                          <Text style={styles.textSellNumber}>123</Text> */}
                         </View>
                       </View>
 
@@ -715,7 +709,7 @@ const DetailsScreen = (props: Props) => {
                               <View style={styles.reviewsTitle}>
                                 <View style={styles.reviewsTitleContainer}>
                                   <Text style={styles.reviewTitleText}>Đánh giá của khác hàng</Text>
-                                  <Text style={styles.numberReviews}>({productIdData?.commentCount || 0})</Text>
+                                  <Text style={styles.numberReviews}>({commentProductIdData.length || productIdData?.commentCount})</Text>
                                 </View>
 
                                 <View style={styles.starPoint}>

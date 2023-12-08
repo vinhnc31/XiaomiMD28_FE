@@ -65,7 +65,6 @@ const ReviewProductScreen = (props: Props) => {
   };
 
   const renderItemComments = ({item, index}) => {
-
     return (
       <View style={{marginHorizontal: hs(10)}}>
         <TouchableOpacity activeOpacity={0.8}>
@@ -155,36 +154,54 @@ const ReviewProductScreen = (props: Props) => {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#FBEFE5'}}>
-      <BaseHeader title={'Đánh giá'} onCartPress={handleCartPress} onBackPress={handleBackPress} data={cartData}/>
+      <BaseHeader title={'Đánh giá'} onCartPress={handleCartPress} onBackPress={handleBackPress} data={cartData} />
 
       {renderNoDataMessage()}
 
       {commentData.length > 0 && (
-        <View
-          style={{paddingHorizontal: 8, backgroundColor: '#FFF', flexDirection: 'column', flex: 1, marginTop: vs(12)}}>
-          <View style={{height: vs(55), justifyContent: 'center', paddingHorizontal: hs(10)}}>
-            <Text style={{color: '#000000', fontSize: ms(18), fontFamily: 'LibreBaskerville-Bold'}}>
-              Tất cả đánh giá
-            </Text>
-          </View>
-          <Text style={{width: '100%', borderBottomWidth: 2, borderColor: '#EEEEEE', flex: 0.01}}></Text>
-
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={commentData ? getProductCommentsToShow() : []}
-            keyExtractor={item => item.id.toString()}
-            renderItem={renderItemComments}
-          />
-          {commentsToShow < commentData.length && (
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={['dummyData']} // Bạn có thể cung cấp một số dữ liệu giả mạo hoặc sử dụng một mục đơn làm đại diện
+          keyExtractor={() => 'dummyKey'} // Sử dụng một hàm trích xuất khóa giả mạo
+          renderItem={() => (
             <>
-            <Text style={styles.borderBottom}></Text>
-              <TouchableOpacity activeOpacity={0.8} style={styles.btnSeeMoreComment} onPress={handleSeeMoreComments}>
-                <Text style={styles.seeMoreReviewsText}>Xem thêm</Text>
-              </TouchableOpacity>
-              <Text style={styles.borderBottom}></Text>
+              <View
+                style={{
+                  paddingHorizontal: 8,
+                  backgroundColor: '#FFF',
+                  flexDirection: 'column',
+                  flex: 1,
+                  marginTop: vs(12),
+                }}>
+                <View style={{height: vs(55), justifyContent: 'center', paddingHorizontal: hs(10)}}>
+                  <Text style={{color: '#000000', fontSize: ms(18), fontFamily: 'LibreBaskerville-Bold'}}>
+                    Tất cả đánh giá
+                  </Text>
+                </View>
+                <Text style={{width: '100%', borderBottomWidth: 2, borderColor: '#EEEEEE', flex: 0.01}}></Text>
+
+                <FlatList
+                  showsVerticalScrollIndicator={false}
+                  data={commentData ? getProductCommentsToShow() : []}
+                  keyExtractor={item => item.id.toString()}
+                  renderItem={renderItemComments}
+                />
+                {commentsToShow < commentData.length && (
+                  <>
+                    <Text style={styles.borderBottom}></Text>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      style={styles.btnSeeMoreComment}
+                      onPress={handleSeeMoreComments}>
+                      <Text style={styles.seeMoreReviewsText}>Xem thêm</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.borderBottom}></Text>
+                  </>
+                )}
+              </View>
             </>
           )}
-        </View>
+        />
       )}
     </SafeAreaView>
   );
