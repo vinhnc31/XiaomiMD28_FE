@@ -20,23 +20,14 @@ const NavigationComponent = () => {
 
   const chooseScreen = useMemo(() => {
     const arr = [];
-    if (authState?.account) {
-      arr.push(
-        <RootStack.Screen
-          name={ROUTES.APP_NAVIGATION}
-          component={AppNavigationScreen}
-          options={{headerShown: false}}
-        />,
-      );
-    } else {
-      arr.push(
-        <RootStack.Screen
-          name={ROUTES.GUEST_NAVIGATION}
-          component={GuestNavigationScreen}
-          options={{headerShown: false}}
-        />,
-      );
-    }
+
+    arr.push(
+      <RootStack.Screen
+        name={ROUTES.GUEST_NAVIGATION}
+        component={GuestNavigationScreen}
+        options={{headerShown: false}}
+      />
+    );
     return arr[0];
   }, [authState?.account]);
 

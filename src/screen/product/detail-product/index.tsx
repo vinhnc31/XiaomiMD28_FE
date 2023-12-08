@@ -40,6 +40,7 @@ interface Props {
 }
 
 const DetailsScreen = (props: Props) => {
+  const {user} = useAuth();
   const [productIdData, setProductIdData] = useState<ProductDetailModel[]>([]);
   const [commentProductIdData, setCommentProductIdData] = useState<CommentProductId[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -54,7 +55,6 @@ const DetailsScreen = (props: Props) => {
 
   const route = props.route;
   const productId = route.params ? route.params.productId : undefined;
-  const {user} = useAuth();
   const AccountId = user?.id || '';
   const [favoriteId, setFavoriteId] = useState(0);
   const [isBtnAddToCart, setIsBtnAddToCart] = useState<boolean>(false);
@@ -484,7 +484,7 @@ const DetailsScreen = (props: Props) => {
       try {
         if (selectedCountModal && productColorIdModal && ProductColorConfigIdModal) {
           const cartService = new CartService();
-  
+
           const addCartData = {
             productId: productIdData?.id,
             AccountId: AccountId,
@@ -492,18 +492,18 @@ const DetailsScreen = (props: Props) => {
             ProductColorId: productColorIdModal,
             ProductColorConfigId: ProductColorConfigIdModal,
           };
-  
+
           const result = await cartService.postCart(addCartData);
-  
-            console.log('result---', result);
-  
-            // Hiển thị toast khi thành công
-            Toast.show({
-              type: 'success',
-              position: 'top',
-              text1: 'Thành công',
-              text2: 'Đã thêm vào giỏ hàng',
-            });
+
+          console.log('result---', result);
+
+          // Hiển thị toast khi thành công
+          Toast.show({
+            type: 'success',
+            position: 'top',
+            text1: 'Thành công',
+            text2: 'Đã thêm vào giỏ hàng',
+          });
         } else {
           // Handle the case where one or more of the required variables are missing
           Toast.show({
@@ -515,7 +515,7 @@ const DetailsScreen = (props: Props) => {
         }
       } catch (error) {
         console.log('error: ', error);
-  
+
         // Hiển thị toast khi có lỗi
         Toast.show({
           type: 'error',
@@ -523,7 +523,7 @@ const DetailsScreen = (props: Props) => {
           text1: 'Thông báo',
           text2: 'Không thể thêm vào giỏ hàng !',
         });
-      }  
+      }
     }
   };
 
@@ -624,7 +624,14 @@ const DetailsScreen = (props: Props) => {
                             // Disable the button based on the loading state
                             onPress={() => {
                               console.log('code logic button tymm <3');
-                              handleFavoritePress();
+                              if (user) {
+                                handleFavoritePress();
+                              } else {
+                                navigateToPage(GUEST_NAVIGATION.LOGIN, {
+                                  name_screen: APP_NAVIGATION.DETAILSPRODUCT,
+                                  param: props.route?.params,
+                                });
+                              }
                             }}>
                             <Image
                               style={styles.imgFavourite}
@@ -709,7 +716,9 @@ const DetailsScreen = (props: Props) => {
                               <View style={styles.reviewsTitle}>
                                 <View style={styles.reviewsTitleContainer}>
                                   <Text style={styles.reviewTitleText}>Đánh giá của khác hàng</Text>
-                                  <Text style={styles.numberReviews}>({commentProductIdData.length || productIdData?.commentCount})</Text>
+                                  <Text style={styles.numberReviews}>
+                                    ({commentProductIdData.length || productIdData?.commentCount})
+                                  </Text>
                                 </View>
 
                                 <View style={styles.starPoint}>
@@ -791,9 +800,16 @@ const DetailsScreen = (props: Props) => {
               <View style={styles.BuyandAddtoCartContainer}>
                 <TouchableOpacity
                   onPress={() => {
-                    console.log('them vao gio hang');
-                    setModalVisible(true);
-                    setModalAction('addToCart');
+                    if (user) {
+                      console.log('them vao gio hang');
+                      setModalVisible(true);
+                      setModalAction('addToCart');
+                    } else {
+                      navigateToPage(GUEST_NAVIGATION.LOGIN, {
+                        name_screen: APP_NAVIGATION.DETAILSPRODUCT,
+                        param: props.route?.params,
+                      });
+                    }
                   }}
                   style={styles.leftContainerCart}
                   activeOpacity={0.8}>
@@ -805,9 +821,16 @@ const DetailsScreen = (props: Props) => {
 
                 <TouchableOpacity
                   onPress={() => {
-                    console.log('mua ngay');
-                    setModalVisible(true);
-                    setModalAction('buyNow');
+                    if (user) {
+                      console.log('mua ngay');
+                      setModalVisible(true);
+                      setModalAction('buyNow');
+                    } else {
+                      navigateToPage(GUEST_NAVIGATION.LOGIN, {
+                        name_screen: APP_NAVIGATION.DETAILSPRODUCT,
+                        param: props.route?.params,
+                      });
+                    }
                   }}
                   style={styles.rightContainerBuy}
                   activeOpacity={0.8}>
