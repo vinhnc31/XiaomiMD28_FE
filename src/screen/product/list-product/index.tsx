@@ -212,10 +212,14 @@ const ProductListScreen = (props: Props) => {
     navigateToPage(APP_NAVIGATION.CART);
   };
 
+  const goToDetailProducts = (id: number) => {
+    navigateToPage(APP_NAVIGATION.DETAILSPRODUCT, {productId: id});
+  };
+
   function ListItemSuggest({ item }: { item: ProductModel }) {
     return (
       <TouchableScale
-        onPress={() => console.log('da chon 1 item', item.id)}
+        onPress={() => {console.log('da chon 1 item', item.id); goToDetailProducts(item.id)} }
         activeScale={0.9}
         friction={9}
         tension={100}>
