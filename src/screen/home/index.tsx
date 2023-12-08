@@ -36,6 +36,7 @@ import {vs} from '@src/styles/scalingUtils';
 import CartService from '@src/services/cart';
 import {useAuth} from '@src/hooks/useAuth';
 import {CartModel} from '@src/services/cart/cart.model';
+import useNotificationPermission from '../../hooks/useNotificationPermission';
 
 interface Props {
   navigation: BottomTabNavigationProp<MenuStackParam>;
@@ -64,6 +65,7 @@ const HomeScreen = (props: Props) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const cartService = new CartService();
   const {user} = useAuth();
+  useNotificationPermission();
   const config = {
     style: 'currency',
     currency: 'VND',
@@ -71,9 +73,7 @@ const HomeScreen = (props: Props) => {
   };
 
   useEffect(() => {
-    
     if (refreshing) {
-      
       setRefreshing(false); // Đặt refreshing thành false trước khi tải lại để tránh tác động lặp
       fetchDataCategory();
       fetchDataProduct()
@@ -189,7 +189,10 @@ const HomeScreen = (props: Props) => {
   //danh sach yeu thich
   function ListItemFavorite({item, index}: {item: ProductModel; index: number}) {
     return (
-      <TouchableWithoutFeedback onPress={() => {console.log('code Xem chi tiet data: ', item.name), goToDetailProducts(item.id)}}>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          console.log('code Xem chi tiet data: ', item.name), goToDetailProducts(item.id);
+        }}>
         <View style={styles.item}>
           <Image source={{uri: item.images}} style={styles.image} resizeMode="cover" />
           <View style={styles.overlay}>

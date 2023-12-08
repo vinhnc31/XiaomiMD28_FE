@@ -30,6 +30,9 @@ import {ProductDetailModel} from '@src/services/product/product.model';
 import {useAuth} from '@src/hooks/useAuth';
 import BaseHeaderNoBack from '@src/containers/components/Base/BaseHeaderNoBack';
 import Toast from 'react-native-toast-message';
+import {CartModel} from '@src/services/cart/cart.model';
+import CartService from '@src/services/cart';
+
 
 type ScreenNavigationProps = CompositeNavigationProp<
   BottomTabNavigationProp<MenuStackParam, MENU_NAVIGATION.FAVORITE>,
@@ -48,20 +51,24 @@ const FavoriteScreen = (props: Props) => {
   const [error, setError] = useState('');
 
   const [dataProductId, setDataProductId] = useState<ProductDetailModel[]>([]);
-
+  const [cartData, setCartData] = useState<CartModel[]>([]);
+  const cartService = new CartService();
   const {user} = useAuth();
   const accountId = user?.id || '';
+  
 
   const [dataFavoriteProductNull, setDataFavoriteProductNull] = useState<FavoriteModel[]>([]);
 
   useEffect(() => {
     fetchViewFavoriteData();
+    featchCart();
   }, [accountId, refreshing]);
 
   useFocusEffect(
     React.useCallback(() => {
       const fetchData = async () => {
         await fetchViewFavoriteData();
+        await featchCart();
       };
 
       fetchData();
@@ -69,6 +76,11 @@ const FavoriteScreen = (props: Props) => {
       return () => {};
     }, [refreshing]),
   );
+
+  const featchCart = async () => {
+    const resultCart = await cartService.fetchCart(user?.id!);
+    setCartData(resultCart.data);
+  };
 
   const fetchViewFavoriteData = async () => {
     try {
@@ -279,11 +291,13 @@ const FavoriteScreen = (props: Props) => {
     return null;
   };
 
-  const handleCartPress = () => {};
+  const handleCartPress = () => {
+    navigateToPage(APP_NAVIGATION.CART);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <BaseHeaderNoBack title={'Yêu thích'} onCartPress={handleCartPress} />
+      <BaseHeaderNoBack title={'Yêu thích'} onCartPress={handleCartPress} data={cartData}/>
 
       {renderNoDataMessage()}
       {dataFavorites.length > 0 && (

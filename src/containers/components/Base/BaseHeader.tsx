@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import {ms, vs, hs} from '@src/styles/scalingUtils';
 import R from '@src/res'
 
-const BaseHeader = ({ title, onBackPress, onCartPress, onFilterPress }:any) => {
+const BaseHeader = ({ title, onBackPress, onCartPress, onFilterPress, data }:any) => {
   return (
     <View>
       <View style={styles.container}>
@@ -25,6 +25,19 @@ const BaseHeader = ({ title, onBackPress, onCartPress, onFilterPress }:any) => {
         <View style={{flex: 1, alignItems: 'flex-start'}}>
           <TouchableOpacity onPress={onCartPress}>
             <Image source={R.images.iconCartBlack} style={styles.icon} />
+            <View
+                  style={{
+                    height: hs(16),
+                    width: hs(16),
+                    backgroundColor: 'red',
+                    position: 'absolute',
+                    right: hs(-5),
+                    top: vs(-5),
+                    borderRadius: ms(20),
+                    alignItems: 'center',
+                  }}>
+                  <Text style={{color: 'white'}}>{data?.length || 0}</Text>
+                </View>
           </TouchableOpacity>
         </View>
       </View>

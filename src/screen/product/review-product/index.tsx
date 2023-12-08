@@ -6,7 +6,9 @@ import {GUEST_NAVIGATION, APP_NAVIGATION} from '@src/navigations/routes';
 import {navigateToPage, goBack} from '@src/navigations/services';
 import React, {useEffect, useState, useRef} from 'react';
 import {FlatList, Image, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
-
+import {useAuth} from '@src/hooks/useAuth';
+import {CartModel} from '@src/services/cart/cart.model';
+import CartService from '@src/services/cart';
 import styles from './styles';
 import {ScrollView} from 'react-native';
 import {hs, vs, ms} from '@src/styles/scalingUtils';
@@ -21,6 +23,19 @@ const ReviewProductScreen = (props: Props) => {
   const route = props.route;
   const commentData = route.params ? route.params.commentProductData : undefined;
   const productName = route.params ? route.params.productName : undefined;
+
+  const {user} = useAuth();
+  const [cartData, setCartData] = useState<CartModel[]>([]);
+  const cartService = new CartService();
+
+  useEffect(() => {
+    featchCart();
+  }, []);
+
+  const featchCart = async () => {
+    const resultCart = await cartService.fetchCart(user?.id!);
+    setCartData(resultCart.data);
+  };
 
   // { phân sang phần comment
   const [page, setPage] = useState(1);
@@ -140,7 +155,7 @@ const ReviewProductScreen = (props: Props) => {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#FBEFE5'}}>
-      <BaseHeader title={'Đánh giá'} onCartPress={handleCartPress} onBackPress={handleBackPress} />
+      <BaseHeader title={'Đánh giá'} onCartPress={handleCartPress} onBackPress={handleBackPress} data={cartData}/>
 
       {renderNoDataMessage()}
 

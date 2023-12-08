@@ -483,7 +483,7 @@ const DetailsScreen = (props: Props) => {
   const [selectedColorConfigId, setSelectedColorConfigId] = useState(0);
   const [hasColorId, setHasColorId] = useState<boolean>(false);
   const [hasColorConfigId, setHasColorConfigId] = useState<boolean>(false);
-  const [isRenderColorConfigId, setIsRenderColorConfigId] = useState<boolean>(false);
+  const [isRenderColorConfigId, setIsRenderColorConfigId] = useState<boolean>(true);
 
   const handleAddToCart = async () => {
     try {
@@ -556,7 +556,7 @@ const DetailsScreen = (props: Props) => {
     setHasColorId(false);
     setHasColorConfigId(false);
     setIsBtnAddToCart(false);
-    setIsRenderColorConfigId(false);
+    setIsRenderColorConfigId(true);
   };
 
   useEffect(() => {
