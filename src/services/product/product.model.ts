@@ -41,7 +41,7 @@ export interface ProductDetailModel {
     },
   ];
   colorProducts: [
-    {
+    Array<{
       id: number;
       image: string;
       colorId: number;
@@ -63,7 +63,7 @@ export interface ProductDetailModel {
           };
         },
       ];
-    },
+    }>,
   ];
   createdAt: Date; // Sửa kiểu dữ liệu thành Date
   updatedAt: Date; // Sửa kiểu dữ liệu thành Date

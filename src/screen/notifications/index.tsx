@@ -110,38 +110,40 @@ const NotificationScreen = (props: Props) => {
 
       <ScrollView
         indicatorStyle="black"
-        showsVerticalScrollIndicator={false}
+        showsVerticalScrollIndicator={true}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         {renderNoDataMessage()}
         {data.length > 0 && (
-          <View style={{flex: 1,}}>
+          <View style={{flex: 1}}>
             <FlatList
               data={data}
               // keyExtractor={(item) => item.id}
+              horizontal={false}
               showsVerticalScrollIndicator={false}
               renderItem={({item, index}) => (
-                <>
+                <View>
                   <TouchableScale
-                  key={index}
-                  onPress={() => console.log('click---', item.id)}
-                  activeScale={1}
-                  friction={9}
-                  tension={100}
-                  style={{height: vs(125), justifyContent: 'center', alignItems: 'center'}}
-                  >
-                  <View style={styles.viewItemNotification}>
-                    <View style={{flex: 2}}>
-                      {/* {item.image ? <Image source={{uri: item.image}} style={styles.imgNotification} /> : <Text>No Image</Text>} */}
-                      {/* {item.image ? <Image source={{uri: item.title}} style={styles.imgNotification} /> : <Image source={require('../../assets/images/demo.jpg')} style={styles.imgNotification} />} */}
-                      <Image source={require('../../assets/images/demo.jpg')} style={styles.imgNotification} />
-                    </View>
+                    key={index}
+                    onPress={() => console.log('click---', data)}
+                    activeScale={1}
+                    friction={9}
+                    tension={100}
+                    style={{height: vs(125), justifyContent: 'center', alignItems: 'center'}}>
+                    <View style={styles.viewItemNotification}>
+                      <View style={{flex: 2}}>
+                        {/* {item.image ? <Image source={{uri: item.image}} style={styles.imgNotification} /> : <Text>No Image</Text>} */}
+                        {/* {item.image ? <Image source={{uri: item.title}} style={styles.imgNotification} /> : <Image source={require('../../assets/images/demo.jpg')} style={styles.imgNotification} />} */}
+                        <Image source={require('../../assets/images/demo.jpg')} style={styles.imgNotification} />
+                      </View>
 
-                    <View style={styles.viewTextNotification}>
-                      <Text numberOfLines={4} style={styles.textContentNotification}>{item?.content}</Text>
+                      <View style={styles.viewTextNotification}>
+                        <Text numberOfLines={4} style={styles.textContentNotification}>
+                          {item?.content}
+                        </Text>
+                      </View>
                     </View>
-                  </View>
-                </TouchableScale>
-                </>
+                  </TouchableScale>
+                </View>
               )}
             />
           </View>
