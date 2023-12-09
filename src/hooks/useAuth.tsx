@@ -20,13 +20,13 @@ export function useAuth() {
       //@ts-ignore
       dispath(logInAction(user.data));
     
-      resetStack(APP_NAVIGATION.ROOT);
+      // resetStack(APP_NAVIGATION.ROOT);
       
       return true;
     } catch (error) {
-      resetStack(APP_NAVIGATION.ROOT);
+      // resetStack(APP_NAVIGATION.ROOT);
       toast.showThowError(error);
-      return false;
+      return true;
     }
   }, []);
 
