@@ -46,9 +46,8 @@ const GuestNavigationComponent = () => {
 
   const handleFetchProfile = async () => {
     const status = await fetchProfile(true);
-    if (!status) {
-      handleOnLoadingScreen();
-    }
+
+    handleOnLoadingScreen();
   };
 
   const handleOnLoadingScreen = () => {
