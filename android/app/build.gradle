@@ -107,6 +107,7 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    implementation fileTree(dir: 'D:\\LapTrinhDaNenTang\\XiaomiMD28_FE\\android\\zpdk-release-28052021', include: ['*.aar', '*.jar'], exclude: [])
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
     debugImplementation("com.facebook.flipper:flipper-network-plugin:${FLIPPER_VERSION}") {

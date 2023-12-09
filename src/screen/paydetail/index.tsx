@@ -115,8 +115,8 @@ const PayDetailScreen = (props: Props) => {
     }
   };
   const payVNPay = async() => {
-    onPay();
-    navigateToPage(APP_NAVIGATION.PAY, {sumPay});
+    // onPay();
+    navigateToPage(APP_NAVIGATION.PAY,);
   };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white', flexDirection: 'column'}}>
