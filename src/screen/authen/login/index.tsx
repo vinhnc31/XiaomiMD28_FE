@@ -77,7 +77,7 @@ const LogInComponent = (props: Props) => {
         resetStack(APP_NAVIGATION.ROOT);
         setTimeout(() => {
           //@ts-ignore
-          navigateToPage(props.route?.params?.name_screen,props.route?.params.param);
+          navigateToPage(props.route?.params?.name_screen, props.route?.params.param);
         }, 1200);
       }
       toast.showSuccess({messageText: 'Đăng nhập thành công'});
@@ -100,7 +100,8 @@ const LogInComponent = (props: Props) => {
       const userInfo = await GoogleSignin.signIn();
       setLoading(true);
       const sv = new AccountService();
-      const res = await sv.loginGoogle(userInfo.idToken!);
+
+      const res = await sv.loginGoogle(userInfo.idToken!, fcmToken);
       console.log('res: ', res);
       // @ts-ignore
       await dispatch(logInAction(res.data)).unwrap();
