@@ -1,4 +1,4 @@
-import {RouteProp, useNavigation} from '@react-navigation/native';
+import {RouteProp, useFocusEffect, useNavigation} from '@react-navigation/native';
 import styles from './styles';
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {MenuStackParam} from '@src/navigations/AppNavigation/stackParam';
@@ -103,7 +103,11 @@ const HomeScreen = (props: Props) => {
   const goToDetailProducts = (id: number) => {
     navigateToPage(APP_NAVIGATION.DETAILSPRODUCT, {productId: id});
   };
-
+  useFocusEffect(
+    React.useCallback(() => {
+      featchCart();
+    }, [])
+  );
   const featchCart = async () => {
     const resultCart = await cartService.fetchCart(user?.id!);
     setData(resultCart.data);
