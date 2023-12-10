@@ -40,6 +40,7 @@ interface Props {
 }
 
 const DetailsScreen = (props: Props) => {
+  const {user} = useAuth();
   const [productIdData, setProductIdData] = useState<ProductDetailModel[]>([]);
   const [commentProductIdData, setCommentProductIdData] = useState<CommentProductId[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -54,7 +55,6 @@ const DetailsScreen = (props: Props) => {
 
   const route = props.route;
   const productId = route.params ? route.params.productId : undefined;
-  const {user} = useAuth();
   const AccountId = user?.id || '';
   const [favoriteId, setFavoriteId] = useState(0);
 
@@ -465,7 +465,6 @@ const DetailsScreen = (props: Props) => {
   const [selectedColorConfigId, setSelectedColorConfigId] = useState(0);
   
   // view
-  const [isBtnAddToCart, setIsBtnAddToCart] = useState<boolean>(false);
   const [isRenderColorConfigId, setIsRenderColorConfigId] = useState<boolean>(true);
 
   const handleColorModalPress = item => {
@@ -498,19 +497,14 @@ const DetailsScreen = (props: Props) => {
       //bg
       setSelectedColorConfigId(configItem.configId || 0);
       // logic view
-      setIsBtnAddToCart(true);
     }
   };
 
   const handleDecrease = () => {
-    if (isBtnAddToCart) {
       setSelectedCountModal(prevCount => Math.max(prevCount - 1, 1));
-    }
   };
   const handleIncrease = () => {
-    if (isBtnAddToCart) {
       setSelectedCountModal(prevCount => Math.min(prevCount + 1, selectedQuantityModal || 1));
-    }
   };
   const handleAddToCart = async () => {
       try {
@@ -557,7 +551,6 @@ const DetailsScreen = (props: Props) => {
     setSelectedCountModal(1);
     setSelectedColorId(0);
     setSelectedColorConfigId(0);
-    setIsBtnAddToCart(false);
     setIsRenderColorConfigId(true);
   };
 
@@ -629,7 +622,14 @@ const DetailsScreen = (props: Props) => {
                             // Disable the button based on the loading state
                             onPress={() => {
                               console.log('code logic button tymm <3');
-                              handleFavoritePress();
+                              if (user) {
+                                handleFavoritePress();
+                              } else {
+                                navigateToPage(GUEST_NAVIGATION.LOGIN, {
+                                  name_screen: APP_NAVIGATION.DETAILSPRODUCT,
+                                  param: props.route?.params,
+                                });
+                              }
                             }}>
                             <Image
                               style={styles.imgFavourite}
@@ -799,10 +799,16 @@ const DetailsScreen = (props: Props) => {
               <View style={styles.BuyandAddtoCartContainer}>
                 <TouchableOpacity
                   onPress={() => {
-                    console.log('them vao gio hang');
-                    setModalVisible(true);
-                    setModalAction('addToCart');
-                    setIsBtnAddToCart(colorProducts.length > 0 ? false : true);
+                    if (user) {
+                      console.log('them vao gio hang');
+                      setModalVisible(true);
+                      setModalAction('addToCart');
+                    } else {
+                      navigateToPage(GUEST_NAVIGATION.LOGIN, {
+                        name_screen: APP_NAVIGATION.DETAILSPRODUCT,
+                        param: props.route?.params,
+                      });
+                    }
                   }}
                   style={styles.leftContainerCart}
                   activeOpacity={0.8}>
@@ -814,10 +820,16 @@ const DetailsScreen = (props: Props) => {
 
                 <TouchableOpacity
                   onPress={() => {
-                    console.log('mua ngay');
-                    setModalVisible(true);
-                    setModalAction('buyNow');
-                    setIsBtnAddToCart(colorProducts.length > 0 ? false : true);
+                    if (user) {
+                      console.log('mua ngay');
+                      setModalVisible(true);
+                      setModalAction('buyNow');
+                    } else {
+                      navigateToPage(GUEST_NAVIGATION.LOGIN, {
+                        name_screen: APP_NAVIGATION.DETAILSPRODUCT,
+                        param: props.route?.params,
+                      });
+                    }
                   }}
                   style={styles.rightContainerBuy}
                   activeOpacity={0.8}>
@@ -950,7 +962,6 @@ const DetailsScreen = (props: Props) => {
                                 : styles.modalBtnAdd
                           }
                           onPress={() => {
-                            setIsBtnAddToCart(colorProducts.length > 0 ? false : true);
                             if (modalAction === 'addToCart') {
                               handleAddToCart();
                             } else if (modalAction === 'buyNow') {

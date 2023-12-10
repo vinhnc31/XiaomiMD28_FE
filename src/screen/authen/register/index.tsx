@@ -6,7 +6,7 @@ import {GUEST_NAVIGATION} from '@src/navigations/routes';
 import {navigateToPage, resetStack} from '@src/navigations/services';
 import R from '@src/res';
 import AccountService from '@src/services/account';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {ActivityIndicator, Image, Keyboard, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import styles from './styles';
@@ -25,6 +25,8 @@ interface Props {
   route: RouteProp<GuestStackParam, GUEST_NAVIGATION.REGISTER>;
 }
 
+import messaging, {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
+
 const RegisterScreen = (props: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const toast = useToast();
@@ -35,6 +37,22 @@ const RegisterScreen = (props: Props) => {
 
   const goToLogin = () => {
     navigateToPage(GUEST_NAVIGATION.LOGIN);
+  };
+
+  const [fcmToken, setFcmToken] = useState<string>();
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId: '1023021056607-8ipdiimvi5c8rl7v8qbk4dhdimb2g80n.apps.googleusercontent.com',
+    });
+    onSubcribeNotify();
+  }, []);
+
+  const onSubcribeNotify = async () => {
+    const token = await messaging().getToken();
+    console.log('fcmToken: ', token);
+    if (!token) return;
+    setFcmToken(token);
   };
 
   const onRegister = async () => {
@@ -104,7 +122,8 @@ const RegisterScreen = (props: Props) => {
       const userInfo = await GoogleSignin.signIn();
       setLoading(true);
       const sv = new AccountService();
-      const res = await sv.loginGoogle(userInfo.idToken!);
+      const res = await sv.loginGoogle(userInfo.idToken!, fcmToken);
+
       // @ts-ignore
       await dispatch(logInAction(res.data)).unwrap();
       toast.showSuccess({messageText: 'Đăng nhập thành công'});

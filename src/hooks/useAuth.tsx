@@ -3,6 +3,8 @@ import {useAppDispatch, useAppSelector} from '@src/stores';
 import {logInAction} from '@src/stores/auth/auth.actions';
 import {useCallback} from 'react';
 import useToast from './useToast';
+import { resetStack } from '@src/navigations/services';
+import { APP_NAVIGATION } from '@src/navigations/routes';
 
 export function useAuth() {
   const authState = useAppSelector(state => state.authSlice);
@@ -17,13 +19,14 @@ export function useAuth() {
       console.log('user: ', user.data);
       //@ts-ignore
       dispath(logInAction(user.data));
-      // if (redirect) {
-      //   resetStack(APP_NAVIGATION.ROOT);
-      // }
+    
+      // resetStack(APP_NAVIGATION.ROOT);
+      
       return true;
     } catch (error) {
+      // resetStack(APP_NAVIGATION.ROOT);
       toast.showThowError(error);
-      return false;
+      return true;
     }
   }, []);
 
