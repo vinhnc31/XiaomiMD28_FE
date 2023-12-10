@@ -61,6 +61,10 @@ const endpoint = {
   evaluate: {
     default: '/api/comment',
     getEvaluate: '/api/comment',
+  },
+  notification: {
+    default: '/api/notification',
+    getNotification: '/api/notification',
   }
 };
 

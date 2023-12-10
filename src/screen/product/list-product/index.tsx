@@ -21,6 +21,9 @@ import BaseInput from '@src/containers/components/Base/BaseInput';
 import { navigateToPage, goBack } from '@src/navigations/services';
 import { BaseLoading } from '@src/containers/components/Base/BaseLoading';
 import { Dropdown } from 'react-native-element-dropdown';
+import {CartModel} from '@src/services/cart/cart.model';
+import CartService from '@src/services/cart';
+import {useAuth} from '@src/hooks/useAuth';
 
 interface Props {
   navigation: NativeStackNavigationProp<GuestStackParam>;
@@ -53,6 +56,19 @@ const ProductListScreen = (props: Props) => {
 
   const [valueConfiguration, setValueConfiguration] = useState(null);
   const [configuration, setConfiguration] = useState<ConfigurationModel[]>([]);
+
+  const {user} = useAuth();
+  const [cartData, setCartData] = useState<CartModel[]>([]);
+  const cartService = new CartService();
+  
+  useEffect(() => {
+    featchCart();
+  }, []);
+
+  const featchCart = async () => {
+    const resultCart = await cartService.fetchCart(user?.id!);
+    setCartData(resultCart.data);
+  };
   // Hàm để lấy sản phẩm dựa trên giá trị cấu hình
   const getProductByConfig = async () => {
     try {
@@ -251,6 +267,7 @@ const ProductListScreen = (props: Props) => {
         title={route.params!.name}
         onCartPress={handleCartPress}
         onBackPress={handleBackPress}
+        data={cartData}
       // onFilterPress={toggleModal}
       />
 
