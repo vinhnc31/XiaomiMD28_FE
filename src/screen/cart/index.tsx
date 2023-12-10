@@ -158,7 +158,7 @@ const CartScreen = (props: Props) => {
   };
   const handleCheckout = () => {
     const selectedItemsData = getSelectedItems();
-    navigateToPage(APP_NAVIGATION.PAYDETAIL,selectedItemsData)
+    navigateToPage(APP_NAVIGATION.PAYDETAIL,{selectedItemsData})
   };
   return (
     <SafeAreaView style={{flex: 1, flexDirection: 'column'}}>

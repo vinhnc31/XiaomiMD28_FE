@@ -20,7 +20,6 @@ import {
   Easing,
 } from 'react-native';
 import {BaseButton} from '@src/containers/components/Base';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {BaseLoading} from '@src/containers/components/Base/BaseLoading';
 import Swiper from 'react-native-swiper';
 import {navigateToPage} from '@src/navigations/services';
@@ -52,8 +51,8 @@ const HomeScreen = (props: Props) => {
 
   const [showAll, setShowAll] = useState(false);
   const displayedData = showAll ? dataProduct : dataProduct.slice(0, 3);
-
-  const displayedDataSuggest = showAll ? dataProduct : dataProduct.slice(0, 10);
+  const [loadingMoreSuggest, setLoadingMoreSuggest] = useState(false);
+  const [displayedDataSuggestCount, setDisplayedDataSuggestCount] = useState(6);
 
   const [dataCategory, setDataCategory] = useState<CategoryModel[]>([]);
   const [showAllCategory, setShowAllCategory] = useState(false);
@@ -122,7 +121,16 @@ const HomeScreen = (props: Props) => {
       setError('err');
     }
   };
-
+  const loadMoreSuggestions = () => {
+    if (!loadingMoreSuggest) {
+      setLoadingMoreSuggest(true);
+      const newCount = displayedDataSuggestCount + 2;
+      setDisplayedDataSuggestCount(newCount);
+      const newData = dataProduct.slice(0, newCount);
+      setDataProduct(newData);
+      setLoadingMoreSuggest(false);
+    }
+  };
   const fetchDataProduct = async () => {
     try {
       const productService = new ProductService();
@@ -133,7 +141,6 @@ const HomeScreen = (props: Props) => {
       setError('err');
     }
   };
-
   //Gợi ý hôm nay
   function ListItemSuggest({item, index}: {item: ProductModel; index: number}) {
     return (
@@ -324,7 +331,9 @@ const HomeScreen = (props: Props) => {
             <View style={{width: '100%', paddingBottom: vs(30)}}>
               <Text style={[styles.titleText]}>Gợi ý hôm nay</Text>
               <FlatList
-                data={displayedDataSuggest}
+                onEndReached={loadMoreSuggestions}
+                onEndReachedThreshold={0.1}
+                data={displayedDataSuggestCount}
                 // keyExtractor={item => item.id.toString()}
                 columnWrapperStyle={{justifyContent: 'space-between'}}
                 numColumns={2}

@@ -81,7 +81,11 @@ const FavoriteScreen = (props: Props) => {
     const resultCart = await cartService.fetchCart(user?.id!);
     setCartData(resultCart.data);
   };
-
+  useFocusEffect(
+    React.useCallback(() => {
+      featchCart();
+    }, [])
+  );
   const fetchViewFavoriteData = async () => {
     try {
       setLoading(true);

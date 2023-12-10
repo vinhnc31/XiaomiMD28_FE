@@ -25,7 +25,7 @@ interface Props {
 const PayDetailScreen = (props: Props) => {
   const {user} = useAuth();
   const toast = useToast();
-  const data = props.route.params;
+  const data = props.route.params?.selectedItemsData;
   const [selectedVoucherData, setSelectedVoucherData] = useState();
   const [loading, setLoading] = useState<boolean>(false);
   const [value, setValue] = useState('1');
