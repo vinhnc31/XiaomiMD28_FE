@@ -160,8 +160,6 @@ export default StyleSheet.create({
   },
   // phan chọn màu
   flatListColorsContainer: {
-    flex: 1,
-    height: vs(40),
     marginHorizontal: hs(15),
     marginBottom: vs(18),
   },
@@ -391,7 +389,6 @@ export default StyleSheet.create({
   },
   modalView: {
     width: '100%',
-    height: '55%',
     flexDirection: 'column',
     backgroundColor: 'white',
     borderTopLeftRadius: ms(10),
@@ -412,10 +409,9 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    flex: 1,
   },
   productModalImage: {width: hs(80), height: vs(80), marginLeft: hs(10), marginTop: vs(20)},
-  productModalPriceQuantity: {flex: 1, marginLeft: hs(10), marginTop: vs(10), alignSelf: 'flex-end'},
+  productModalPriceQuantity: {flex: 1, marginLeft: hs(10), marginTop: vs(10), alignSelf: 'flex-end',},
   productModalPriceText: {
     marginTop: vs(5),
     color: '#F00',
@@ -452,11 +448,11 @@ export default StyleSheet.create({
   },
   // số lượng muốn thêm
   modalNumberProductContainer: {
-    flex: 0.5,
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: SCREEN_WIDTH - hs(25),
     marginLeft: hs(15),
+    marginVertical: vs(10),
     alignItems: 'center',
   },
   modalNumberProductTitle: {color: '#000', fontSize: ms(15), fontWeight: '400', fontFamily: 'LibreBaskerville-Bold'},
@@ -493,6 +489,16 @@ export default StyleSheet.create({
     width: SCREEN_WIDTH - hs(25),
     height: vs(55),
     backgroundColor: '#FF6900',
+    borderRadius: ms(10),
+    marginBottom: vs(8),
+    justifyContent: 'center',
+    alignSelf: 'center',
+  },
+  modalBtnAddFalse: {
+    marginTop: vs(12),
+    width: SCREEN_WIDTH - hs(25),
+    height: vs(55),
+    backgroundColor: '#D9D9D9',
     borderRadius: ms(10),
     marginBottom: vs(8),
     justifyContent: 'center',

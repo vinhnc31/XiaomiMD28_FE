@@ -57,7 +57,7 @@ const DetailsScreen = (props: Props) => {
   const productId = route.params ? route.params.productId : undefined;
   const AccountId = user?.id || '';
   const [favoriteId, setFavoriteId] = useState(0);
-  const [isBtnAddToCart, setIsBtnAddToCart] = useState<boolean>(false);
+
   const [noData, setNoData] = useState(false);
 
   // { phân sang phần comment
@@ -71,7 +71,9 @@ const DetailsScreen = (props: Props) => {
   };
 
   useEffect(() => {
+    
     const fetchData = async () => {
+      
       try {
         setLoading(true);
         await fetchDataProduct();
@@ -84,18 +86,22 @@ const DetailsScreen = (props: Props) => {
         setRefreshing(false);
       }
     };
-
+    
     fetchData();
+   
     // Gọi hàm checkIfProductIsFavorite ngay khi vào trang
     checkIfProductIsFavorite();
+    
   }, [productId, refreshing]);
 
   const fetchDataProduct = async () => {
     try {
       const productService = new ProductService();
       const result = await productService.getProductId(productId);
-
       setProductIdData(result.data);
+      seta(result.data.colorProducts)
+      await check32();
+      console.log('aaaaaa', Object.keys(result.data));
       if (result.data && Object.keys(result.data).length > 0) {
         // `result.data` không rỗng
         setNoData(false);
@@ -375,29 +381,49 @@ const DetailsScreen = (props: Props) => {
     });
   };
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalAction, setModalAction] = useState('');
+  // add du lieu hien thi
+  const [selectedImageModal, setSelectedImageModal] = useState('');
+  const [selectedPriceModal, setSelectedPriceModal] = useState(0);
+  const [selectedQuantityModal, setSelectedQuantityModal] = useState(0);
+  const [productColorIdModal, setProductColorIdModal] = useState(); // truyen ProductColorId nay
+  const [ProductColorConfigIdModal, setProductColorConfigIdModal] = useState(); // truyen ProductColorConfigId nay
+  const [selectedCountModal, setSelectedCountModal] = useState(1); // truyen
+  const [config, setConfig] = useState(false);
   const {colorProducts} = productIdData;
+  // const [a,seta] = useState([]);
+  const getColorConfigs = colorProducts => {
+    // Check if colorProducts is an array and has at least one element
+    if (Array.isArray(colorProducts) && colorProducts.length > 0) {
+      // Initialize an array to store all colorConfigs
+      const allColorConfigs = [];
 
+      // Loop through each product in colorProducts
+      colorProducts.forEach(product => {
+        // Check if the product has the "colorConfigs" property
+        if (product.hasOwnProperty('colorConfigs')) {
+          // Concatenate the colorConfigs array to the allColorConfigs array
+          allColorConfigs.push(...product.colorConfigs);
+        } else {
+          console.error("Missing 'colorConfigs' property in a product data.");
+        }
+      });
+
+      return allColorConfigs;
+    } else {
+      console.error("Invalid or empty 'colorProducts' array.");
+    }
+
+    // Return an empty array if the extraction fails
+    return [];
+  };
   const renderItemColorModal = ({item, index}) => {
     return (
       <View key={item.id} style={styles.btnColorsContainer}>
         <TouchableOpacity
           activeOpacity={0.8}
-          onPress={() => {
-            setProductColorIdModal(item?.id); // add
-
-            setSelectedImageModal(item?.image); //view
-
-            setSelectedColorId(item?.id || null); //btn
-
-            setIsBtnAddToCart(false);
-            setIsCountAdd(false);
-            setSelectedColorConfigId(0);
-            setIsRenderColorConfigId(item?.colorConfigs.length === 0 ? true : false);
-            const has = selectedColorId === item.id ? false : true;
-            setHasColorId(has);
-            setHasColorConfigId(item?.colorConfigs.length === 0 ? false : true);
-            setProductColorConfigIdModal(item?.colorConfigs.length === 0 ? '' : ProductColorConfigIdModal);
-          }}
+          onPress={() => handleColorModalPress(item)}
           style={[
             styles.btnColors,
             {
@@ -420,19 +446,7 @@ const DetailsScreen = (props: Props) => {
           <TouchableOpacity
             key={configItem.id}
             activeOpacity={0.8}
-            onPress={() => {
-              setProductColorConfigIdModal(configItem.configId);
-              setProductColorIdModal(configItem.ProductColorId);
-
-              setSelectedPriceModal(configItem.price);
-              setSelectedQuantityModal(configItem.quantity || 0);
-              setSelectedColorConfigId(configItem.configId || null);
-
-              const has = selectedColorConfigId === configItem.configId ? false : true;
-              setIsBtnAddToCart(true);
-              setHasColorConfigId(has);
-              setIsCountAdd(true);
-            }}
+            onPress={() => handleConfigModalPress(configItem)}
             style={[
               styles.btnColors,
               {
@@ -445,78 +459,73 @@ const DetailsScreen = (props: Props) => {
       </View>
     );
   };
-
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalAction, setModalAction] = useState('');
-  // get data
-
-  // add du lieu hien thi
-  const [selectedImageModal, setSelectedImageModal] = useState('');
-  const [selectedPriceModal, setSelectedPriceModal] = useState(0);
-  const [selectedQuantityModal, setSelectedQuantityModal] = useState(0);
-
-  const [productColorIdModal, setProductColorIdModal] = useState(''); // truyen ProductColorId nay
-  const [ProductColorConfigIdModal, setProductColorConfigIdModal] = useState(''); // truyen ProductColorConfigId nay
-  const [selectedCountModal, setSelectedCountModal] = useState(1); // truyen
-
-  const handleDecrease = () => {
-    // Giảm số lượng, nhưng không thể nhỏ hơn 1
-    if (hasColorId && hasColorConfigId && isCountAdd) {
-      setSelectedCountModal(prevCount => Math.max(prevCount - 1, 1));
-    }
-  };
-  const handleIncrease = () => {
-    // Tăng số lượng
-    if (hasColorId && hasColorConfigId && isCountAdd) {
-      setSelectedCountModal(prevCount => Math.min(prevCount + 1, selectedQuantityModal || 1));
-    }
-  };
-
+  //logic backroud
   const [selectedColorId, setSelectedColorId] = useState(0);
+ 
   const [selectedColorConfigId, setSelectedColorConfigId] = useState(0);
-  const [hasColorId, setHasColorId] = useState<boolean>(false);
-  const [hasColorConfigId, setHasColorConfigId] = useState<boolean>(false);
-  const [isCountAdd, setIsCountAdd] = useState<boolean>(false);
+  
+  // view
   const [isRenderColorConfigId, setIsRenderColorConfigId] = useState<boolean>(true);
 
+  const handleColorModalPress = item => {
+    console.log(item.colorConfigs.length)
+    if(item.colorConfigs.length===0){
+      setConfig(true)
+    }else{
+      setConfig(false)
+    }
+    // Handle color modal press logic
+    setProductColorIdModal(item?.id); // add
+    setSelectedImageModal(item?.image); //view
+    setSelectedColorId(item?.id || null); //btn
+    //bg
+    setSelectedColorConfigId(0);
+    //logic set data
+    setProductColorConfigIdModal(item?.colorConfigs.length === 0 ? '' : ProductColorConfigIdModal);
+    //logic view
+    setIsRenderColorConfigId(item?.colorConfigs.length === 0 ? true : false);
+  };
+
+  const handleConfigModalPress = configItem => {
+    {
+      //add
+      setProductColorConfigIdModal(configItem.configId);
+      setProductColorIdModal(configItem.ProductColorId);
+      //view
+      setSelectedPriceModal(configItem.price || 0);
+      setSelectedQuantityModal(configItem.quantity || 0);
+      //bg
+      setSelectedColorConfigId(configItem.configId || 0);
+      // logic view
+    }
+  };
+
+  const handleDecrease = () => {
+      setSelectedCountModal(prevCount => Math.max(prevCount - 1, 1));
+  };
+  const handleIncrease = () => {
+      setSelectedCountModal(prevCount => Math.min(prevCount + 1, selectedQuantityModal || 1));
+  };
   const handleAddToCart = async () => {
-    if (hasColorId && hasColorConfigId && isCountAdd) {
       try {
-        if (selectedCountModal && productColorIdModal && ProductColorConfigIdModal) {
-          const cartService = new CartService();
-
-          const addCartData = {
-            productId: productIdData?.id,
-            AccountId: AccountId,
-            quantity: selectedCountModal,
-            ProductColorId: productColorIdModal,
-            ProductColorConfigId: ProductColorConfigIdModal,
-          };
-
-          const result = await cartService.postCart(addCartData);
-
-          console.log('result---', result);
-
-          // Hiển thị toast khi thành công
-          Toast.show({
-            type: 'success',
-            position: 'top',
-            text1: 'Thành công',
-            text2: 'Đã thêm vào giỏ hàng',
-          });
-        } else {
-          // Handle the case where one or more of the required variables are missing
-          Toast.show({
-            type: 'error',
-            position: 'top',
-            text1: 'Thông báo',
-            text2: 'Vui lòng chọn đầy đủ thông tin trước khi thêm vào giỏ hàng !',
-          });
-        }
+        const cartService = new CartService();
+        const addCartData = {
+          productId: productIdData?.id,
+          AccountId: AccountId,
+          quantity: selectedCountModal,
+          ProductColorId: productColorIdModal ?? null,
+          ProductColorConfigId: ProductColorConfigIdModal ?? null,
+        };
+        console.log('addCartData', addCartData);
+        const result = await cartService.postCart(addCartData);
+        Toast.show({
+          type: 'success',
+          position: 'top',
+          text1: 'Thành công',
+          text2: 'Đã thêm vào giỏ hàng',
+        });
       } catch (error) {
         console.log('error: ', error);
-
-        // Hiển thị toast khi có lỗi
         Toast.show({
           type: 'error',
           position: 'top',
@@ -524,9 +533,7 @@ const DetailsScreen = (props: Props) => {
           text2: 'Không thể thêm vào giỏ hàng !',
         });
       }
-    }
   };
-
   const handleBuyNow = () => {
     console.log('mua ngay: ');
   };
@@ -535,32 +542,23 @@ const DetailsScreen = (props: Props) => {
     setModalVisible(!modalVisible);
     setModalVisible(false);
     setModalAction('');
-    if (productIdData?.images && productIdData?.price && getQuantitys(productIdData)) {
+    setSelectedColorId(0);
+    if (productIdData?.images && productIdData?.price) {
       setSelectedImageModal(productIdData?.images || '');
       setSelectedPriceModal(productIdData?.price || 0);
       setSelectedQuantityModal(getQuantitys(productIdData) || 0);
     }
-    setProductColorIdModal('');
-    setProductColorConfigIdModal('');
     setSelectedCountModal(1);
     setSelectedColorId(0);
     setSelectedColorConfigId(0);
-    setHasColorId(false);
-    setHasColorConfigId(false);
-    setIsBtnAddToCart(false);
     setIsRenderColorConfigId(true);
-    setIsCountAdd(false);
   };
 
   useEffect(() => {
-    // Kiểm tra giá trị trước khi gán vào state
-    if (productIdData?.images && productIdData?.price && getQuantitys(productIdData)) {
-      setSelectedImageModal(productIdData?.images || '');
-      setSelectedPriceModal(productIdData?.price || 0);
-      setSelectedQuantityModal(getQuantitys(productIdData) || 0);
-    }
+    setSelectedImageModal(productIdData?.images || '');
+    setSelectedPriceModal(productIdData?.price || 0);
+    setSelectedQuantityModal(getQuantitys(productIdData) || 0);
   }, [productIdData]);
-
   return (
     <SafeAreaView style={styles.mainContainer}>
       <View style={styles.backContainer}>
@@ -661,16 +659,17 @@ const DetailsScreen = (props: Props) => {
                           <Text style={styles.textSellNumber}>123</Text> */}
                         </View>
                       </View>
-
-                      <View style={styles.flatListColorsContainer}>
-                        <FlatList
-                          horizontal
-                          showsHorizontalScrollIndicator={false}
-                          data={dataSlider(productIdData) || []}
-                          keyExtractor={item => item.id.toString()}
-                          renderItem={renderItemNameColors}
-                        />
-                      </View>
+                      {dataSlider(productIdData) ? (
+                        <View style={styles.flatListColorsContainer}>
+                          <FlatList
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            data={dataSlider(productIdData) || []}
+                            keyExtractor={item => item.id.toString()}
+                            renderItem={renderItemNameColors}
+                          />
+                        </View>
+                      ) : null}
                     </View>
 
                     <View style={styles.mainDescription}>
@@ -851,10 +850,14 @@ const DetailsScreen = (props: Props) => {
                     <TouchableWithoutFeedback>
                       <View style={styles.modalView}>
                         <View style={styles.productModal}>
-                          <Image
-                            source={{uri: selectedImageModal} || require('../../../assets/images/noimage.jpg')}
-                            style={styles.productModalImage}
-                          />
+                          {selectedImageModal ? (
+                            <Image source={{uri: selectedImageModal}} style={styles.productModalImage} />
+                          ) : (
+                            <Image
+                              source={require('../../../assets/images/noimage.jpg')}
+                              style={styles.productModalImage}
+                            />
+                          )}
                           <View style={styles.productModalPriceQuantity}>
                             <Text style={styles.productModalPriceText}>{formatPrice(selectedPriceModal || 0)}</Text>
                             <Text style={styles.productModalQuantityText}>
@@ -869,36 +872,47 @@ const DetailsScreen = (props: Props) => {
                             />
                           </TouchableOpacity>
                         </View>
-                        <Text style={[styles.borderBottom]}></Text>
 
                         {/* Màu */}
-                        <View style={styles.modalProductColorContainer}>
-                          <Text style={styles.modalProductColorTitle}>Màu</Text>
-                          <View style={{}}>
-                            <FlatList
-                              horizontal
-                              showsHorizontalScrollIndicator={false}
-                              data={colorProducts || []}
-                              keyExtractor={item => item.id.toString()}
-                              renderItem={renderItemColorModal}
-                            />
-                          </View>
-                        </View>
+                        {colorProducts.length > 0 ? (
+                          <>
+                            <Text style={[styles.borderBottom]}></Text>
+                            <View style={styles.modalProductColorContainer}>
+                              <Text style={styles.modalProductColorTitle}>Màu</Text>
+                              <View style={{}}>
+                                <FlatList
+                                  horizontal
+                                  showsHorizontalScrollIndicator={false}
+                                  data={colorProducts || []}
+                                  keyExtractor={item => item.id.toString()}
+                                  renderItem={renderItemColorModal}
+                                />
+                              </View>
+                            </View>
+                          </>
+                        ) : (
+                          <View></View>
+                        )}
 
                         {/* RAM */}
 
                         <View style={styles.modalProductConfigContainer}>
-                          {isRenderColorConfigId ? <></> : <Text style={styles.modalProductConfigTitle}>Ram</Text>}
-
-                          <View style={{}}>
-                            <FlatList
-                              horizontal
-                              showsHorizontalScrollIndicator={false}
-                              data={colorProducts || []}
-                              keyExtractor={item => item.id.toString()}
-                              renderItem={renderItemColorConfigModal}
-                            />
-                          </View>
+                          {isRenderColorConfigId ? (
+                            <View></View>
+                          ) : (
+                            <>
+                              <Text style={styles.modalProductConfigTitle}>Ram</Text>
+                              <View style={{}}>
+                                <FlatList
+                                  horizontal
+                                  showsHorizontalScrollIndicator={false}
+                                  data={colorProducts || []}
+                                  keyExtractor={item => item.id.toString()}
+                                  renderItem={renderItemColorConfigModal}
+                                />
+                              </View>
+                            </>
+                          )}
                         </View>
                         <Text style={styles.borderBottom}></Text>
 
@@ -932,25 +946,28 @@ const DetailsScreen = (props: Props) => {
                         <Text style={[styles.borderBottom, {flex: 0.01}]}></Text>
 
                         <TouchableOpacity
+                          disabled={
+                            dataSlider(productIdData).length == 0
+                              ? false
+                              :config ? false : selectedColorId == 0 || selectedColorConfigId == 0
+                                ? true
+                                : false
+                          }
                           activeOpacity={0.8}
-                          style={styles.modalBtnAdd}
+                          style={
+                            dataSlider(productIdData).length == 0
+                              ? styles.modalBtnAdd
+                              :  config ?styles.modalBtnAdd : selectedColorConfigId == 0 ||selectedColorId == 0
+                                ? styles.modalBtnAddFalse
+                                : styles.modalBtnAdd
+                          }
                           onPress={() => {
-                            if (isBtnAddToCart) {
-                              if (modalAction === 'addToCart') {
-                                handleAddToCart();
-                              } else if (modalAction === 'buyNow') {
-                                handleBuyNow();
-                              }
-                              setModalVisible(!modalVisible);
-                            } else {
-                              Toast.show({
-                                type: 'error',
-                                position: 'top',
-                                text1: 'Thông báo',
-                                text2: 'Vui lòng chọn đầy đủ thông tin !',
-                                visibilityTime: 1500,
-                              });
+                            if (modalAction === 'addToCart') {
+                              handleAddToCart();
+                            } else if (modalAction === 'buyNow') {
+                              handleBuyNow();
                             }
+                            setModalVisible(!modalVisible);
                           }}>
                           <Text style={styles.modalBtnText}>
                             {modalAction === 'addToCart' ? 'Thêm vào giỏ hàng' : 'Mua ngay'}
