@@ -2,19 +2,38 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {MENU_NAVIGATION} from '@src/navigations/routes';
 import {Colors} from '@src/styles/colors';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {BaseIcon} from '@src/containers/components/Base/BaseIcon';
 import {MenuStackParam} from './stackParam';
 import styles from './styles';
-import {Text} from 'react-native';
+import {Text, View} from 'react-native';
 import HomeScreen from '@src/screen/home';
 import FavoriteScreen from '@src/screen/favorite';
 import NotificationsScreen from '@src/screen/notifications';
 import AccountScreen from '@src/screen/account';
+import {NotificationModel} from '@src/services/notification/notification.model';
+import {useAuth} from '@src/hooks/useAuth';
+import NotificationService from '@src/services/notification';
+import {ms, vs, hs} from '@src/styles/scalingUtils';
 const Tab = createBottomTabNavigator<MenuStackParam>();
 import CategoryScreen from '@src/screen/category';
 
 const RootScreen = () => {
+  const [notificationData, setNotificationData] = useState<NotificationModel[]>([]);
+  const {user} = useAuth();
+  useEffect(() => {
+    fetchDataNotification();
+  }, []);
+  const fetchDataNotification = async () => {
+    try {
+      const notificationService = new NotificationService();
+      const result = await notificationService.getNotification(user.id);
+      // console.log(result.data);
+      setNotificationData(result.data);
+    } catch (error) {
+      console.log('error: ', error);
+    }
+  };
   return (
     <Tab.Navigator
       initialRouteName={MENU_NAVIGATION.HOME}
@@ -50,7 +69,30 @@ const RootScreen = () => {
           tabBarLabel: ({focused}) => (
             <Text style={focused ? styles.tabBarActiveLabelStyle : styles.tabBarLabelStyle}>Thông báo</Text>
           ),
-          tabBarIcon: ({color, size}) => <BaseIcon name="notifications" color={color} size={size} />,
+          tabBarIcon: ({color, size}) => (
+            <>
+              <BaseIcon name="notifications" color={color} size={size} />
+              {notificationData?.length == 0 ? (
+                <></>
+              ) : (
+                <View
+                  style={{
+                    height: hs(16),
+                    width: hs(16),
+                    backgroundColor: 'red',
+                    position: 'absolute',
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    right: hs(30),
+                    top: 0,
+                    borderRadius: ms(20),
+                    alignItems: 'center',
+                  }}>
+                  <Text style={{color: 'white'}}>{notificationData?.length || 0}</Text>
+                </View>
+              )}
+            </>
+          ),
         }}
       />
       <Tab.Screen

@@ -91,15 +91,10 @@ const FavoriteScreen = (props: Props) => {
   const fetchViewFavoriteData = async () => {
     try {
       setLoading(true);
-
       const favoriteService = new FavoriteService();
       const result = await favoriteService.fetchFavorite(accountId);
       setDataFavorites(result.data);
-
-      // Instantiate ProductService
       const productService = new ProductService();
-
-      // Fetch product details using Promise.all
       const productDetails = await Promise.all(
         result.data.map(async favorite => {
           try {
@@ -112,17 +107,10 @@ const FavoriteScreen = (props: Props) => {
           }
         }),
       );
-
-      // lọc các favorite có productId là null;
       const favoritesWithNullProductId = result.data.filter(favorite => favorite.productId === null);
-      console.log('favoritesWithNullProductId:', favoritesWithNullProductId);
       setDataFavoriteProductNull(favoritesWithNullProductId);
-
-      // Filter out null values (failed product details fetch)
       const filteredProductDetails = productDetails.filter(product => product !== null);
-      console.log('filteredProductDetails------------------', filteredProductDetails.length);
       setDataProductId(filteredProductDetails);
-
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -137,7 +125,6 @@ const FavoriteScreen = (props: Props) => {
 
   const getQuantitiys = (productData: any): number => {
     let totalQuantity = 0;
-
     if (productData && productData.colorProducts && Array.isArray(productData.colorProducts)) {
       productData.colorProducts.forEach((colorProduct: any) => {
         if (colorProduct && colorProduct.colorConfigs && Array.isArray(colorProduct.colorConfigs)) {
