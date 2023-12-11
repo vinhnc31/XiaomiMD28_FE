@@ -116,7 +116,7 @@ const OrderDetailScreen = (props: Props) => {
           <View style={styles.container}>
             <Text style={styles.textAddress}>Tên người nhận: {data.Address['nameReceiver']}</Text>
             <Text style={styles.textAddress}>Số điện thoại: {data.Address['phoneReceiver']}</Text>
-            <Text style={styles.textAddress}>Ghi chú: {data.Address['note']}</Text>
+            {data.Address["note"] ?<Text style={styles.textAddress}>Ghi chú: {data.Address['note']}</Text>:null}
             <Text style={styles.textAddress}>Địa chỉ: {data.Address['address']}</Text>
           </View>
           <View style={{height: 10, width: '100%', backgroundColor: '#F1F1F1', marginTop: 10}} />
@@ -135,13 +135,13 @@ const OrderDetailScreen = (props: Props) => {
             renderItem={({item}) => (
               <View style={styles.viewItem}>
                 <View style={styles.item}>
-                  <Image source={{uri: item.productcolor['image']}} style={styles.image} resizeMode="stretch" />
+                  <Image source={{uri: item.productcolor ?item.productcolor['image']:item["Product"]["images"]}} style={styles.image} resizeMode="stretch" />
                   <View style={styles.viewItem}>
                     <Text
                       style={{
                         color: 'black',
                         fontSize: 18,
-                        width: '70%',
+                        width: hs(200),
                         fontFamily: 'LibreBaskerville-DpdE',
                         marginBottom: 5,
                       }}
@@ -187,7 +187,7 @@ const OrderDetailScreen = (props: Props) => {
           <View style={{flexDirection: 'row', margin: 10, justifyContent: 'space-between'}}>
             <Text style={{fontSize: 15, fontFamily: 'LibreBaskerville-DpdE'}}>Tổng tiền hàng: </Text>
             <Text style={{fontSize: 15, fontFamily: 'LibreBaskerville-DpdE'}}>
-              {data.total.toLocaleString('vi-VN', {
+              {(data.total+((data.Promotion ? data.Promotion["discount"] : 0) /100 * data.total)).toLocaleString('vi-VN', {
                 style: 'currency',
                 currency: 'VND',
               })}
@@ -202,13 +202,13 @@ const OrderDetailScreen = (props: Props) => {
           </View>
           <View style={{flexDirection: 'row', margin: 10, justifyContent: 'space-between'}}>
             <Text style={{fontSize: 18, color: 'black', fontFamily: 'LibreBaskerville-Bold'}}>Thành tiền: </Text>
-            <Text style={{fontSize: 18, color: 'black', fontFamily: 'LibreBaskerville-Bold'}}>{(data.total - ((data.Promotion ? data.Promotion["discount"] : 0)/100 * data.total)).toLocaleString('vi-VN', {
+            <Text style={{fontSize: 18, color: 'black', fontFamily: 'LibreBaskerville-Bold'}}>{(data.total).toLocaleString('vi-VN', {
                 style: 'currency',
                 currency: 'VND',
               })}</Text>
           </View>
           <Text style={{fontSize: 13, fontFamily: 'LibreBaskerville-DpdE', marginHorizontal: 10}}>
-            Vui lòng thanh toán <Text style={{color: 'red'}}>{(data.total - ((data.Promotion ? data.Promotion["discount"] : 0)/100 * data.total)).toLocaleString('vi-VN', {
+            Vui lòng thanh toán <Text style={{color: 'red'}}>{(data.total).toLocaleString('vi-VN', {
                 style: 'currency',
                 currency: 'VND',
               })}</Text> khi nhận hàng

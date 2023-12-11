@@ -1,4 +1,4 @@
-import {RouteProp, useNavigation} from '@react-navigation/native';
+import {RouteProp, useFocusEffect, useNavigation} from '@react-navigation/native';
 import styles from './styles';
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {MenuStackParam} from '@src/navigations/AppNavigation/stackParam';
@@ -88,14 +88,17 @@ const HomeScreen = (props: Props) => {
   const onRefresh = () => {
     setRefreshing(true);
   };
-
+  useFocusEffect(
+    React.useCallback(() => {
+      featchCart();
+    }, [])
+  );
   const goToCategory = () => {
     navigateToPage(APP_NAVIGATION.CATEGORY);
   };
   const goToCart = () => {
     navigateToPage(APP_NAVIGATION.CART);
   };
-
   const gotoListProduct = (id, name) => {
     navigateToPage(APP_NAVIGATION.PRODUCTLIST, {categoryId: id, name: name});
     console.log(id);
@@ -105,8 +108,10 @@ const HomeScreen = (props: Props) => {
   };
 
   const featchCart = async () => {
-    const resultCart = await cartService.fetchCart(user?.id!);
-    setData(resultCart.data);
+    if(user){
+      const resultCart = await cartService.fetchCart(user?.id!);
+      setData(resultCart.data);
+    }
   };
   const fetchDataCategory = async () => {
     try {

@@ -49,6 +49,7 @@ export interface ProductDetailModel {
       Color: {
         id: number;
         nameColor: string;
+        
       };
       colorConfigs: [
         {

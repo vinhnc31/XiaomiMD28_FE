@@ -12,6 +12,7 @@ export type AppStackParam = {
   PAY:undefined;
   EVALUATE:undefined;
   SEARCH: undefined;
+  PAYVIEW: undefined;
 };
 
 export type MenuStackParam = {
