@@ -23,6 +23,7 @@ import VouCherScreen from '@src/screen/voucher/index';
 import myaccount from '@src/screen/account/myaccount';
 import changepass from '@src/screen/account/changepass';
 import PayScreen from '@src/screen/pay/index';
+import PayViewScreen from '@src/screen/pay/viewpay';
 import EvaluateScreen from '@src/screen/evaluate/index';
 import reviewProduct from '@src/screen/product/review-product';
 import search from '@src/screen/search';
@@ -77,7 +78,7 @@ const GuestNavigationComponent = () => {
       <Stack.Screen name={APP_NAVIGATION.CHANGE_PASS} component={changepass} />
       <Stack.Screen name={APP_NAVIGATION.PAY} component={PayScreen} />
       <Stack.Screen name={APP_NAVIGATION.EVALUATE} component={EvaluateScreen} />
-
+      <Stack.Screen name={APP_NAVIGATION.PAYVIEW} component={PayViewScreen}/>
       <Stack.Screen name={APP_NAVIGATION.SEARCH} component={search} />
       <Stack.Screen name={APP_NAVIGATION.REVIEWPRODUCT} component={reviewProduct} />
     </Stack.Navigator>

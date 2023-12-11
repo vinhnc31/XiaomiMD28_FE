@@ -99,8 +99,6 @@ const DetailsScreen = (props: Props) => {
       const productService = new ProductService();
       const result = await productService.getProductId(productId);
       setProductIdData(result.data);
-      seta(result.data.colorProducts)
-      await check32();
       console.log('aaaaaa', Object.keys(result.data));
       if (result.data && Object.keys(result.data).length > 0) {
         // `result.data` không rỗng
@@ -380,7 +378,7 @@ const DetailsScreen = (props: Props) => {
       productName: productIdData?.name,
     });
   };
-
+  const [dataProduct,setDataProduct]=useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalAction, setModalAction] = useState('');
   // add du lieu hien thi
@@ -392,7 +390,8 @@ const DetailsScreen = (props: Props) => {
   const [selectedCountModal, setSelectedCountModal] = useState(1); // truyen
   const [config, setConfig] = useState(false);
   const {colorProducts} = productIdData;
-  // const [a,seta] = useState([]);
+  const [a,seta] = useState(null);
+  const [b,setb] = useState(null);
   const getColorConfigs = colorProducts => {
     // Check if colorProducts is an array and has at least one element
     if (Array.isArray(colorProducts) && colorProducts.length > 0) {
@@ -466,22 +465,21 @@ const DetailsScreen = (props: Props) => {
   
   // view
   const [isRenderColorConfigId, setIsRenderColorConfigId] = useState<boolean>(true);
-
   const handleColorModalPress = item => {
-    console.log(item.colorConfigs.length)
     if(item.colorConfigs.length===0){
       setConfig(true)
     }else{
       setConfig(false)
     }
+    setb(item)
     // Handle color modal press logic
-    setProductColorIdModal(item?.id); // add
+    setProductColorIdModal(item.id); // add
     setSelectedImageModal(item?.image); //view
     setSelectedColorId(item?.id || null); //btn
     //bg
     setSelectedColorConfigId(0);
     //logic set data
-    setProductColorConfigIdModal(item?.colorConfigs.length === 0 ? '' : ProductColorConfigIdModal);
+    setProductColorConfigIdModal(item?.colorConfigs.length === 0 ? null : ProductColorConfigIdModal);
     //logic view
     setIsRenderColorConfigId(item?.colorConfigs.length === 0 ? true : false);
   };
@@ -489,6 +487,7 @@ const DetailsScreen = (props: Props) => {
   const handleConfigModalPress = configItem => {
     {
       //add
+      seta(configItem); 
       setProductColorConfigIdModal(configItem.configId);
       setProductColorIdModal(configItem.ProductColorId);
       //view
@@ -535,14 +534,27 @@ const DetailsScreen = (props: Props) => {
       }
   };
   const handleBuyNow = () => {
-    console.log('mua ngay: ');
+    handleModalPress();
+      const data =[
+        {
+          productImage:!config ?productIdData?.images : b["image"],
+          productName: productIdData?.name,
+          productId: productIdData?.id,
+          productPrice:  productIdData["colorProducts"].length==0||config ? productIdData.price : a["price"],
+          quantity: selectedCountModal,
+          ProductColorId: productColorIdModal ?? null,
+          ProductRam:!config? a?.Config["nameConfig"] : null,
+          ProductColor:config||!config? b?.Color["nameColor"] : null,
+          ProductColorConfigId: ProductColorConfigIdModal ?? null,
+        }]  
+    navigateToPage(APP_NAVIGATION.PAYDETAIL,{data})
   };
   const handleModalPress = () => {
     // Đóng Modal khi người dùng ấn vào nền bên ngoài
     setModalVisible(!modalVisible);
     setModalVisible(false);
     setModalAction('');
-    setSelectedColorId(0);
+    setConfig(false);
     if (productIdData?.images && productIdData?.price) {
       setSelectedImageModal(productIdData?.images || '');
       setSelectedPriceModal(productIdData?.price || 0);
@@ -921,6 +933,7 @@ const DetailsScreen = (props: Props) => {
                           <Text style={styles.modalNumberProductTitle}>Số lượng</Text>
                           <View style={styles.modalQuantityProductContainer}>
                             <TouchableOpacity
+                              disabled={selectedCountModal==1 ?true : false}
                               onPress={handleDecrease}
                               activeOpacity={0.8}
                               style={styles.modalBtnMinusPlus}>
@@ -947,7 +960,7 @@ const DetailsScreen = (props: Props) => {
 
                         <TouchableOpacity
                           disabled={
-                            dataSlider(productIdData).length == 0
+                            selectedQuantityModal == 0? true : dataSlider(productIdData).length == 0
                               ? false
                               :config ? false : selectedColorId == 0 || selectedColorConfigId == 0
                                 ? true
@@ -955,7 +968,7 @@ const DetailsScreen = (props: Props) => {
                           }
                           activeOpacity={0.8}
                           style={
-                            dataSlider(productIdData).length == 0
+                            selectedQuantityModal == 0? styles.modalBtnAddFalse: dataSlider(productIdData).length == 0
                               ? styles.modalBtnAdd
                               :  config ?styles.modalBtnAdd : selectedColorConfigId == 0 ||selectedColorId == 0
                                 ? styles.modalBtnAddFalse
