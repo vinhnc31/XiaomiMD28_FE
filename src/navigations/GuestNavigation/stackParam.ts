@@ -7,4 +7,5 @@ export type GuestStackParam = {
   PRODUCTLIST: undefined;
   FORGOTPASS:undefined;
   REVIEWPRODUCT: undefined;
+  PAYVIEW: undefined;
 };

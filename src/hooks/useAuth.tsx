@@ -5,6 +5,7 @@ import {useCallback} from 'react';
 import useToast from './useToast';
 import { resetStack } from '@src/navigations/services';
 import { APP_NAVIGATION } from '@src/navigations/routes';
+import { StorageKey, StorageUtils } from '@src/utils/mmkv';
 
 export function useAuth() {
   const authState = useAppSelector(state => state.authSlice);
@@ -14,14 +15,16 @@ export function useAuth() {
   const fetchProfile = useCallback(async (redirect?: boolean) => {
     try {
       const sv = new AccountService();
-      const user = await sv.fetchProfile();
-      //@ts-ignore
-      console.log('user: ', user.data);
-      //@ts-ignore
-      dispath(logInAction(user.data));
-    
+      const accessToken = StorageUtils.get(StorageKey.AccessToken);
+      if(accessToken){
+        const user = await sv.fetchProfile();
+        //@ts-ignore
+        console.log('user: ', user.data);
+        //@ts-ignore
+       
+        dispath(logInAction(user.data));
+      }
       // resetStack(APP_NAVIGATION.ROOT);
-      
       return true;
     } catch (error) {
       // resetStack(APP_NAVIGATION.ROOT);

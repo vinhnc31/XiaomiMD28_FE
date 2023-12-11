@@ -4,61 +4,52 @@ import {APP_NAVIGATION} from '@src/navigations/routes';
 import React, {useEffect, useState} from 'react';
 import {Text, SafeAreaView, View, NativeModules, NativeEventEmitter, Button,} from 'react-native';
 import {AppStackParam} from '@src/navigations/AppNavigation/stackParam';
-import {goBack} from '@src/navigations/services';
+import {goBack, navigateToPage} from '@src/navigations/services';
 import BaseHeaderNoCart from '@src/containers/components/Base/BaseHeaderNoCart';
 import {BaseButton} from '@src/containers/components/Base/BaseButton';
 import {hs, ms, vs} from '@src/styles/scalingUtils';
 import OrderService from '@src/services/order';
 import { PayModel } from '@src/services/pay/pay.mode';
 import PayService from '@src/services/pay';
-import CryptoJS from 'crypto-js';
-const { PayZaloBridge } = NativeModules;
-const payZaloBridgeEmitter = new NativeEventEmitter(PayZaloBridge);
-
-const subscription = payZaloBridgeEmitter.addListener(
-  'EventPayZalo',
-  (data) => {
-    if (data.returnCode == 1) {
-      console.log('Pay success!');
-    } else {
-      console.log('Pay errror! ' + data.returnCode);
-    }
-  }
-);
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
   route: RouteProp<AppStackParam, APP_NAVIGATION.PAY>;
 }
 const PayScreen = (props: Props) => {
-  // const totalPriceProduct=props.route.params!.sumPay;
+  const totalPriceProduct=props.route.params!.sumPay;
   const [data,setData] = useState<PayModel[]>([]);
   const orderService = new OrderService();
   const payService = new PayService();
- 
-  // const featchData =  async ()=>{
-  //   try {
-  //    const result= await orderService.getOrder();
-  //    for (let i = 0; i < result.data.length; i++) {
-  //     if (result.data[i]["PayId"] === 2) {
-  //        setData(result.data[i]);
-  //        break;
-  //     }
-  //    }
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
-  // const postPay=()=>{
-  //   payService.postPay({amount:totalPriceProduct,orderId:data.id,bankCode:""})
-  // }
-  // useEffect(()=>{featchData();},[])
+ console.log(totalPriceProduct)
+  const featchData =  async ()=>{
+    try {
+     const result= await orderService.getOrder();
+     for (let i = result.data.length - 1; i >= 0; i--) {
+      if (result.data[i]["PayId"] === 2) {
+         setData(result.data[i]);
+         console.log(result.data[i].id)
+         break;
+      }
+     }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const postPay = async()=>{
+    const dataView=await payService.postPay({amount:totalPriceProduct,orderId:data.id,bankCode:""})
+    // console.log(dataView.data)
+    const dataVnPay = dataView.data;
+    console.log(dataVnPay)
+     navigateToPage(APP_NAVIGATION.PAYVIEW,{dataVnPay})
+  }
+  useEffect(()=>{featchData();},[])
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white', flexDirection: 'column'}}>
       <BaseHeaderNoCart title="Thanh toán" onBackPress={goBack} />
       <View style={{margin: 10}}>
         <Text style={{fontSize: 18, color: 'black',}}>Số tiền</Text>
         <View style={{padding:10,borderWidth:.2,borderRadius:10}}>
-          <Text style={{fontSize: 16, color: 'black',}}></Text>
+          <Text style={{fontSize: 16, color: 'black',}}>{totalPriceProduct.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}</Text>
         </View>
         <Text style={{fontSize: 18, color: 'black'}}>Phương thức thanh toán</Text>
         <View style={{flexDirection:"row",alignItems:"center",margin:10}}>
@@ -86,14 +77,11 @@ const PayScreen = (props: Props) => {
         </View>
       </View>
       <View style={{position:'absolute',bottom:0}}>
-      <BaseButton onPress={createOrder} text='Thanh toán' style={{margin:hs(10),width:hs(350)}}></BaseButton>
+      <BaseButton onPress={postPay} text='Thanh toán' style={{margin:hs(10),width:hs(350)}}></BaseButton>
       </View>
     </SafeAreaView>
   );
 };
-export default React.memo(PayScreen);
-function getCurrentDateYYMMDD() {
-  var todayDate = new Date().toISOString().slice(2, 10);
-  return todayDate.split('-').join('');
-}
 
+
+export default React.memo(PayScreen);

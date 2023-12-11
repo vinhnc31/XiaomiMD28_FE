@@ -202,7 +202,7 @@ const HistoryOrderTab = ({data, onShow}: {data: HistoryOrderModel[]; loading: bo
                 }}>
                 <View style={styles.item}>
                   <Image
-                    source={{uri: item.OrdersProducts[0].productcolor['image']}}
+                    source={{uri: item.OrdersProducts[0].productcolor?item.OrdersProducts[0].productcolor['image']:item.OrdersProducts[0]["Product"]["images"]}}
                     style={styles.image}
                     resizeMode="stretch"
                   />
@@ -211,9 +211,12 @@ const HistoryOrderTab = ({data, onShow}: {data: HistoryOrderModel[]; loading: bo
                       {item.OrdersProducts[0].Product['name']}
                     </Text>
                     <View style={{flexDirection: 'row', justifyContent: 'space-between', width: hs(220)}}>
-                      <Text ellipsizeMode="tail" numberOfLines={1} style={styles.text}>
+                      {
+                        item.OrdersProducts[0].productcolor?<Text ellipsizeMode="tail" numberOfLines={1} style={styles.text}>
                         Màu sắc: {item.OrdersProducts[0].productcolor['Color']['nameColor']}
-                      </Text>
+                      </Text>:<Text></Text>
+                      }
+                      
                       <Text style={styles.text}>x {item.OrdersProducts[0].quantity}</Text>
                     </View>
                     <View style={{flexDirection: 'row', justifyContent: 'flex-start'}}>

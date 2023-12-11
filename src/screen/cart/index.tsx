@@ -134,10 +134,9 @@ const CartScreen = (props: Props) => {
     selectedItems.forEach((itemId) => {
       const selectedItem = data.find((item) => item.id === itemId);
       if (selectedItem) {
-        totalPrice += selectedItem.ProductColorConfig['price'] * selectedItem.quantity;
+        totalPrice +=selectedItem.ProductColorConfig? selectedItem.ProductColorConfig ['price']  * selectedItem.quantity : selectedItem.Product["price"] * selectedItem.quantity;
       }
     });
-
     return totalPrice.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
   };
   useEffect(() => {
