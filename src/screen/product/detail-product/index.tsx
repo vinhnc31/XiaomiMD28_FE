@@ -542,13 +542,11 @@ const DetailsScreen = (props: Props) => {
     setModalVisible(!modalVisible);
     setModalVisible(false);
     setModalAction('');
-    setSelectedColorId(0);
     if (productIdData?.images && productIdData?.price) {
       setSelectedImageModal(productIdData?.images || '');
       setSelectedPriceModal(productIdData?.price || 0);
       setSelectedQuantityModal(getQuantitys(productIdData) || 0);
     }
-    setSelectedCountModal(1);
     setSelectedColorId(0);
     setSelectedColorConfigId(0);
     setIsRenderColorConfigId(true);
@@ -968,6 +966,7 @@ const DetailsScreen = (props: Props) => {
                               handleBuyNow();
                             }
                             setModalVisible(!modalVisible);
+                            handleModalPress()
                           }}>
                           <Text style={styles.modalBtnText}>
                             {modalAction === 'addToCart' ? 'Thêm vào giỏ hàng' : 'Mua ngay'}
