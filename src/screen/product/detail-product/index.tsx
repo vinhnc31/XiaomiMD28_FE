@@ -71,9 +71,7 @@ const DetailsScreen = (props: Props) => {
   };
 
   useEffect(() => {
-    
     const fetchData = async () => {
-      
       try {
         setLoading(true);
         await fetchDataProduct();
@@ -86,12 +84,8 @@ const DetailsScreen = (props: Props) => {
         setRefreshing(false);
       }
     };
-    
     fetchData();
-   
-    // Gọi hàm checkIfProductIsFavorite ngay khi vào trang
     checkIfProductIsFavorite();
-    
   }, [productId, refreshing]);
 
   const fetchDataProduct = async () => {
@@ -101,10 +95,8 @@ const DetailsScreen = (props: Props) => {
       setProductIdData(result.data);
       console.log('aaaaaa', Object.keys(result.data));
       if (result.data && Object.keys(result.data).length > 0) {
-        // `result.data` không rỗng
         setNoData(false);
       } else {
-        // `result.data` rỗng hoặc là một giá trị "falsy"
         setNoData(true);
       }
     } catch (error) {
@@ -164,14 +156,10 @@ const DetailsScreen = (props: Props) => {
 
   const handleFavoritePress = async () => {
     try {
-      // Disable the button while handling the press
       const favoriteService = new FavoriteService();
-
       if (isFavorite) {
-        // Nếu sản phẩm đã có trong danh sách yêu thích, thì xóa nó đi
         const removeResult = await favoriteService.deleteFavorite(favoriteId);
         console.log('xóa yêu thích -----', removeResult?.status);
-
         if (removeResult) {
           Toast.show({
             text1: 'Xóa thành công khỏi mục yêu thích',
@@ -179,7 +167,6 @@ const DetailsScreen = (props: Props) => {
           });
           setIsFavorite(false);
         } else {
-          // Xử lý trường hợp không thành công nếu cần
           console.log('Xóa yêu thích không thành công');
           Toast.show({
             text1: 'Bỏ yêu thích không thành công !',
@@ -187,7 +174,6 @@ const DetailsScreen = (props: Props) => {
           });
         }
       } else {
-        // Nếu sản phẩm chưa có trong danh sách yêu thích, thêm nó vào
         const addPavoriteResult = await favoriteService.addFavorite({
           productId,
           AccountId,
@@ -202,33 +188,24 @@ const DetailsScreen = (props: Props) => {
           setFavoriteId(addPavoriteResult.data.id); // Lưu ID mới tạo được
         }
       }
-
-      // After adding/removing from favorites, fetch the updated data
-      //await fetchDataProduct();
       await checkIfProductIsFavorite();
     } catch (error) {
       console.log('error: ', error);
     }
   };
-
-  // kiem tra xem account này có yêu thích sản phẩm này không
   const checkIfProductIsFavorite = async () => {
     try {
       const favoriteService = new FavoriteService();
       const favoriteResult = await favoriteService.fetchFavorite(AccountId);
       const favorites = favoriteResult.data;
 
-      // Kiểm tra xem sản phẩm đã có trong danh sách yêu thích hay chưa
       const isProductInFavorites = favorites.some(favorite => {
         if (favorite.productId === productId) {
-          //console.log('Favorite ID:----', favorite.id);
           setFavoriteId(favorite.id);
           return true; // Returning true means the product is found in favorites
         }
         return false; // Continue searching
       });
-
-      // Cập nhật trạng thái isFavorite
       setIsFavorite(isProductInFavorites);
     } catch (error) {
       console.log('Error checking liked products:', error);
@@ -253,7 +230,6 @@ const DetailsScreen = (props: Props) => {
     if (productData && productData.colorProducts && Array.isArray(productData.colorProducts)) {
       productData.colorProducts.forEach(colorProduct => {
         if (colorProduct && colorProduct.Color && colorProduct.Color.id && colorProduct.Color.nameColor) {
-          // Lấy thông tin cần thiết và thêm vào mảng
           sliderData.push({
             id: colorProduct.Color.id,
             image: colorProduct.image,
@@ -274,9 +250,7 @@ const DetailsScreen = (props: Props) => {
   };
 
   const renderItemNameColors = ({item, index}) => {
-    // Kiểm tra xem colorId của item có trùng với colorIdSlider hay không
     const isColorMatched = item?.colorId === colorIdSlider;
-
     return (
       <View key={item.id} style={styles.btnColorsContainer}>
         <TouchableOpacity
@@ -392,31 +366,7 @@ const DetailsScreen = (props: Props) => {
   const {colorProducts} = productIdData;
   const [a,seta] = useState(null);
   const [b,setb] = useState(null);
-  const getColorConfigs = colorProducts => {
-    // Check if colorProducts is an array and has at least one element
-    if (Array.isArray(colorProducts) && colorProducts.length > 0) {
-      // Initialize an array to store all colorConfigs
-      const allColorConfigs = [];
 
-      // Loop through each product in colorProducts
-      colorProducts.forEach(product => {
-        // Check if the product has the "colorConfigs" property
-        if (product.hasOwnProperty('colorConfigs')) {
-          // Concatenate the colorConfigs array to the allColorConfigs array
-          allColorConfigs.push(...product.colorConfigs);
-        } else {
-          console.error("Missing 'colorConfigs' property in a product data.");
-        }
-      });
-
-      return allColorConfigs;
-    } else {
-      console.error("Invalid or empty 'colorProducts' array.");
-    }
-
-    // Return an empty array if the extraction fails
-    return [];
-  };
   const renderItemColorModal = ({item, index}) => {
     return (
       <View key={item.id} style={styles.btnColorsContainer}>
@@ -570,6 +520,7 @@ const DetailsScreen = (props: Props) => {
     setSelectedPriceModal(productIdData?.price || 0);
     setSelectedQuantityModal(getQuantitys(productIdData) || 0);
   }, [productIdData]);
+  console.log(productIdData?.averageRating)
   return (
     <SafeAreaView style={styles.mainContainer}>
       <View style={styles.backContainer}>
@@ -733,7 +684,7 @@ const DetailsScreen = (props: Props) => {
 
                                 <View style={styles.starPoint}>
                                   <Text style={styles.pointText}>
-                                    {parseFloat(productIdData?.averageRating).toFixed(1) || '0.0'}
+                                    {productIdData?.averageRating ? parseFloat(productIdData?.averageRating).toFixed(1) : '0.0'}
                                   </Text>
                                   <Text style={styles.pointText}> / 5 </Text>
                                   <View style={styles.imgStarContainer}>
