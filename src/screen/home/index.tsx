@@ -3,7 +3,7 @@ import styles from './styles';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { MenuStackParam } from '@src/navigations/AppNavigation/stackParam';
 import { MENU_NAVIGATION, APP_NAVIGATION } from '@src/navigations/routes';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   SafeAreaView,
   Text,
@@ -17,7 +17,8 @@ import {
   SectionList,
   Dimensions,
   Animated,
-  Easing
+  Easing,
+  ActivityIndicator
 } from 'react-native';
 import { BaseButton } from '@src/containers/components/Base';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -34,7 +35,9 @@ import { CategoryModel } from '@src/services/category/category.model';
 import ProductService from '@src/services/product';
 import { ProductModel } from '@src/services/product/product.model';
 import R from '@src/res';
-import {vs} from '@src/styles/scalingUtils';
+import { vs, width } from '@src/styles/scalingUtils';
+
+import { FlatListSlider } from 'react-native-flatlist-slider';
 
 
 interface Props {
@@ -49,9 +52,7 @@ const HomeScreen = (props: Props) => {
   const [refreshing, setRefreshing] = useState(false);
 
   const [showAll, setShowAll] = useState(false);
-  const displayedData = showAll ? dataProduct : dataProduct.slice(0, 3);
-
-  const displayedDataSuggest = showAll ? dataProduct : dataProduct.slice(0, 10);
+  const displayedData1 = showAll ? dataProduct : dataProduct.slice(0, 3);
 
   const [dataCategory, setDataCategory] = useState<CategoryModel[]>([]);
   const [showAllCategory, setShowAllCategory] = useState(false);
@@ -66,23 +67,107 @@ const HomeScreen = (props: Props) => {
     maximumFractionDigits: 9,
   };
 
-  useEffect(() => {
-    if (refreshing) {
-      setRefreshing(false); // Đặt refreshing thành false trước khi tải lại để tránh tác động lặp
-      fetchDataCategory()
-      fetchDataProduct()
-        .then(() => setRefreshing(false))
-        .catch(() => setRefreshing(false));
-        
-    } else {
-      fetchDataCategory();
-      fetchDataProduct()
+  const [displayedData, setDisplayedData] = useState<CategoryModel[]>([]);
+
+
+  const [page, setPage] = useState(1);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasMoreData, setHasMoreData] = useState(true);
+
+  const [newDataProduct, setNewDataProduct] = useState<ProductModel[]>([]);
+
+  const handleEndReached = () => {
+    if (!isLoadingMore && hasMoreData) {
+      setPage(page + 1);
+      setIsLoadingMore(true);
     }
+  };
+
+  useEffect(() => {
+    if(dataProduct.length > 0) {
+      fetchSearchResults(page);
+      console.log("page: " + page);
+      console.log("new: ", newDataProduct.length);
+    }
+  }, [page, dataProduct]);
+
+  const fetchSearchResults = useCallback(async (nextPage: number = 1) => {
+    console.log("dataprd: ", dataProduct.length);
+   
+    try {
+      setIsLoadingMore(true);
+      const pageSize = 10;
+      const startIndex = (nextPage - 1) * pageSize;
+      const endIndex = startIndex + pageSize;
+
+      console.log('Fetching more results. Page1:', nextPage);
+      let filtered = [];
+      filtered = dataProduct.slice(startIndex, endIndex);
+
+
+      setHasMoreData(filtered.length === pageSize);
+
+      if (nextPage === 1) {
+        setNewDataProduct((prevResults) => {
+          if (nextPage === 1) {
+            return filtered;
+          } else {
+            return [...prevResults, ...filtered];
+          }
+        });
+
+      } else {
+        setNewDataProduct((prevResults) => [...prevResults, ...filtered]);
+      }
+    } catch (error) {
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [dataProduct]);
+
+
+
+  // useEffect(() => {
+  //   if (refreshing) {
+  //     setRefreshing(false); // Đặt refreshing thành false trước khi tải lại để tránh tác động lặp
+  //     fetchDataCategory()
+  //     fetchDataProduct()
+  //       .then(() => setRefreshing(false))
+  //       .catch(() => setRefreshing(false));
+
+  //   } else {
+  //     fetchDataCategory();
+  //     fetchDataProduct()
+  //   }
+
+  // }, [refreshing]);
+
+  useEffect(() => {
+    if (dataCategory.length > 0) {
+      setDisplayedData(dataCategory.slice(0, 5));
+    }
+  }, [dataCategory]);
+
+
+
+  useEffect(() => {
+    fetchData();
   }, [refreshing]);
+
+  const fetchData = async () => {
+    try {
+      setRefreshing(false);
+      await fetchDataCategory();
+      await fetchDataProduct();
+    } catch (error) {
+      setError('err');
+    }
+  };
 
   const onRefresh = () => {
     setRefreshing(true);
   };
+
 
   const goToCategory = () => {
     navigateToPage(APP_NAVIGATION.CATEGORY);
@@ -113,7 +198,8 @@ const HomeScreen = (props: Props) => {
       const productService = new ProductService();
       const result = await productService.getProduct();
       setDataProduct(result.data);
-      console.log(result.data.length);
+      setNewDataProduct(result.data.slice(0, 10));
+      console.log('Data from fetchDataProduct:', result.data.length);
     } catch (error) {
       setError('err');
     }
@@ -123,7 +209,7 @@ const HomeScreen = (props: Props) => {
   //Gợi ý hôm nay
   function ListItemSuggest({ item, index }: { item: ProductModel, index: number }) {
     return (
-      <TouchableScale 
+      <TouchableScale
         key={index}
         onPress={() => console.log('da chon 1 item', item.id)}
         activeScale={0.9}
@@ -141,9 +227,9 @@ const HomeScreen = (props: Props) => {
               {item.name}
             </Text>
             <Text style={styles.text}>
-            {new Intl.NumberFormat("vi-VN", config).format(
-                        item.price
-                      )}
+              {new Intl.NumberFormat("vi-VN", config).format(
+                item.price
+              )}
             </Text>
             <View style={styles.viewStar}>
               <Image style={styles.imgStar} source={R.images.iconStar} />
@@ -157,7 +243,7 @@ const HomeScreen = (props: Props) => {
   }
 
   // danh muc
-  function ListItemCategory({ item, index }: { item: CategoryModel, index: number}) {
+  function ListItemCategory({ item, index }: { item: CategoryModel, index: number }) {
     return (
       <TouchableScale key={index} onPress={() => gotoListProduct(item.id, item.name)} activeScale={0.9} friction={9} tension={100}>
         <View style={styles.categoryItem}>
@@ -201,9 +287,9 @@ const HomeScreen = (props: Props) => {
                 <Text style={styles.textCmt}>({item.commentCount})</Text>
               </View>
               <Text style={styles.text}>
-              {new Intl.NumberFormat("vi-VN", config).format(
-                        item.price
-                      )}
+                {new Intl.NumberFormat("vi-VN", config).format(
+                  item.price
+                )}
               </Text>
             </View>
           </View>
@@ -212,9 +298,8 @@ const HomeScreen = (props: Props) => {
     );
   }
 
-
   return (
-    <SafeAreaView style={{ flex: 1, flexDirection: 'column'}}>
+    <SafeAreaView style={{ flex: 1, flexDirection: 'column' }}>
       <View style={styles.mainContainer}>
         <TouchableWithoutFeedback onPress={() => navigateToPage(APP_NAVIGATION.SEARCH)}>
           <View style={styles.inputContainer}>
@@ -243,24 +328,37 @@ const HomeScreen = (props: Props) => {
           <ScrollView
             indicatorStyle="black"
             showsVerticalScrollIndicator={false}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} 
-            />}>
+            onScroll={handleEndReached}
+          
+            // scrollEnabled={false}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}
+            />
+            }>
 
-            <View style={{ height: vs(160), marginTop: vs(8), borderRadius: vs(50)}}>
-              <Swiper
-                loop={true}
-                autoplayTimeout={3}
-                autoplay={true}
-                showsPagination={true} // Tắt chấm tròn mặc định
-                dotColor='gray'
-                activeDotColor='#FF6900'
-              >
-                {displayedDataCategory.map(item => (
-                  <View style={styles.slide} key={item.id}>
-                    <Image source={{ uri: item.image }} style={styles.image1} />
-                  </View>
-                ))}
-              </Swiper>
+            <View style={{
+              height: vs(168), marginTop: vs(8), flex: 1,
+              elevation: 1,
+              shadowColor: 'black',
+              shadowOffset: { width: 0, height: 1 },
+              shadowOpacity: 0.2,
+              shadowRadius: 2, 
+              borderWidth:1,
+              borderRadius: 8,
+              margin: 8
+            }}>
+              {displayedData.length > 0 && (
+                <FlatListSlider
+                  data={displayedData}
+                  // imageKey={'image'}
+                  timer={5000}
+                  onPress={item => console.log("data clicked: ", item)}
+                  indicatorContainerStyle={{ position: 'absolute', bottom: 20 }}
+                  indicatorActiveColor={'#FF6900'}
+                  indicatorInActiveColor={'#ffffff'}
+                  indicatorActiveWidth={20}
+                  animation
+                />
+              )}
             </View>
 
             <View style={styles.categoryView}>
@@ -278,16 +376,16 @@ const HomeScreen = (props: Props) => {
                   data={displayedDataCategory}
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}
-                  renderItem={({ item }) => <ListItemCategory item={item} index={0}  />}
+                  renderItem={({ item }) => <ListItemCategory item={item} index={0} />}
                 />
               </View>
             </View>
 
-            <View style={{ width: '100%', marginTop: vs(16), marginBottom: vs(8)}}>
+            <View style={{ width: '100%', marginTop: vs(16), marginBottom: vs(8) }}>
               <Text style={styles.titleText}>Yêu thích nhiều nhất</Text>
               <FlatList
-                data={displayedData}
-                // keyExtractor={item => item.id.toString()}
+                data={displayedData1}
+                keyExtractor={item => item.id.toString()}
                 horizontal={true}
                 contentContainerStyle={styles.flatListContainer}
                 renderItem={({ item }) => <ListItemFavorite item={item} index={0} />}
@@ -295,21 +393,30 @@ const HomeScreen = (props: Props) => {
               />
             </View>
 
-            <View style={{ width: '100%', paddingBottom: vs(30)}}>
+            <View style={{ width: '100%', paddingBottom: vs(30) }}>
               <Text style={[styles.titleText]}>Gợi ý hôm nay</Text>
               <FlatList
-                data={displayedDataSuggest}
-                // keyExtractor={item => item.id.toString()}
+                data={newDataProduct}
+                keyExtractor={item => item.id.toString()}
                 columnWrapperStyle={{ justifyContent: 'space-between' }}
                 numColumns={2}
                 horizontal={false}
                 scrollEnabled={false}
                 contentContainerStyle={styles.flatListSuggestContainer}
                 renderItem={({ item }) => <ListItemSuggest item={item} index={0} />}
+                // onEndReached={handleEndReached}
+                // onEndReachedThreshold={0.1} 
               />
             </View>
 
-          </ScrollView>)}
+            {isLoadingMore && (
+              <View style={{ height: 100 }}>
+                <BaseLoading size={30} top={0} loading={true} color={'#FF6900'} />
+              </View>
+            )}
+
+          </ScrollView>
+        )}
       </View>
     </SafeAreaView>
   );

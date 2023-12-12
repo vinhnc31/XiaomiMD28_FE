@@ -23,5 +23,6 @@ export const images = {
   support: require('../assets/images/support.png'),
   signinGG:require('../assets/images/signGG.png'),
   iconFilter: require('../assets/images/filter.png'),
+  iconFiltered: require('../assets/images/filtered.png'),
   imgNoResult: require('../assets/images/noResult.png'),
 };

@@ -1,27 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import R from '@src/res'
 
-const BaseHeaderLisPrd = ({ title, onBackPress, onCartPress, onFilterPress }:any) => {
+const BaseHeaderLisPrd = ({ title, onBackPress, onCartPress, onFilterPress }: any) => {
+  const [filterIcon, setFilterIcon] = useState(R.images.iconFilter);
+
+  const toggleFilterIcon = () => {
+    setFilterIcon(filterIcon === R.images.iconFilter ? R.images.iconFiltered : R.images.iconFilter);
+  };
   return (
     <View>
       <View style={styles.container}>
-        <View style={{flex: 1, alignItems: 'flex-end'}}>
+        <View style={{ flex: 1, alignItems: 'flex-end' }}>
           <TouchableOpacity onPress={onBackPress}>
             <Image source={R.images.iconBack} style={styles.icon} />
           </TouchableOpacity>
         </View>
 
-        <View style={{flex: 8, alignItems: 'flex-start', justifyContent: 'center'}}>
+        <View style={{ flex: 8, alignItems: 'flex-start', justifyContent: 'center' }}>
           <Text numberOfLines={1} style={styles.title}>{title}</Text>
         </View>
 
-        <View style={{flex: 1, alignItems: 'flex-start'}}>
-          <TouchableOpacity onPress={onFilterPress}>
-            <Image source={R.images.iconFilter} style={styles.iconFilter} />
+        <View style={{ flex: 1, alignItems: 'flex-start' }}>
+          <TouchableOpacity onPress={() => { onFilterPress(); toggleFilterIcon(); }}>
+            {/* <Image source={R.images.iconFilter} style={styles.iconFilter} /> */}
+            <Image source={filterIcon} style={styles.iconFilter} />
           </TouchableOpacity>
         </View>
-        <View style={{flex: 1, alignItems: 'flex-start'}}>
+        <View style={{ flex: 1, alignItems: 'flex-start' }}>
           <TouchableOpacity onPress={onCartPress}>
             <Image source={R.images.iconCartBlack} style={styles.icon} />
           </TouchableOpacity>
@@ -42,11 +48,11 @@ const styles = StyleSheet.create({
   },
   icon: {
     width: 30,
-    height:30,
+    height: 30,
   },
   iconFilter: {
     width: 28,
-    height:28,
+    height: 28,
   },
   title: {
     fontSize: 18,

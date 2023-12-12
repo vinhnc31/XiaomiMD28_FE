@@ -38,6 +38,7 @@ const ProductListScreen = (props: Props) => {
   const [minimum, setMinimum] = useState<string>('');
   const [max, setMax] = useState<string>('');
 
+
   const [valueColor, setValueColor] = useState(null);
   const [items, setItems] = useState([
     { label: 'Titanium', nameColor: 'titanium', color: 'titanium' },
@@ -127,16 +128,21 @@ const ProductListScreen = (props: Props) => {
     }
   };
 
-    // Trong hàm áp dụng lọc
-  const applyFilter = () => {
-    const minPrice = parseInt(minimum);
-    const maxPrice = parseInt(max);
+
+  // Trong hàm áp dụng lọc
+const applyFilter = () => {
+  const minPrice = parseInt(minimum);
+  const maxPrice = parseInt(max);
+  
+  // Kiểm tra nếu giá trị minimum và maximum rỗng thì gọi hàm fetchProducts
+  if (isNaN(minPrice) && isNaN(maxPrice)) {
+    fetchProducts();
+  } else {
     setValueConfiguration(null);
     setValueColor(null);
     getProductByPrice(minPrice, maxPrice, categoryId);
-    console.log("price: ", minPrice, maxPrice, categoryId);
-  };
-
+  }
+};
 
   useEffect(() => {
     fetchConfig();
@@ -159,16 +165,12 @@ const ProductListScreen = (props: Props) => {
     console.log("value, id: ", valueColor, categoryId);
   }, [valueColor, categoryId]);
 
-  const [isModalVisible, setModalVisible] = useState(false);
   const [isChecked, setChecked] = useState(false);
 
   const toggleCheckbox = () => {
     setChecked(!isChecked);
   };
 
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
 
   const config = {
     style: 'currency',
@@ -245,152 +247,165 @@ const ProductListScreen = (props: Props) => {
     );
   }
 
+  const [isFilterVisible, setFilterVisible] = useState(false);
+
+
+  const toggleFilter = () => {
+    onFilterPress
+    setFilterVisible(!isFilterVisible);
+  };
+
+  const { onFilterPress } = props;
+
   return (
     <SafeAreaView style={{ flex: 1, flexDirection: 'column', backgroundColor: 'white' }}>
       <BaseHeaderLisPrd
         title={route.params!.name}
         onCartPress={handleCartPress}
         onBackPress={handleBackPress}
-      onFilterPress={toggleModal}
+        onFilterPress={toggleFilter}
       />
 
       <ScrollView style={{ paddingHorizontal: 8, backgroundColor: '#FBEFE5' }} showsVerticalScrollIndicator={false}>
         
+      {isFilterVisible && (
         <View style={styles.viewFilter}>
-          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
-            <BaseButton
-              onPress={sortByAscending}
-              style={{ flex: 1, backgroundColor: '#D9D9D9' }}
-              loading={loading}
-              text={'Giá từ thấp đến cao'}
-              textStyle={styles.buttonText}
-            />
-            <BaseButton
-              onPress={sortByDescending}
-              style={{ flex: 1, backgroundColor: '#D9D9D9', marginHorizontal: 8 }}
-              loading={loading}
-              text={'Giá từ cao đến thấp'}
-              textStyle={styles.buttonText}
-            />
-            <BaseButton
-              onPress={() => sortProductByStar('desc')}
-              style={{ flex: 1, backgroundColor: '#D9D9D9' }}
-              loading={loading}
-              text={'Đánh giá'}
-              textStyle={styles.buttonText}
-            />
-          </View>
+        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
+          <BaseButton
+            onPress={sortByAscending}
+            style={{ flex: 1, backgroundColor: '#D9D9D9' }}
+            loading={loading}
+            text={'Giá từ thấp đến cao'}
+            textStyle={styles.buttonText}
+          />
+          <BaseButton
+            onPress={sortByDescending}
+            style={{ flex: 1, backgroundColor: '#D9D9D9', marginHorizontal: 8 }}
+            loading={loading}
+            text={'Giá từ cao đến thấp'}
+            textStyle={styles.buttonText}
+          />
+          <BaseButton
+            onPress={() => sortProductByStar('desc')}
+            style={{ flex: 1, backgroundColor: '#D9D9D9' }}
+            loading={loading}
+            text={'Đánh giá'}
+            textStyle={styles.buttonText}
+          />
+        </View>
 
-          <View style={{borderWidth: 1, marginTop: 8, borderColor: '#D9D9D9'}}/>
+        <View style={{borderWidth: 1, marginTop: 8, borderColor: '#D9D9D9'}}/>
 
-          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
-            <View
-              style={{
-                flex: 6,
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-                alignItems: 'center',
-                marginRight: 8,
-              }}>
-              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <BaseInput
-                  leftIcon={''}
-                  title="Tối thiểu"
-                  value={minimum}
-                  onChangeText={setMinimum}
-                  borderRadius={10}
-                  style={{ width: '100%', height: 40, marginBottom: -2, borderRadius: 5 }}
-                />
-              </View>
-
-              <View style={{ borderWidth: 1, width: 10, marginTop: 8, marginHorizontal: 6, borderColor: 'gray' }} />
-
-              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <BaseInput
-                  leftIcon={''}
-                  title="Tối đa"
-                  value={max}
-                  onChangeText={setMax}
-                  borderRadius={10}
-                  style={{ width: '100%', height: 40, marginBottom: -2, borderRadius: 5 }}
-                />
-              </View>
+        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
+          <View
+            style={{
+              flex: 6,
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              alignItems: 'center',
+              marginRight: 8,
+            }}>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+              <BaseInput
+                leftIcon={''}
+                title="Tối thiểu"
+                value={minimum}
+                onChangeText={setMinimum}
+                borderRadius={10}
+                style={{ width: '100%', height: 40, marginBottom: -2, borderRadius: 5 }}
+              />
             </View>
 
-            <View style={{ flex: 2.5 }}>
-              <BaseButton
-                // onPress={() => filterProducts(parseInt(minimum), parseInt(max))}
-                onPress={applyFilter}
-                style={{ flex: 1, backgroundColor: '#FF6900', height: 40 }}
-                loading={loading}
-                text={'Áp dụng'}
-                textStyle={styles.buttonText}
+            <View style={{ borderWidth: 1, width: 10, marginTop: 8, marginHorizontal: 6, borderColor: 'gray' }} />
+
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+              <BaseInput
+                leftIcon={''}
+                title="Tối đa"
+                value={max}
+                onChangeText={setMax}
+                borderRadius={10}
+                style={{ width: '100%', height: 40, marginBottom: -2, borderRadius: 5}}
               />
             </View>
           </View>
 
-          <View style={{borderWidth: 1, marginTop: 8, borderColor: '#D9D9D9'}}/>
-
-          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
-            <Dropdown
-              style={[styles.dropdown, isFocus && { borderColor: 'blue'}, {marginRight: 8}]}
-              placeholderStyle={styles.placeholderStyle}
-              placeholder='Màu sắc'
-              selectedTextStyle={styles.selectedTextStyle}
-              iconStyle={styles.iconStyle}
-              data={items}
-              maxHeight={300}
-              labelField="label"
-              valueField="nameColor"
-              value={valueColor}
-              onFocus={() => setIsFocus(true)}
-              onBlur={() => setIsFocus(false)}
-              onChange={item => {
-                console.log("color: ", item.nameColor)
-                setValueColor(item.nameColor);
-                setIsFocus(false);
-              }}
-              renderItem={(item, index, isSelected) => (
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <View
-                    style={{
-                      width: 20,
-                      height: 20,
-                      borderRadius: 10,
-                      backgroundColor: item.color,
-                      marginRight: 10,
-                      borderWidth: 1,
-                      margin: 2,
-                      borderColor: '#FF6900',
-                    }}
-                  />
-                  <Text style={{ color: 'black', fontFamily: 'LibreBaskerville-Regular' }}>{item.label}</Text>
-                </View>
-              )}
-            />
-
-            <Dropdown
-              style={[styles.dropdown1, isFocus && { borderColor: 'blue' }]}
-              placeholderStyle={styles.placeholderStyle}
-              placeholder='Cấu hình'
-              selectedTextStyle={styles.selectedTextStyle}
-              iconStyle={styles.iconStyle}
-              data={configuration}
-              maxHeight={300}
-              labelField="nameConfig"
-              valueField="nameConfig"
-              value={valueConfiguration}
-              onFocus={() => setIsFocus(true)}
-              onBlur={() => setIsFocus(false)}
-              onChange={item => {
-                console.log('Selected Configuration:', item.nameConfig);
-                setValueConfiguration(item.nameConfig);
-                setIsFocus(false);
-              }}
-              disable={categoryId !== 1}
+          <View style={{ flex: 2.5 }}>
+            <BaseButton
+              // onPress={() => filterProducts(parseInt(minimum), parseInt(max))}
+              onPress={applyFilter}
+              style={{ flex: 1, backgroundColor: '#FF6900', height: 40 }}
+              loading={loading}
+              text={'Áp dụng'}
+              textStyle={styles.buttonText}
             />
           </View>
         </View>
+
+        <View style={{borderWidth: 1, marginTop: 8, borderColor: '#D9D9D9'}}/>
+
+        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
+          <Dropdown
+            style={[styles.dropdown, isFocus && { borderColor: 'blue'}, {marginRight: 8}]}
+            placeholderStyle={styles.placeholderStyle}
+            placeholder='Màu sắc'
+            selectedTextStyle={styles.selectedTextStyle}
+            iconStyle={styles.iconStyle}
+            data={items}
+            maxHeight={300}
+            labelField="label"
+            valueField="nameColor"
+            value={valueColor}
+            onFocus={() => setIsFocus(true)}
+            onBlur={() => setIsFocus(false)}
+            onChange={item => {
+              console.log("color: ", item.nameColor)
+              setValueColor(item.nameColor);
+              setIsFocus(false);
+            }}
+            renderItem={(item, index, isSelected) => (
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <View
+                  style={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: 10,
+                    backgroundColor: item.color,
+                    marginRight: 10,
+                    borderWidth: 1,
+                    margin: 2,
+                    borderColor: '#FF6900',
+                  }}
+                />
+                <Text style={{ color: 'black', fontFamily: 'LibreBaskerville-Regular' }}>{item.label}</Text>
+              </View>
+            )}
+          />
+
+          <Dropdown
+            style={[styles.dropdown1, isFocus && { borderColor: 'blue' }]}
+            placeholderStyle={styles.placeholderStyle}
+            placeholder='Cấu hình'
+            selectedTextStyle={styles.selectedTextStyle}
+            iconStyle={styles.iconStyle}
+            data={configuration}
+            maxHeight={300}
+            labelField="nameConfig"
+            valueField="nameConfig"
+            value={valueConfiguration}
+            onFocus={() => setIsFocus(true)}
+            onBlur={() => setIsFocus(false)}
+            onChange={item => {
+              console.log('Selected Configuration:', item.nameConfig);
+              setValueConfiguration(item.nameConfig);
+              setIsFocus(false);
+            }}
+            disable={categoryId !== 1}
+          />
+        </View>
+        </View>
+      )}
+       
 
         {loadingData ? (
           <View style={{ height: 100 }}>
