@@ -4,4 +4,5 @@ export interface EvaluateModel {
   commentBody: string;
   image: any;
   star: number;
+  // ordersId:number
 }

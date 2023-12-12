@@ -506,6 +506,7 @@ const DetailsScreen = (props: Props) => {
       setSelectedCountModal(prevCount => Math.min(prevCount + 1, selectedQuantityModal || 1));
   };
   const handleAddToCart = async () => {
+    handleModalPress();
       try {
         const cartService = new CartService();
         const addCartData = {

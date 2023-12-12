@@ -70,9 +70,7 @@ const FavoriteScreen = (props: Props) => {
         await fetchViewFavoriteData();
         await featchCart();
       };
-
       fetchData();
-
       return () => {};
     }, [refreshing]),
   );
@@ -83,11 +81,6 @@ const FavoriteScreen = (props: Props) => {
       setCartData(resultCart.data);
     }
   };
-  useFocusEffect(
-    React.useCallback(() => {
-      featchCart();
-    }, [])
-  );
   const fetchViewFavoriteData = async () => {
     try {
       setLoading(true);

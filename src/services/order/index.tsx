@@ -21,7 +21,7 @@ export default class OrderService extends BaseService<OrderModel> {
         return data;
     }
     public async putEvaluate(id:number,body:StatusOrder) {
-        const {data} = await http.put<StatusOrder>(`${url.getOrder}/${id}`,body);
+        const {data} = await http.put<StatusOrder>(`${url.getOrder}/statusOrder/${id}`,body);
         return data;
     }
 }

@@ -20,7 +20,6 @@ import {
   Easing,
 } from 'react-native';
 import {BaseButton} from '@src/containers/components/Base';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {BaseLoading} from '@src/containers/components/Base/BaseLoading';
 import Swiper from 'react-native-swiper';
 import {navigateToPage} from '@src/navigations/services';
@@ -73,6 +72,7 @@ const HomeScreen = (props: Props) => {
   };
 
   useEffect(() => {
+    featchCart();
     if (refreshing) {
       setRefreshing(false); // Đặt refreshing thành false trước khi tải lại để tránh tác động lặp
       fetchDataCategory();
@@ -84,14 +84,14 @@ const HomeScreen = (props: Props) => {
       fetchDataCategory();
       fetchDataProduct();
     }
-  }, [refreshing]);
+  }, [refreshing,user]);
   const onRefresh = () => {
     setRefreshing(true);
   };
   useFocusEffect(
-    React.useCallback(() => {
-      featchCart();
-    }, [])
+    React.useCallback(  () => {
+       featchCart();
+    }, [user])
   );
   const goToCategory = () => {
     navigateToPage(APP_NAVIGATION.CATEGORY);

@@ -78,7 +78,7 @@ const HistoryOrderScreen = (props: Props) => {
     else if (item.status == '2') await evaluate(item);
   };
   const cancer = async () => {
-    await statusOrder.putOrder(Number(status.id), {status: '3'});
+    await statusOrder.putOrder(Number(status.id), {status: '2'});
     onHide();
     toast.showSuccess({messageText: 'Hủy đơn hàng thành công'});
     fetchData();
@@ -202,7 +202,7 @@ const HistoryOrderTab = ({data, onShow}: {data: HistoryOrderModel[]; loading: bo
                 }}>
                 <View style={styles.item}>
                   <Image
-                    source={{uri: item.OrdersProducts[0].productcolor?item.OrdersProducts[0].productcolor['image']:item.OrdersProducts[0]["Product"]["images"]}}
+                    source={{uri: item.OrdersProducts[0].productcolor ? item.OrdersProducts[0].productcolor['image']:item.OrdersProducts[0]["Product"]["images"]}}
                     style={styles.image}
                     resizeMode="stretch"
                   />
