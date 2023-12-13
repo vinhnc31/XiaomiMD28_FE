@@ -134,10 +134,9 @@ const CartScreen = (props: Props) => {
     selectedItems.forEach((itemId) => {
       const selectedItem = data.find((item) => item.id === itemId);
       if (selectedItem) {
-        totalPrice += selectedItem.ProductColorConfig['price'] * selectedItem.quantity;
+        totalPrice +=selectedItem.ProductColorConfig? selectedItem.ProductColorConfig ['price']  * selectedItem.quantity : selectedItem.Product["price"] * selectedItem.quantity;
       }
     });
-
     return totalPrice.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
   };
   useEffect(() => {
@@ -158,7 +157,7 @@ const CartScreen = (props: Props) => {
   };
   const handleCheckout = () => {
     const selectedItemsData = getSelectedItems();
-    navigateToPage(APP_NAVIGATION.PAYDETAIL,selectedItemsData)
+    navigateToPage(APP_NAVIGATION.PAYDETAIL,{selectedItemsData})
   };
   return (
     <SafeAreaView style={{flex: 1, flexDirection: 'column'}}>

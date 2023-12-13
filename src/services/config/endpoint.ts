@@ -15,14 +15,24 @@ const endpoint = {
   products: {
     default: '/api/products',
     getProduct: '/api/product',
-    getProductByIdCategory: '/api/product/category'
-
+    getProductByIdCategory: '/api/product/category',
+    getProductId: '/api/product',
+    getCommentProductId: '/api/comment',
   },
+  
+  favorites:{
+    default:"/api/favorites",
+    getfavorite:"/api/favorites",
+    postfavorite:'/api/favorites',
+    deletefavorite:'/api/favorites'
+  },
+
   cart:{
     default:"/api/cart",
     getCart:"/api/cart",
     putCart:'/api/cart',
-    deleteCart:'/api/cart'
+    deleteCart:'/api/cart',
+    postCart:'/api/cart'
   },
   address:{
     default:"/api/address",
@@ -51,6 +61,10 @@ const endpoint = {
   evaluate: {
     default: '/api/comment',
     getEvaluate: '/api/comment',
+  },
+  notification: {
+    default: '/api/notification',
+    getNotification: '/api/notification',
   }
 };
 

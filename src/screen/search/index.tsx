@@ -4,6 +4,7 @@ import {AppStackParam} from '@src/navigations/AppNavigation/stackParam';
 import {APP_NAVIGATION} from '@src/navigations/routes';
 import ProductService from '@src/services/product';
 import {ProductModel} from '@src/services/product/product.model';
+import {navigateToPage} from '@src/navigations/services';
 import React, {useEffect, useRef, useState} from 'react';
 import {
   ActivityIndicator,
@@ -47,6 +48,9 @@ const SearchScreen = (props: Props) => {
 
   const handleBackPress = () => {
     goBack();
+  };
+  const goToDetailProducts = (id: number) => {
+    navigateToPage(APP_NAVIGATION.DETAILSPRODUCT, {productId: id});
   };
 
   const fetchData = async (query: string) => {
@@ -99,7 +103,7 @@ const SearchScreen = (props: Props) => {
   function ListItemSuggest({item}: {item: ProductModel}) {
     return (
       <TouchableScale
-        onPress={() => console.log('da chon 1 item', item.id)}
+      onPress={() => {console.log('da chon 1 item', item.id); goToDetailProducts(item.id)}}
         activeScale={0.9}
         friction={9}
         tension={100}>

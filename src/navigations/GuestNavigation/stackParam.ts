@@ -5,5 +5,7 @@ export type GuestStackParam = {
   ACCOUNT: undefined;
   CATEGORY: undefined;
   PRODUCTLIST: undefined;
-  FORGOTPASS:undefined
+  FORGOTPASS:undefined;
+  REVIEWPRODUCT: undefined;
+  PAYVIEW: undefined;
 };

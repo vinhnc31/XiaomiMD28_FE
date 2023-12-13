@@ -1,4 +1,4 @@
-import {RouteProp, useNavigation} from '@react-navigation/native';
+import {RouteProp, useFocusEffect, useNavigation} from '@react-navigation/native';
 import styles from './styles';
 import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
 import {MenuStackParam} from '@src/navigations/AppNavigation/stackParam';
@@ -36,6 +36,7 @@ import {vs} from '@src/styles/scalingUtils';
 import CartService from '@src/services/cart';
 import {useAuth} from '@src/hooks/useAuth';
 import {CartModel} from '@src/services/cart/cart.model';
+import useNotificationPermission from '../../hooks/useNotificationPermission';
 
 interface Props {
   navigation: BottomTabNavigationProp<MenuStackParam>;
@@ -64,6 +65,7 @@ const HomeScreen = (props: Props) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const cartService = new CartService();
   const {user} = useAuth();
+  useNotificationPermission();
   const config = {
     style: 'currency',
     currency: 'VND',
@@ -71,9 +73,7 @@ const HomeScreen = (props: Props) => {
   };
 
   useEffect(() => {
-    
     if (refreshing) {
-      
       setRefreshing(false); // Đặt refreshing thành false trước khi tải lại để tránh tác động lặp
       fetchDataCategory();
       fetchDataProduct()
@@ -88,22 +88,30 @@ const HomeScreen = (props: Props) => {
   const onRefresh = () => {
     setRefreshing(true);
   };
-
+  useFocusEffect(
+    React.useCallback(() => {
+      featchCart();
+    }, [])
+  );
   const goToCategory = () => {
     navigateToPage(APP_NAVIGATION.CATEGORY);
   };
   const goToCart = () => {
     navigateToPage(APP_NAVIGATION.CART);
   };
-
   const gotoListProduct = (id, name) => {
     navigateToPage(APP_NAVIGATION.PRODUCTLIST, {categoryId: id, name: name});
     console.log(id);
   };
+  const goToDetailProducts = (id: number) => {
+    navigateToPage(APP_NAVIGATION.DETAILSPRODUCT, {productId: id});
+  };
 
   const featchCart = async () => {
-    const resultCart = await cartService.fetchCart(user?.id!);
-    setData(resultCart.data);
+    if(user){
+      const resultCart = await cartService.fetchCart(user?.id!);
+      setData(resultCart.data);
+    }
   };
   const fetchDataCategory = async () => {
     try {
@@ -132,7 +140,7 @@ const HomeScreen = (props: Props) => {
     return (
       <TouchableScale
         key={index}
-        onPress={() => console.log('da chon 1 item', item.id)}
+        onPress={() => console.log('da chon 1 item', goToDetailProducts(item.id))}
         activeScale={0.9}
         friction={9}
         tension={100}>
@@ -180,10 +188,15 @@ const HomeScreen = (props: Props) => {
     );
   }
 
+  
+
   //danh sach yeu thich
   function ListItemFavorite({item, index}: {item: ProductModel; index: number}) {
     return (
-      <TouchableWithoutFeedback key={index} onPress={() => console.log('code Xem chi tiet data: ', item.name)}>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          console.log('code Xem chi tiet data: ', item.name), goToDetailProducts(item.id);
+        }}>
         <View style={styles.item}>
           <Image source={{uri: item.images}} style={styles.image} resizeMode="cover" />
           <View style={styles.overlay}>

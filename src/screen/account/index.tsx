@@ -3,14 +3,14 @@ import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {MenuStackParam} from '@src/navigations/AppNavigation/stackParam';
 import {GuestStackParam} from '@src/navigations/GuestNavigation/stackParam';
-import {APP_NAVIGATION, MENU_NAVIGATION} from '@src/navigations/routes';
+import {APP_NAVIGATION, GUEST_NAVIGATION, MENU_NAVIGATION} from '@src/navigations/routes';
 import React, {useState} from 'react';
 import {Modal, SafeAreaView, Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 import R from '@src/res';
 import {BaseButton, BaseIcon, BaseImage, BaseText} from '@src/containers/components/Base';
 import {useAuth} from '@src/hooks/useAuth';
-import {navigateToPage} from '@src/navigations/services';
+import {navigateToPage, resetStack} from '@src/navigations/services';
 import {hs, ms, vs} from '@src/styles/scalingUtils';
 import {Colors} from '@src/styles/colors';
 import {useAppDispatch} from '@src/stores';
@@ -75,7 +75,11 @@ const AccountScreen = (props: Props) => {
             onShow();
             return;
           }
-          navigateToPage(item.navigate);
+          if (user) {
+            navigateToPage(item.navigate);
+          } else {
+            navigateToPage(GUEST_NAVIGATION.LOGIN, {name_screen: MENU_NAVIGATION.ACCOUNT});
+          }
         }}
         key={index}>
         <View style={{flexDirection: 'row', alignItems: 'center', flex: 1, columnGap: hs(12)}}>
@@ -90,6 +94,7 @@ const AccountScreen = (props: Props) => {
   const handleLogout = () => {
     // @ts-ignore
     distchpatch(logOutAction(true));
+    resetStack(APP_NAVIGATION.ROOT);
   };
 
   const onHide = (): void => {
@@ -102,14 +107,15 @@ const AccountScreen = (props: Props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <BaseImage image={{uri:user?.avatar}} imageStyle={styles.avatar} resizeMode="cover" />
-      <BaseText fullText={user?.name || 'Minh'} style={styles.name} />
+      <BaseImage image={user ? {uri: user?.avatar} : images.avataEmpty} imageStyle={styles.avatar} resizeMode="cover" />
+      <BaseText fullText={user?.name || ''} style={styles.name} />
       {listMenu.map(renderMenu)}
-
-      <TouchableOpacity onPress={handleLogout} style={styles.btnLogout}>
-        <BaseText fullText={'Đăng xuất'} style={styles.textLogout} />
-        <BaseIcon name="log-out-outline" color={Colors.white} size={ms(25)} />
-      </TouchableOpacity>
+      {user && (
+        <TouchableOpacity onPress={handleLogout} style={styles.btnLogout}>
+          <BaseText fullText={'Đăng xuất'} style={styles.textLogout} />
+          <BaseIcon name="log-out-outline" color={Colors.white} size={ms(25)} />
+        </TouchableOpacity>
+      )}
 
       <Modal visible={isVisible} onRequestClose={onHide} transparent animationType="fade">
         <TouchableOpacity onPress={onHide} style={styles.modalWrap}>

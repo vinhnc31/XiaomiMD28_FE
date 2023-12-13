@@ -3,7 +3,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import useToast from '@src/hooks/useToast';
 import {GuestStackParam} from '@src/navigations/GuestNavigation/stackParam';
 import {APP_NAVIGATION, GUEST_NAVIGATION, MENU_NAVIGATION} from '@src/navigations/routes';
-import {navigateToPage, pushToPage} from '@src/navigations/services';
+import {goBack, navigateToPage, popMany, pushToPage, resetStack} from '@src/navigations/services';
 import R from '@src/res';
 import AccountService from '@src/services/account';
 import React, {useEffect, useRef, useState} from 'react';
@@ -72,6 +72,14 @@ const LogInComponent = (props: Props) => {
       console.log('res: ', res);
       // @ts-ignore
       await dispatch(logInAction(res.data)).unwrap();
+      //@ts-ignore
+      if (props.route?.params?.name_screen) {
+        resetStack(APP_NAVIGATION.ROOT);
+        setTimeout(() => {
+          //@ts-ignore
+          navigateToPage(props.route?.params?.name_screen, props.route?.params.param);
+        }, 1200);
+      }
       toast.showSuccess({messageText: 'Đăng nhập thành công'});
       setLoading(false);
     } catch (error) {
@@ -92,7 +100,8 @@ const LogInComponent = (props: Props) => {
       const userInfo = await GoogleSignin.signIn();
       setLoading(true);
       const sv = new AccountService();
-      const res = await sv.loginGoogle(userInfo.idToken!);
+
+      const res = await sv.loginGoogle(userInfo.idToken!, fcmToken);
       console.log('res: ', res);
       // @ts-ignore
       await dispatch(logInAction(res.data)).unwrap();

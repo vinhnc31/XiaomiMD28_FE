@@ -25,7 +25,7 @@ interface Props {
 const PayDetailScreen = (props: Props) => {
   const {user} = useAuth();
   const toast = useToast();
-  const data = props.route.params;
+  const data = props.route.params?.selectedItemsData || props.route.params?.data;
   const [selectedVoucherData, setSelectedVoucherData] = useState();
   const [loading, setLoading] = useState<boolean>(false);
   const [value, setValue] = useState('1');
@@ -41,6 +41,7 @@ const PayDetailScreen = (props: Props) => {
     {label: 'Thanh toán khi nhận hàng', value: '1'},
     {label: 'Thanh toán qua vnpay', value: '2'},
   ];
+  // console.log(data)
   const navigateToAddressPay = () => {
     navigateToPage(APP_NAVIGATION.ADDRESS, {
       onAddress: item => {
@@ -73,17 +74,17 @@ const PayDetailScreen = (props: Props) => {
 
   const calculateTotalAmount = () => {
     let total = 0;
-    data?.forEach(item => {
-      total += item.quantity * item.ProductColorConfig['price'];
+    !data[0]["Product"]? total+=data[0].quantity *data[0].productPrice : data?.forEach(item => {
+      total += item.ProductColorConfig? item.quantity * item.ProductColorConfig['price']:item["Product"]["price"]*item.quantity;
     });
     return total;
   };
   const discount = totalAmounts * (selectedVoucherData?.discount / 100) || 0;
   const sumPay = totalAmounts - discount;
   const onPay = async () => {
-    const productsArray = data!.map(item => ({
+    const productsArray = data!.map((item) => ({
       quantity: item.quantity,
-      productId: item.Product['id'],
+      productId: item.Product?item.Product['id']:item.productId,
       ProductColorId: item.ProductColorId,
       ProductColorConfigId: item.ProductColorConfigId,
     }));
@@ -108,7 +109,6 @@ const PayDetailScreen = (props: Props) => {
         console.error('Error deleting item from AsyncStorage', error);
       }
     });
-    console.log(itemId);
     if(value =="1"){
       toast.showSuccess({messageText: 'Đặt hàng thành công'});
       navigateToPage(MENU_NAVIGATION.HOME);
@@ -116,8 +116,9 @@ const PayDetailScreen = (props: Props) => {
   };
   const payVNPay = async() => {
     onPay();
-    navigateToPage(APP_NAVIGATION.PAY, {sumPay});
+    navigateToPage(APP_NAVIGATION.PAY,{sumPay});
   };
+  // console.log(data[0]["Product"]["price"]*data[0].quantity)
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white', flexDirection: 'column'}}>
       <BaseHeaderNoCart title="Chi tiết thanh toán" onBackPress={goBack} />
@@ -156,20 +157,20 @@ const PayDetailScreen = (props: Props) => {
           renderItem={({item}) => (
             <View style={styles.viewItem}>
               <View style={styles.item}>
-                <Image source={{uri: item.productcolor['image']}} style={styles.image} resizeMode="cover" />
+                <Image source={{uri:item.productcolor? item.productcolor['image']: item["Product"]?item["Product"]["images"]:item.productImage}} style={styles.image} resizeMode="cover" />
                 <View style={styles.viewText}>
                   <Text ellipsizeMode="tail" numberOfLines={1} style={styles.text}>
-                    {item.Product['name']}
+                    {item.productName||item.Product['name']}
                   </Text>
-                  {item.productcolor?<View style={{flexDirection: 'row'}}>
+                  {item.ProductColor || item.productcolor?<View style={{flexDirection: 'row'}}>
                     <Text style={styles.textColor}>Màu sắc: </Text>
-                    <Text style={styles.textColor}>{item.productcolor.Color['nameColor']}</Text>
+                    <Text style={styles.textColor}>{item.ProductColor||item.productcolor.Color['nameColor']}</Text>
                   </View>
                   :null
                   }
                   <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                     <Text style={styles.textPrice}>
-                      {item.ProductColorConfig['price'].toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}
+                      {(item.ProductColorConfig? item.ProductColorConfig['price'] : item["Product"]?item["Product"]["price"]:item.productPrice ).toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}
                     </Text>
                     <Text style={styles.textPrice}>x{item.quantity}</Text>
                   </View>
@@ -181,7 +182,7 @@ const PayDetailScreen = (props: Props) => {
                   <Text style={styles.textNote}>({item.quantity} sản phẩm)</Text>
                 </View>
                 <Text style={styles.textSumPrice}>
-                  {(item.quantity * item.ProductColorConfig['price']).toLocaleString('vi-VN', {
+                  {(item.quantity * (item.ProductColorConfig? item.ProductColorConfig['price'] : item["Product"]?item["Product"]["price"]:item.productPrice )).toLocaleString('vi-VN', {
                     style: 'currency',
                     currency: 'VND',
                   })}

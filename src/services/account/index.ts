@@ -23,11 +23,11 @@ export default class AccountService extends BaseService<IAccount> {
   }
 
   public async changePass(id: number, obj: IChangePassReq) {
-    const {data} = await http.post<IAccount>(`${url.default}/changePassword/${id}`, obj);
+    const {data} = await http.post<IAccount>(`${url.default}/account/changePassword/${id}`, obj);
     return data;
   }
 
-  public async updateProfile(id:number,obj: FormData) {
+  public async updateProfile(id: number, obj: FormData) {
     const {data} = await http.put<IAccount>(`${url.default}/updateProfile/${id}`, obj);
     return data;
   }
@@ -42,8 +42,8 @@ export default class AccountService extends BaseService<IAccount> {
     return data;
   }
 
-  public async loginGoogle(id_token:string) {
-    const {data} = await http.post<IAccount>(`${url.default}/login-google`, {id_token});
+  public async loginGoogle(id_token: string, fcmToken?: string) {
+    const {data} = await http.post<IAccount>(`${url.default}/login-google`, {id_token, fcmToken});
     return data;
   }
 }
