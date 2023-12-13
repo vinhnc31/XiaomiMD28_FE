@@ -57,7 +57,6 @@ const NotificationScreen = (props: Props) => {
       const result = await notificationService.getNotification(AccountId);
       // console.log(result.data);
       setData(result.data);
-      props.navigation.setParams({ notificationCount: result.data.length });
       setLoading(false);
     } catch (error) {
       setError('err');

@@ -520,7 +520,6 @@ const DetailsScreen = (props: Props) => {
     setSelectedPriceModal(productIdData?.price || 0);
     setSelectedQuantityModal(getQuantitys(productIdData) || 0);
   }, [productIdData]);
-  console.log(productIdData?.averageRating)
   return (
     <SafeAreaView style={styles.mainContainer}>
       <View style={styles.backContainer}>

@@ -13,7 +13,7 @@ const endpoint = {
   },
  
   products: {
-    default: '/api/products',
+    default: '/api/product',
     getProduct: '/api/product',
     getProductByIdCategory: '/api/product/category',
     getProductId: '/api/product',
