@@ -108,7 +108,7 @@ export default StyleSheet.create({
   },
   textStar: {
     fontSize: ms(14),
-    color: '#000',
+    color: '#FB2A2A',
     fontWeight: '400',
     fontFamily: 'LibreBaskerville-Bold',
   },
@@ -142,8 +142,14 @@ export default StyleSheet.create({
     marginRight: hs(5),
   },
   textCmt: {
-    color: '#817F7F', // Màu văn bản
+    color: '#000000', // Màu văn bản
     fontSize: ms(14),
+    fontFamily: 'LibreBaskerville-Bold',
+    marginLeft: hs(5),
+  },
+  textCommentCount: {
+    color: '#817F7F', // Màu văn bản
+    fontSize: ms(13),
     fontFamily: 'LibreBaskerville-Bold',
     marginLeft: hs(5),
   },
@@ -151,7 +157,7 @@ export default StyleSheet.create({
     color: '#817F7F', // Màu văn bản
     fontSize: ms(13),
     fontFamily: 'LibreBaskerville-Bold',
-    marginLeft: 5,
+    marginLeft: hs(5),
   },
   textSellNumber: {
     color: '#000', // Màu văn bản
@@ -209,7 +215,7 @@ export default StyleSheet.create({
     fontSize: ms(13),
     color: '#646464',
     fontWeight: '400',
-    fontFamily: 'LibreBaskerville-Bold',
+    fontFamily: 'LibreBaskerville',
     marginBottom: vs(10),
   },
   descriptionImage: {

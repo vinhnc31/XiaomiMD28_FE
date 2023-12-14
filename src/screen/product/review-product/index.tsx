@@ -10,9 +10,7 @@ import {useAuth} from '@src/hooks/useAuth';
 import {CartModel} from '@src/services/cart/cart.model';
 import CartService from '@src/services/cart';
 import styles from './styles';
-import {ScrollView} from 'react-native';
 import {hs, vs, ms} from '@src/styles/scalingUtils';
-import R from '@src/res';
 
 interface Props {
   navigation: NativeStackNavigationProp<GuestStackParam>;

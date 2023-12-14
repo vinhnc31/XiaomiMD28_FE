@@ -21,14 +21,23 @@ import CategoryScreen from '@src/screen/category';
 const RootScreen = () => {
   const [notificationData, setNotificationData] = useState<NotificationModel[]>([]);
   const {user} = useAuth();
+  
   useEffect(() => {
-    fetchDataNotification();
-  }, []);
+    const fetchData = async () => {
+      try {
+        await fetchDataNotification();
+      } catch (error) {
+        console.log('Error fetching data:', error);
+      }
+    };
+  
+    fetchData();
+  }, [user]);
   const fetchDataNotification = async () => {
     try {
+      const AccountId = await user?.id;
       const notificationService = new NotificationService();
-      const result = await notificationService.getNotification(user.id);
-      // console.log(result.data);
+      const result = await notificationService.getNotification(AccountId);
       setNotificationData(result.data);
     } catch (error) {
       console.log('error: ', error);
