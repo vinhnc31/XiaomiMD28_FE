@@ -17,7 +17,7 @@ import OrderDetailScreen from '@src/screen/orderDetails/index';
 import VouCherScreen from '@src/screen/voucher/index';
 import myaccount from '@src/screen/account/myaccount';
 import changepass from '@src/screen/account/changepass';
-import PayScreen from '@src/screen/pay/index';
+
 import EvaluateScreen from '@src/screen/evaluate/index';
 import PayViewScreen from '@src/screen/pay/viewpay';
 import search from '@src/screen/search';
@@ -79,12 +79,11 @@ const AppNavigationScreen = () => {
       <Stack.Screen name={APP_NAVIGATION.VOUCHER} component={VouCherScreen} />
       <Stack.Screen name={APP_NAVIGATION.MY_ACCOUNT} component={myaccount} />
       <Stack.Screen name={APP_NAVIGATION.CHANGE_PASS} component={changepass} />
-      <Stack.Screen name={APP_NAVIGATION.PAY} component={PayScreen} />
+      
       <Stack.Screen name={APP_NAVIGATION.EVALUATE} component={EvaluateScreen} />
       <Stack.Screen name={APP_NAVIGATION.SEARCH} component={search}/>
       <Stack.Screen name={APP_NAVIGATION.REVIEWPRODUCT} component={reviewProduct} />
       <Stack.Screen name={APP_NAVIGATION.PAYVIEW} component={PayViewScreen} />
-    </Stack.Navigator>
     </Stack.Navigator>
   );
 };

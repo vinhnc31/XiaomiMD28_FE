@@ -76,7 +76,7 @@ const GuestNavigationComponent = () => {
       <Stack.Screen name={APP_NAVIGATION.VOUCHER} component={VouCherScreen} />
       <Stack.Screen name={APP_NAVIGATION.MY_ACCOUNT} component={myaccount} />
       <Stack.Screen name={APP_NAVIGATION.CHANGE_PASS} component={changepass} />
-      <Stack.Screen name={APP_NAVIGATION.PAY} component={PayScreen} />
+     
       <Stack.Screen name={APP_NAVIGATION.EVALUATE} component={EvaluateScreen} />
       <Stack.Screen name={APP_NAVIGATION.PAYVIEW} component={PayViewScreen}/>
       <Stack.Screen name={APP_NAVIGATION.SEARCH} component={search} />

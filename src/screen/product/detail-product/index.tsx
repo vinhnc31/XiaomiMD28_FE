@@ -456,6 +456,7 @@ const DetailsScreen = (props: Props) => {
       setSelectedCountModal(prevCount => Math.min(prevCount + 1, selectedQuantityModal || 1));
   };
   const handleAddToCart = async () => {
+    handleModalPress();
       try {
         const cartService = new CartService();
         const addCartData = {
@@ -520,7 +521,6 @@ const DetailsScreen = (props: Props) => {
     setSelectedPriceModal(productIdData?.price || 0);
     setSelectedQuantityModal(getQuantitys(productIdData) || 0);
   }, [productIdData]);
-  console.log(productIdData?.averageRating)
   return (
     <SafeAreaView style={styles.mainContainer}>
       <View style={styles.backContainer}>
