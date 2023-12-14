@@ -140,8 +140,7 @@ export default StyleSheet.create({
   dropdown: {
     height: 45,
     borderColor: 'gray',
-    borderRadius: 4,
-    paddingHorizontal: 8,
+    borderRadius: 4,paddingHorizontal: 8,
     flex: 1, 
     // marginHorizontal: 8,
     backgroundColor: '#D9D9D9',

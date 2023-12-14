@@ -32,6 +32,7 @@ const RootScreen = () => {
     };
   
     fetchData();
+    fetchDataNotification();
   }, [user]);
   const fetchDataNotification = async () => {
     try {

@@ -1,4 +1,4 @@
-import {RouteProp, useFocusEffect, useNavigation} from '@react-navigation/native';
+import {RouteProp, useFocusEffect, useIsFocused, useNavigation} from '@react-navigation/native';
 import styles from './styles';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { MenuStackParam } from '@src/navigations/AppNavigation/stackParam';
@@ -96,11 +96,6 @@ const HomeScreen = (props: Props) => {
       console.log("new: ", newDataProduct.length);
     }
   }, [page, dataProduct]);
-  useFocusEffect(
-    React.useCallback(() => {
-      featchCart();
-    }, [user]),
-  );
   const fetchSearchResults = useCallback(async (nextPage: number = 1) => {
     console.log("dataprd: ", dataProduct.length);
    
@@ -158,12 +153,11 @@ const HomeScreen = (props: Props) => {
     }
   }, [dataCategory]);
 
-
-
+  const loadCart = useIsFocused();
   useEffect(() => {
     fetchData();
     featchCart();
-  }, [user,refreshing]);
+  }, [user,refreshing,loadCart]);
 
   const fetchData = async () => {
     try {
@@ -198,6 +192,7 @@ const HomeScreen = (props: Props) => {
     if(user){
       const resultCart = await cartService.fetchCart(user?.id!);
       setData(resultCart.data);
+      console.log(resultCart.data)
     }
   };
   const fetchDataCategory = async () => {
@@ -383,6 +378,8 @@ const HomeScreen = (props: Props) => {
               shadowOffset: { width: 0, height: 1 },
               shadowOpacity: 0.2,
               shadowRadius: 2, 
+              borderWidth:1,
+              borderRadius: 8,
               margin: 8
             }}>
               {displayedData.length > 0 && (
