@@ -38,7 +38,6 @@ const RootScreen = () => {
       const AccountId = await user?.id;
       const notificationService = new NotificationService();
       const result = await notificationService.getNotification(AccountId);
-      console.log(result.data);
       setNotificationData(result.data);
     } catch (error) {
       console.log('error: ', error);

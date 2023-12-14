@@ -1,6 +1,5 @@
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import BaseHeader from '@src/containers/components/Base/BaseHeader';
 import {APP_NAVIGATION, GUEST_NAVIGATION} from '@src/navigations/routes';
 import React, {useEffect, useState} from 'react';
 import {ms, vs, hs} from '@src/styles/scalingUtils';
@@ -14,7 +13,6 @@ import {
   Image,
   Modal,
   TouchableOpacity,
-  ScrollView,
   RefreshControl,
   TouchableWithoutFeedback,
 } from 'react-native';
@@ -23,14 +21,13 @@ import {AppStackParam} from '@src/navigations/AppNavigation/stackParam';
 import {BaseLoading} from '@src/containers/components/Base/BaseLoading';
 import Carousel from './Carousel';
 
-import {ProductModel, ProductDetailModel, CommentProductId} from '@src/services/product/product.model';
+import {ProductDetailModel, CommentProductId} from '@src/services/product/product.model';
 import ProductService from '@src/services/product';
 import {navigateToPage} from '@src/navigations/services';
 import FavoriteService from '@src/services/favorite';
 import {useAuth} from '@src/hooks/useAuth';
 import Toast from 'react-native-toast-message';
 import CartService from '@src/services/cart';
-import {ToastAndroid} from 'react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -93,7 +90,6 @@ const DetailsScreen = (props: Props) => {
       const productService = new ProductService();
       const result = await productService.getProductId(productId);
       setProductIdData(result.data);
-      console.log('aaaaaa', Object.keys(result.data));
       if (result.data && Object.keys(result.data).length > 0) {
         setNoData(false);
       } else {
@@ -134,21 +130,21 @@ const DetailsScreen = (props: Props) => {
     RefreshData();
   };
 
-  // const getQuantitys = (productData: ProductDetailModel): number => {
-  //   let totalQuantity = 0;
-  //   if (productData && productData.colorProducts && Array.isArray(productData.colorProducts)) {
-  //     productData.colorProducts.forEach(colorProduct => {
-  //       if (colorProduct && colorProduct.colorConfigs && Array.isArray(colorProduct.colorConfigs)) {
-  //         colorProduct.colorConfigs.forEach(colorConfig => {
-  //           if (colorConfig && typeof colorConfig.quantity === 'number') {
-  //             totalQuantity += colorConfig.quantity;
-  //           }
-  //         });
-  //       }
-  //     });
-  //   }
-  //   return totalQuantity;
-  // };
+  const getQuantitys = (productData: ProductDetailModel): number => {
+    let totalQuantity = 0;
+    if (productData && productData.colorProducts && Array.isArray(productData.colorProducts)) {
+      productData.colorProducts.forEach(colorProduct => {
+        if (colorProduct && colorProduct.colorConfigs && Array.isArray(colorProduct.colorConfigs)) {
+          colorProduct.colorConfigs.forEach(colorConfig => {
+            if (colorConfig && typeof colorConfig.quantity === 'number') {
+              totalQuantity += colorConfig.quantity;
+            }
+          });
+        }
+      });
+    }
+    return totalQuantity;
+  };
 
   const handleBackPress = () => {
     props.navigation.goBack();
@@ -433,7 +429,7 @@ const DetailsScreen = (props: Props) => {
       setSelectedQuantityModal(0);
       setProductColorConfigIdModal(null);
     } else {
-      setSelectedQuantityModal(productIdData?.quantity ? productIdData?.quantity : item?.colorConfigs[0].quantity );
+      setSelectedQuantityModal(productIdData?.quantity ? productIdData?.quantity : item?.colorConfigs[0].quantity);
     }
     //logic view
     setIsRenderColorConfigId(item?.colorConfigs.length === 0 ? true : false);
@@ -462,32 +458,32 @@ const DetailsScreen = (props: Props) => {
   };
   const handleAddToCart = async () => {
     handleModalPress();
-      try {
-        const cartService = new CartService();
-        const addCartData = {
-          productId: productIdData?.id,
-          AccountId: AccountId,
-          quantity: selectedCountModal,
-          ProductColorId: productColorIdModal ?? null,
-          ProductColorConfigId: ProductColorConfigIdModal ?? null,
-        };
-        console.log('addCartData', addCartData);
-        const result = await cartService.postCart(addCartData);
-        Toast.show({
-          type: 'success',
-          position: 'top',
-          text1: 'Thành công',
-          text2: 'Đã thêm vào giỏ hàng',
-        });
-      } catch (error) {
-        console.log('error: ', error);
-        Toast.show({
-          type: 'error',
-          position: 'top',
-          text1: 'Thông báo',
-          text2: 'Không thể thêm vào giỏ hàng !',
-        });
-      }
+    try {
+      const cartService = new CartService();
+      const addCartData = {
+        productId: productIdData?.id,
+        AccountId: AccountId,
+        quantity: selectedCountModal,
+        ProductColorId: productColorIdModal ?? null,
+        ProductColorConfigId: ProductColorConfigIdModal ?? null,
+      };
+      console.log('addCartData', addCartData);
+      const result = await cartService.postCart(addCartData);
+      Toast.show({
+        type: 'success',
+        position: 'top',
+        text1: 'Thành công',
+        text2: 'Đã thêm vào giỏ hàng',
+      });
+    } catch (error) {
+      console.log('error: ', error);
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Thông báo',
+        text2: 'Không thể thêm vào giỏ hàng !',
+      });
+    }
   };
   const handleBuyNow = () => {
     handleModalPress();
@@ -524,7 +520,7 @@ const DetailsScreen = (props: Props) => {
   useEffect(() => {
     setSelectedImageModal(productIdData?.images || '');
     setSelectedPriceModal(productIdData?.price || 0);
-    setSelectedQuantityModal(productIdData?.quantity || 0);
+    setSelectedQuantityModal(productIdData?.quantity || getQuantitys(productIdData));
   }, [productIdData]);
   return (
     <SafeAreaView style={styles.mainContainer}>
@@ -573,8 +569,6 @@ const DetailsScreen = (props: Props) => {
                           <Carousel
                             data={dataSlider(productIdData) || []}
                             onColorChanged={colorId => {
-                              // Xử lý thông tin vị trí ở đây, ví dụ: console.log(index);
-                              console.log('index-----------------z', colorId);
                               setcolorIdSlider(colorId);
                             }}
                             colorIdButton={colorIdButtonSlider}
@@ -588,7 +582,6 @@ const DetailsScreen = (props: Props) => {
                             activeOpacity={0.8}
                             // Disable the button based on the loading state
                             onPress={() => {
-                              console.log('code logic button tymm <3');
                               if (user) {
                                 handleFavoritePress();
                               } else {
@@ -622,11 +615,11 @@ const DetailsScreen = (props: Props) => {
                           <Text style={styles.textStar}>
                             {productIdData?.averageRating ? parseFloat(productIdData?.averageRating).toFixed(1) : 0.0}
                           </Text>
-                          <Text style={styles.textCommentCount}>({commentProductIdData.length || productIdData?.commentCount})</Text>
+                          <Text style={styles.textCommentCount}>
+                            ({commentProductIdData.length || productIdData?.commentCount})
+                          </Text>
                           <Text style={styles.textSell}>{' |  Kho : '}</Text>
-                          <Text style={styles.textCmt}>{productIdData?.quantity}</Text>
-                          {/* <Text style={styles.textSell}>| Đã bán : </Text>
-                          <Text style={styles.textSellNumber}>123</Text> */}
+                          <Text style={styles.textCmt}>{productIdData?.quantity || getQuantitys(productIdData)}</Text>
                         </View>
                       </View>
                       {dataSlider(productIdData) ? (

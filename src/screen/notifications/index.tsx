@@ -48,14 +48,12 @@ const NotificationScreen = (props: Props) => {
   const AccountId = user?.id;
   useEffect(() => {
     fetchDataNotification();
-    console.log('eff: ', data);
-  }, []);
+  }, [user]);
   const fetchDataNotification = async () => {
     try {
       setLoading(true);
       const notificationService = new NotificationService();
       const result = await notificationService.getNotification(AccountId);
-      // console.log(result.data);
       setData(result.data);
       setLoading(false);
     } catch (error) {
