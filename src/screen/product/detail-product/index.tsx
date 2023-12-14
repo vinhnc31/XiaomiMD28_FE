@@ -461,32 +461,33 @@ const DetailsScreen = (props: Props) => {
     setSelectedCountModal(prevCount => Math.min(prevCount + 1, selectedQuantityModal || 1));
   };
   const handleAddToCart = async () => {
-    try {
-      const cartService = new CartService();
-      const addCartData = {
-        productId: productIdData?.id,
-        AccountId: AccountId,
-        quantity: selectedCountModal,
-        ProductColorId: productColorIdModal ?? null,
-        ProductColorConfigId: ProductColorConfigIdModal ?? null,
-      };
-      console.log('addCartData', addCartData);
-      const result = await cartService.postCart(addCartData);
-      Toast.show({
-        type: 'success',
-        position: 'top',
-        text1: 'Thành công',
-        text2: 'Đã thêm vào giỏ hàng',
-      });
-    } catch (error) {
-      console.log('error: ', error);
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'Thông báo',
-        text2: 'Không thể thêm vào giỏ hàng !',
-      });
-    }
+    handleModalPress();
+      try {
+        const cartService = new CartService();
+        const addCartData = {
+          productId: productIdData?.id,
+          AccountId: AccountId,
+          quantity: selectedCountModal,
+          ProductColorId: productColorIdModal ?? null,
+          ProductColorConfigId: ProductColorConfigIdModal ?? null,
+        };
+        console.log('addCartData', addCartData);
+        const result = await cartService.postCart(addCartData);
+        Toast.show({
+          type: 'success',
+          position: 'top',
+          text1: 'Thành công',
+          text2: 'Đã thêm vào giỏ hàng',
+        });
+      } catch (error) {
+        console.log('error: ', error);
+        Toast.show({
+          type: 'error',
+          position: 'top',
+          text1: 'Thông báo',
+          text2: 'Không thể thêm vào giỏ hàng !',
+        });
+      }
   };
   const handleBuyNow = () => {
     handleModalPress();

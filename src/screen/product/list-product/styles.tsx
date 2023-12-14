@@ -158,7 +158,7 @@ export default StyleSheet.create({
   },
   placeholderStyle: {
     fontSize: 14,
-    fontFamily: 'LibreBaskerville-Regular',
+    fontFamily: 'LibreBaskerville-Bold',
     color: 'black',
   },
   selectedTextStyle: {

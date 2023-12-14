@@ -66,7 +66,6 @@ const FavoriteScreen = (props: Props) => {
         await fetchViewFavoriteData();
         await featchCart();
       };
-
       fetchData();
       return () => {};
     }, []),

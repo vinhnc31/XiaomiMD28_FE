@@ -9,7 +9,6 @@ export type AppStackParam = {
   HISTORYORDER:undefined;
   ORDERDETAIL:undefined;
   REVIEWPRODUCT:undefined;
-  PAY:undefined;
   EVALUATE:undefined;
   SEARCH: undefined;
   PAYVIEW: undefined;

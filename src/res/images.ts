@@ -25,5 +25,6 @@ export const images = {
   cameraIconx2: require('../assets/images/iconCamera2x.png'),
   logoApp: require('../assets/images/logoApp.png'),
   iconFilter: require('../assets/images/filter.png'),
+  iconFiltered: require('../assets/images/filtered.png'),
   imgNoResult: require('../assets/images/noResult.png'),
 };
