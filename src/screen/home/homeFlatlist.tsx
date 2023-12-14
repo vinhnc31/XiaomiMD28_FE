@@ -3,6 +3,8 @@ import TouchableScale from "react-native-touchable-scale";
 import { navigateToPage } from "@src/navigations/services";
 import styles from "./styles";
 import React from "react";
+import R from "@src/res";
+import { ProductModel } from "@src/services/product/product.model";
 
 export type Movie = {
   id: string;
@@ -11,46 +13,36 @@ export type Movie = {
   price: string;
 };
 
+const config = {
+  style: 'currency',
+  currency: 'VND',
+  maximumFractionDigits: 9,
+};
+
 
 const numColumns = 2; // Số cột bạn muốn hiển thị
 
 //goi y
-export function ListItemSuggest({ item }: { item: Movie }) {
-  
-  const itemWidth = Dimensions.get('window').width / numColumns;
-  const itemHeight = itemWidth; // Đảm bảo kích thước bằng nhau
-
+export function ListItemSuggest({ item }: { item: ProductModel }) {
   return (
-    <TouchableScale onPress={() => console.log("da chon 1 item", item.id)} activeScale={0.9} friction={9} tension={100}>
+    <TouchableScale
+      onPress={() => console.log('da chon 1 item', item.id)}
+      activeScale={0.9}
+      friction={9}
+      tension={100}>
       <View style={styles.suggestItem}>
-      
         <View style={styles.viewSuggestImage}>
-          <Image
-            source={{ uri: item.image }}
-            style={{ width: '70%', height: '90%' }}
-          />
-          <View style={{ width: '100%', position: 'absolute', top: 10, alignItems: 'flex-end' }}>
-            <TouchableOpacity onPress={() => console.log("da thich")}>
-              <Image
-                style={styles.imgFavourite}
-                source={require('../../assets/images/favourite.png')}
-              />
-            </TouchableOpacity>
-          </View>
+          <Image source={{ uri: item.images }} style={{ width: '100%', height: '100%' }} />
         </View>
         <View style={{ flex: 0.5 }} />
 
-        <Image style={{ width: 30, height: 35, position: 'absolute', left: 16, bottom: 75 }}
-          source={require('../../assets/images/hot2.png')}
-        />
         <View style={styles.viewSuggestText}>
-          <Text numberOfLines={1} style={styles.suggestTextName}>{item.name}</Text>
-          <Text style={styles.text}>{item.price}<Text style={{ textDecorationLine: 'underline', color: 'red' }}>đ</Text></Text>
+          <Text numberOfLines={1} style={styles.suggestTextName}>
+            {item.name}
+          </Text>
+          <Text style={styles.text}>{new Intl.NumberFormat('vi-VN', config).format(item.price)}</Text>
           <View style={styles.viewStar}>
-            <Image
-              style={styles.imgStar}
-              source={require('../../assets/images/star4.png')}
-            />
+            <Image style={styles.imgStar} source={R.images.iconStar} />
             <Text style={styles.text}>4.9</Text>
             <Text style={styles.textCmt}>(50)</Text>
           </View>

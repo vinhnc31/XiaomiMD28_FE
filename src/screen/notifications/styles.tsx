@@ -1,5 +1,5 @@
-import {ms, vs, hs} from '@src/styles/scalingUtils';
-import {StyleSheet, Dimensions} from 'react-native';
+import { ms, vs, hs } from '@src/styles/scalingUtils';
+import { StyleSheet, Dimensions } from 'react-native';
 const WIDTH_50PT = Dimensions.get('window').width - hs(375 / 2);
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
@@ -32,7 +32,7 @@ export default StyleSheet.create({
     marginHorizontal: hs(16),
     elevation: 5, // Độ sâu của đổ bóng (cho Android)
     shadowColor: '#000000', // Màu của đổ bóng (cho iOS)
-    shadowOffset: {width: 0, height: 4}, // Độ dài và độ rộng của đổ bóng (cho iOS)
+    shadowOffset: { width: 0, height: 4 }, // Độ dài và độ rộng của đổ bóng (cho iOS)
     shadowOpacity: 0.4, // Độ trong suốt của đổ bóng (cho iOS)
     shadowRadius: 4, // Bán kính của đổ bóng (cho iOS)
   },
