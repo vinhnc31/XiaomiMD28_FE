@@ -64,8 +64,9 @@ const NotificationScreen = (props: Props) => {
     }
   };
   const onRefresh = async () => {
+    setRefreshing(true);
     await fetchDataNotification();
-    setLoading(false);
+    setRefreshing(false);
   };
   const renderNoDataMessage = () => {
     if (loading) {
@@ -87,48 +88,44 @@ const NotificationScreen = (props: Props) => {
   };
   return (
     <SafeAreaView style={{flex: 1, flexDirection: 'column', backgroundColor: '#F8F8F8'}}>
+      <>
+        <View style={styles.headerContainer}>
+          <View style={{flex: 8, alignItems: 'flex-start', justifyContent: 'center'}}>
+            <Text numberOfLines={1} style={styles.headerTitle}>
+              Thông báo
+            </Text>
+          </View>
+        </View>
+        <View style={{borderColor: '#A7A7A7', borderWidth: 0.8}} />
+      </>
+      {renderNoDataMessage()}
       <FlatList
-        ListHeaderComponent={() => (
-          <>
-            <View style={styles.headerContainer}>
-              <View style={{flex: 8, alignItems: 'flex-start', justifyContent: 'center'}}>
-                <Text numberOfLines={1} style={styles.headerTitle}>
-                  Thông báo
-                </Text>
-              </View>
-            </View>
-            <View style={{borderColor: '#A7A7A7', borderWidth: 0.8}} />
-          </>
-        )}
         data={data}
         keyExtractor={item => item.id.toString()}
         showsVerticalScrollIndicator={true}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         renderItem={({item, index}) => (
-          <>
-            {renderNoDataMessage()}
-            <View>
-              <TouchableScale
-                key={index}
-                onPress={() => console.log('click---', data)}
-                activeScale={1}
-                friction={9}
-                tension={100}
-                style={{height: vs(125), justifyContent: 'center', alignItems: 'center'}}>
-                <View style={styles.viewItemNotification}>
-                  <View style={{flex: 2}}>
-                    <Image source={require('../../assets/images/demo.jpg')} style={styles.imgNotification} />
-                  </View>
-
-                  <View style={styles.viewTextNotification}>
-                    <Text numberOfLines={4} style={styles.textContentNotification}>
-                      {item?.content}
-                    </Text>
-                  </View>
+          <View>
+            <TouchableScale
+              key={index}
+              onPress={() => console.log('click---', data)}
+              activeScale={1}
+              friction={9}
+              tension={100}
+              style={{height: vs(125), justifyContent: 'center', alignItems: 'center'}}>
+              <View style={styles.viewItemNotification}>
+                <View style={{flex: 2}}>
+                  <Image source={require('../../assets/images/demo.jpg')} style={styles.imgNotification} />
                 </View>
-              </TouchableScale>
-            </View>
-          </>
+
+                <View style={styles.viewTextNotification}>
+                  <Text numberOfLines={4} style={styles.textContentNotification}>
+                    {item?.content}
+                  </Text>
+                </View>
+              </View>
+            </TouchableScale>
+          </View>
         )}
       />
     </SafeAreaView>
