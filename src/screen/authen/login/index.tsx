@@ -79,7 +79,9 @@ const LogInComponent = (props: Props) => {
           //@ts-ignore
           navigateToPage(props.route?.params?.name_screen, props.route?.params.param);
         }, 1200);
+        return;
       }
+      resetStack(APP_NAVIGATION.ROOT);
       toast.showSuccess({messageText: 'Đăng nhập thành công'});
       setLoading(false);
     } catch (error) {

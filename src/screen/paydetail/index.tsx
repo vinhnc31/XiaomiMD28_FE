@@ -114,16 +114,15 @@ const PayDetailScreen = (props: Props) => {
                 await AsyncStorage.setItem('cartData', JSON.stringify(updatedCartData));
               }
               await cartService.deleteCart(itemId.id);
+              if (value == '1') {
+                toast.showSuccess({messageText: 'Đặt hàng thành công'});
+                navigateToPage(MENU_NAVIGATION.HOME);
+              }
             } catch (error) {
               console.error('Error deleting item from AsyncStorage', error);
             }
           })
         : null;
-    }
-
-    if (value == '1') {
-      toast.showSuccess({messageText: 'Đặt hàng thành công'});
-      navigateToPage(MENU_NAVIGATION.HOME);
     }
   };
   const featchDataPay = async () => {

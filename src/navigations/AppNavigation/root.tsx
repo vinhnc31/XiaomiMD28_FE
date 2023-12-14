@@ -23,7 +23,7 @@ const RootScreen = () => {
   const {user} = useAuth();
   useEffect(() => {
     fetchDataNotification();
-  }, []);
+  }, [user]);
   const fetchDataNotification = async () => {
     try {
       const notificationService = new NotificationService();

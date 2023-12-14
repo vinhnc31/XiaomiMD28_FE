@@ -284,7 +284,7 @@ const applyFilter = () => {
         onCartPress={handleCartPress}
         onBackPress={handleBackPress}
         data={cartData}
-      // onFilterPress={toggleModal}
+        onFilterPress={toggleFilter}
       />
 
       <ScrollView style={{ paddingHorizontal: 8, backgroundColor: '#FBEFE5' }} showsVerticalScrollIndicator={false}>
