@@ -35,6 +35,9 @@ import R from '@src/res';
 import { vs, width } from '@src/styles/scalingUtils';
 
 import { FlatListSlider } from 'react-native-flatlist-slider';
+import { useAuth } from '@src/hooks/useAuth';
+import useNotificationPermission from '@src/hooks/useNotificationPermission';
+import CartService from '@src/services/cart';
 
 
 interface Props {
@@ -92,7 +95,11 @@ const HomeScreen = (props: Props) => {
       console.log("new: ", newDataProduct.length);
     }
   }, [page, dataProduct]);
-
+  useFocusEffect(
+    React.useCallback(() => {
+      featchCart();
+    }, [user]),
+  );
   const fetchSearchResults = useCallback(async (nextPage: number = 1) => {
     console.log("dataprd: ", dataProduct.length);
    
