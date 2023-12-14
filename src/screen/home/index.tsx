@@ -84,7 +84,7 @@ const HomeScreen = (props: Props) => {
       fetchDataCategory();
       fetchDataProduct();
     }
-  }, [refreshing]);
+  }, [user,refreshing]);
   const onRefresh = () => {
     setRefreshing(true);
   };

@@ -112,14 +112,14 @@ const NotificationScreen = (props: Props) => {
               activeScale={1}
               friction={9}
               tension={100}
-              style={{height: vs(125), justifyContent: 'center', alignItems: 'center'}}>
+              style={styles.btnContainer}>
               <View style={styles.viewItemNotification}>
-                <View style={{flex: 2}}>
-                  <Image source={require('../../assets/images/demo.jpg')} style={styles.imgNotification} />
+                <View style={{justifyContent: 'center', alignSelf: 'center'}}>
+                  <Image source={require('../../assets/images/logoApp.png')} style={styles.imgNotification} />
                 </View>
 
                 <View style={styles.viewTextNotification}>
-                  <Text numberOfLines={4} style={styles.textContentNotification}>
+                  <Text style={styles.textContentNotification}>
                     {item?.content}
                   </Text>
                 </View>
