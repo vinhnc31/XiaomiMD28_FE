@@ -38,6 +38,7 @@ import { FlatListSlider } from 'react-native-flatlist-slider';
 import { useAuth } from '@src/hooks/useAuth';
 import useNotificationPermission from '@src/hooks/useNotificationPermission';
 import CartService from '@src/services/cart';
+import { CartModel } from '@src/services/cart/cart.model';
 
 
 interface Props {
@@ -161,7 +162,8 @@ const HomeScreen = (props: Props) => {
 
   useEffect(() => {
     fetchData();
-  }, [refreshing]);
+    featchCart();
+  }, [user,refreshing]);
 
   const fetchData = async () => {
     try {
@@ -381,8 +383,6 @@ const HomeScreen = (props: Props) => {
               shadowOffset: { width: 0, height: 1 },
               shadowOpacity: 0.2,
               shadowRadius: 2, 
-              borderWidth:1,
-              borderRadius: 8,
               margin: 8
             }}>
               {displayedData.length > 0 && (
