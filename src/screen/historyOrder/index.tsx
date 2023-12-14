@@ -103,38 +103,32 @@ const HistoryOrderScreen = (props: Props) => {
         screenOptions={{
           tabBarLabelStyle: {fontSize: 15, textTransform: 'none'},
           tabBarScrollEnabled: true,
-          tabBarAndroidRipple: {borderless: false},
+          // tabBarAndroidRipple: {borderless: false},
         }}>
         <MaterialTopTabs.Screen
           name="Tab1"
           options={{title: 'Chờ xác nhận'}}
-          listeners={{
-            focus: () => fetchData(),
-          }}>
+          
+          >
+            
           {props => <HistoryOrderTab {...props} data={data['0']} loading={loading} onShow={onShow} />}
         </MaterialTopTabs.Screen>
         <MaterialTopTabs.Screen
           name="Tab2"
           options={{title: 'Đang vận chuyển'}}
-          listeners={{
-            focus: () => fetchData(),
-          }}>
+          >
           {props => <HistoryOrderTab {...props} data={data['1']} loading={loading} onShow={onShow} />}
         </MaterialTopTabs.Screen>
         <MaterialTopTabs.Screen
           name="Tab4"
           options={{title: 'Đã nhận'}}
-          listeners={{
-            focus: () => fetchData(),
-          }}>
+          >
           {props => <HistoryOrderTab {...props} data={data['2']} loading={loading} onShow={onShow} />}
         </MaterialTopTabs.Screen>
         <MaterialTopTabs.Screen
           name="Tab5"
           options={{title: 'Đã hủy'}}
-          listeners={{
-            focus: () => fetchData(),
-          }}>
+          >
           {props => <HistoryOrderTab {...props} data={data['3']} loading={loading} />}
         </MaterialTopTabs.Screen>
       </MaterialTopTabs.Navigator>
@@ -202,7 +196,7 @@ const HistoryOrderTab = ({data, onShow}: {data: HistoryOrderModel[]; loading: bo
                 }}>
                 <View style={styles.item}>
                   <Image
-                    source={{uri: item.OrdersProducts[0].productcolor?item.OrdersProducts[0].productcolor['image']:item.OrdersProducts[0]["Product"]["images"]}}
+                    source={{uri: item.OrdersProducts[0].productcolor ? item.OrdersProducts[0].productcolor['image']:item.OrdersProducts[0]["Product"]["images"]}}
                     style={styles.image}
                     resizeMode="stretch"
                   />

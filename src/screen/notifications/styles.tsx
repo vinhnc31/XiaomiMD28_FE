@@ -18,12 +18,11 @@ export default StyleSheet.create({
     color: 'black',
     marginLeft: hs(20),
   },
+  btnContainer: { justifyContent: 'center', alignItems: 'center', width: '100%' },
   viewItemNotification: {
     flexDirection: 'row',
-    flex: 1,
     backgroundColor: '#FFFFFF',
     marginVertical: vs(6),
-    height: vs(120),
     borderRadius: ms(10),
     borderWidth: 0.8,
     paddingHorizontal: hs(8),
@@ -37,14 +36,12 @@ export default StyleSheet.create({
     shadowRadius: 4, // Bán kính của đổ bóng (cho iOS)
   },
   imgNotification: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    resizeMode: 'contain',
+    width: vs(100),
+    height: vs(100),
     borderRadius: ms(8),
   },
   viewTextNotification: {
-    flex: 8,
+    width: hs(260),
     paddingLeft: hs(8),
   },
   textContentNotification: {

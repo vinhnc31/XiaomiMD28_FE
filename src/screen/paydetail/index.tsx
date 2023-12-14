@@ -18,6 +18,8 @@ import OrderService from '@src/services/order';
 import useToast from '@src/hooks/useToast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CartService from '@src/services/cart';
+import {PayModel} from '@src/services/pay/pay.mode';
+import PayService from '@src/services/pay';
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
   route: RouteProp<AppStackParam, APP_NAVIGATION.PAYDETAIL>;
@@ -25,6 +27,7 @@ interface Props {
 const PayDetailScreen = (props: Props) => {
   const {user} = useAuth();
   const toast = useToast();
+  const [dataPay, setDataPay] = useState<PayModel[]>([]);
   const data = props.route.params?.selectedItemsData || props.route.params?.data;
   const [selectedVoucherData, setSelectedVoucherData] = useState();
   const [loading, setLoading] = useState<boolean>(false);
@@ -33,7 +36,7 @@ const PayDetailScreen = (props: Props) => {
   const [isFocus, setIsFocus] = useState(false);
   const [totalAmounts, setTotalAmounts] = useState({});
   const [addressData, setAddressData] = useState<AddressModel>();
-
+  const payService = new PayService();
   const addressService = new AddressService();
   const cartService = new CartService();
   const orderService = new OrderService();
@@ -69,22 +72,26 @@ const PayDetailScreen = (props: Props) => {
   useEffect(() => {
     setTotalAmounts(calculateTotalAmount());
     fetchDataAddress();
-    
+    featchDataPay();
   }, []);
 
   const calculateTotalAmount = () => {
     let total = 0;
-    !data[0]["Product"]? total+=data[0].quantity *data[0].productPrice : data?.forEach(item => {
-      total += item.ProductColorConfig? item.quantity * item.ProductColorConfig['price']:item["Product"]["price"]*item.quantity;
-    });
+    !data[0]['Product']
+      ? (total += data[0].quantity * data[0].productPrice)
+      : data?.forEach(item => {
+          total += item.ProductColorConfig
+            ? item.quantity * item.ProductColorConfig['price']
+            : item['Product']['price'] * item.quantity;
+        });
     return total;
   };
   const discount = totalAmounts * (selectedVoucherData?.discount / 100) || 0;
   const sumPay = totalAmounts - discount;
   const onPay = async () => {
-    const productsArray = data!.map((item) => ({
+    const productsArray = data!.map(item => ({
       quantity: item.quantity,
-      productId: item.Product?item.Product['id']:item.productId,
+      productId: item.Product ? item.Product['id'] : item.productId,
       ProductColorId: item.ProductColorId,
       ProductColorConfigId: item.ProductColorConfigId,
     }));
@@ -96,27 +103,48 @@ const PayDetailScreen = (props: Props) => {
       products: productsArray,
       PromotionId: selectedVoucherData?.id ?? null,
     });
-    const itemId = data?.map(async itemId => {
-      try {
-        const savedData = await AsyncStorage.getItem('cartData');
-        if (savedData) {
-          const cartData = JSON.parse(savedData);
-          const updatedCartData = cartData.filter(item => item.id !== itemId.id);
-          await AsyncStorage.setItem('cartData', JSON.stringify(updatedCartData));
-        }
-        await cartService.deleteCart(itemId.id);
-      } catch (error) {
-        console.error('Error deleting item from AsyncStorage', error);
-      }
-    });
-    if(value =="1"){
-      toast.showSuccess({messageText: 'Đặt hàng thành công'});
-      navigateToPage(MENU_NAVIGATION.HOME);
+    {
+      value == '1' && data == props.route.params?.selectedItemsData
+        ? data?.map(async itemId => {
+            try {
+              const savedData = await AsyncStorage.getItem('cartData');
+              if (savedData) {
+                const cartData = JSON.parse(savedData);
+                const updatedCartData = cartData.filter(item => item.id !== itemId.id);
+                await AsyncStorage.setItem('cartData', JSON.stringify(updatedCartData));
+              }
+              await cartService.deleteCart(itemId.id);
+              if (value == '1') {
+                toast.showSuccess({messageText: 'Đặt hàng thành công'});
+                navigateToPage(MENU_NAVIGATION.HOME);
+              }
+            } catch (error) {
+              console.error('Error deleting item from AsyncStorage', error);
+            }
+          })
+        : null;
     }
   };
-  const payVNPay = async() => {
-    onPay();
-    navigateToPage(APP_NAVIGATION.PAY,{sumPay});
+  const featchDataPay = async () => {
+    try {
+      const result = await orderService.getOrder();
+      for (let i = result.data.length - 1; i >= 0; i--) {
+        if (result.data[i]['PayId'] === 2) {
+          setDataPay(result.data[i]);
+          break;
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const payVNPay = async () => {
+    await onPay();
+    const dataView = await payService.postPay({amount: sumPay, orderId: data.id, bankCode: ''});
+    // console.log(dataView.data)
+    const dataVnPay = dataView.data;
+    console.log(dataVnPay);
+    navigateToPage(APP_NAVIGATION.PAYVIEW, {dataVnPay});
   };
   // console.log(data[0]["Product"]["price"]*data[0].quantity)
   return (
@@ -157,20 +185,35 @@ const PayDetailScreen = (props: Props) => {
           renderItem={({item}) => (
             <View style={styles.viewItem}>
               <View style={styles.item}>
-                <Image source={{uri:item.productcolor? item.productcolor['image']: item["Product"]?item["Product"]["images"]:item.productImage}} style={styles.image} resizeMode="cover" />
+                <Image
+                  source={{
+                    uri: item.productcolor
+                      ? item.productcolor['image']
+                      : item['Product']
+                        ? item['Product']['images']
+                        : item.productImage,
+                  }}
+                  style={styles.image}
+                  resizeMode="cover"
+                />
                 <View style={styles.viewText}>
                   <Text ellipsizeMode="tail" numberOfLines={1} style={styles.text}>
-                    {item.productName||item.Product['name']}
+                    {item.productName || item.Product['name']}
                   </Text>
-                  {item.ProductColor || item.productcolor?<View style={{flexDirection: 'row'}}>
-                    <Text style={styles.textColor}>Màu sắc: </Text>
-                    <Text style={styles.textColor}>{item.ProductColor||item.productcolor.Color['nameColor']}</Text>
-                  </View>
-                  :null
-                  }
+                  {item.ProductColor || item.productcolor ? (
+                    <View style={{flexDirection: 'row'}}>
+                      <Text style={styles.textColor}>Màu sắc: </Text>
+                      <Text style={styles.textColor}>{item.ProductColor || item.productcolor.Color['nameColor']}</Text>
+                    </View>
+                  ) : null}
                   <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                     <Text style={styles.textPrice}>
-                      {(item.ProductColorConfig? item.ProductColorConfig['price'] : item["Product"]?item["Product"]["price"]:item.productPrice ).toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}
+                      {(item.ProductColorConfig
+                        ? item.ProductColorConfig['price']
+                        : item['Product']
+                          ? item['Product']['price']
+                          : item.productPrice
+                      ).toLocaleString('vi-VN', {style: 'currency', currency: 'VND'})}
                     </Text>
                     <Text style={styles.textPrice}>x{item.quantity}</Text>
                   </View>
@@ -182,7 +225,14 @@ const PayDetailScreen = (props: Props) => {
                   <Text style={styles.textNote}>({item.quantity} sản phẩm)</Text>
                 </View>
                 <Text style={styles.textSumPrice}>
-                  {(item.quantity * (item.ProductColorConfig? item.ProductColorConfig['price'] : item["Product"]?item["Product"]["price"]:item.productPrice )).toLocaleString('vi-VN', {
+                  {(
+                    item.quantity *
+                    (item.ProductColorConfig
+                      ? item.ProductColorConfig['price']
+                      : item['Product']
+                        ? item['Product']['price']
+                        : item.productPrice)
+                  ).toLocaleString('vi-VN', {
                     style: 'currency',
                     currency: 'VND',
                   })}

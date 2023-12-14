@@ -135,7 +135,7 @@ const EvaluateScreen = (props: Props) => {
                     style={styles.star}
                     source={
                       item <= defaultRating
-                        ? require('../../assets/images/star2.png')
+                        ? require('../../assets/images/star.png')
                         : require('../../assets/images/star1.png')
                     }
                   />

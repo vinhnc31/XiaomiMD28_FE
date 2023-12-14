@@ -10,15 +10,6 @@ export interface ProductModel {
     averageRating: string,
     createdAt: Date, // Sửa kiểu dữ liệu thành Date
     updatedAt: Date, // Sửa kiểu dữ liệu thành Date
-  id: number;
-  name: string;
-  price: number;
-  description: string;
-  quantity: number;
-  images: string;
-  CategoryId: number;
-  createdAt: Date; // Sửa kiểu dữ liệu thành Date
-  updatedAt: Date; // Sửa kiểu dữ liệu thành Date
 }
 
 export interface ProductDetailModel {
@@ -26,11 +17,12 @@ export interface ProductDetailModel {
   name: string;
   price: number;
   description: string;
+  quantity: number;
   images: string;
   CategoryId: number;
   commentCount: number;
   averageRating: string;
-  comments: [
+  comments: Array<[
     {
       images: string;
       id: number;
@@ -39,7 +31,7 @@ export interface ProductDetailModel {
       AccountId: number;
       productId: number;
     },
-  ];
+  ]>;
   colorProducts: [
     Array<{
       id: number;
@@ -51,7 +43,7 @@ export interface ProductDetailModel {
         nameColor: string;
         
       };
-      colorConfigs: [
+      colorConfigs: Array<[
         {
           id: number;
           quantity: number;
@@ -63,7 +55,7 @@ export interface ProductDetailModel {
             nameConfig: string;
           };
         },
-      ];
+      ]>;
     }>,
   ];
   createdAt: Date; // Sửa kiểu dữ liệu thành Date

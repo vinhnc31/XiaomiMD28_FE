@@ -1,6 +1,6 @@
-import {RouteProp, useFocusEffect, useNavigation} from '@react-navigation/native';
+import {RouteProp, useFocusEffect, useIsFocused, useNavigation} from '@react-navigation/native';
 import styles from './styles';
-import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { MenuStackParam } from '@src/navigations/AppNavigation/stackParam';
 import { MENU_NAVIGATION, APP_NAVIGATION } from '@src/navigations/routes';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -21,7 +21,6 @@ import {
   ActivityIndicator
 } from 'react-native';
 import {BaseButton} from '@src/containers/components/Base';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import {BaseLoading} from '@src/containers/components/Base/BaseLoading';
 import Swiper from 'react-native-swiper';
 import {navigateToPage} from '@src/navigations/services';
@@ -33,13 +32,13 @@ import {CategoryModel} from '@src/services/category/category.model';
 import ProductService from '@src/services/product';
 import {ProductModel} from '@src/services/product/product.model';
 import R from '@src/res';
-import CartService from '@src/services/cart';
-import {useAuth} from '@src/hooks/useAuth';
-import {CartModel} from '@src/services/cart/cart.model';
-import useNotificationPermission from '../../hooks/useNotificationPermission';
 import { vs, width } from '@src/styles/scalingUtils';
 
 import { FlatListSlider } from 'react-native-flatlist-slider';
+import { useAuth } from '@src/hooks/useAuth';
+import useNotificationPermission from '@src/hooks/useNotificationPermission';
+import CartService from '@src/services/cart';
+import { CartModel } from '@src/services/cart/cart.model';
 
 
 interface Props {
@@ -75,6 +74,8 @@ const HomeScreen = (props: Props) => {
   };
 
   const [displayedData, setDisplayedData] = useState<CategoryModel[]>([]);
+
+
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMoreData, setHasMoreData] = useState(true);
@@ -95,7 +96,6 @@ const HomeScreen = (props: Props) => {
       console.log("new: ", newDataProduct.length);
     }
   }, [page, dataProduct]);
-
   const fetchSearchResults = useCallback(async (nextPage: number = 1) => {
     console.log("dataprd: ", dataProduct.length);
    
@@ -108,6 +108,7 @@ const HomeScreen = (props: Props) => {
       console.log('Fetching more results. Page1:', nextPage);
       let filtered = [];
       filtered = dataProduct.slice(startIndex, endIndex);
+
 
       setHasMoreData(filtered.length === pageSize);
 
@@ -152,17 +153,11 @@ const HomeScreen = (props: Props) => {
     }
   }, [dataCategory]);
 
-
-
+  const loadCart = useIsFocused();
   useEffect(() => {
     fetchData();
-  }, [refreshing]);
-
-  useFocusEffect(
-    React.useCallback(() => {
-      featchCart();
-    }, [])
-  );
+    featchCart();
+  }, [user,refreshing,loadCart]);
 
   const fetchData = async () => {
     try {
@@ -197,6 +192,7 @@ const HomeScreen = (props: Props) => {
     if(user){
       const resultCart = await cartService.fetchCart(user?.id!);
       setData(resultCart.data);
+      console.log(resultCart.data)
     }
   };
   const fetchDataCategory = async () => {

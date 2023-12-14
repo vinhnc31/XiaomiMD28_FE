@@ -218,7 +218,7 @@ const OrderDetailScreen = (props: Props) => {
             Phương thức thanh toán
           </Text>
           <Text style={{fontSize: 16, fontFamily: 'LibreBaskerville-DpdE', marginHorizontal: 10, marginVertical: 5}}>
-            Thanh toán khi nhận hàng
+            {data.PayId == 1 ?"Thanh toán khi nhận hàng": "Thanh toán qua ví VnPay"}
           </Text>
           <View style={{height: 10, width: '100%', backgroundColor: '#F1F1F1', marginVertical: 10}} />
           <View style={{flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 10}}>
