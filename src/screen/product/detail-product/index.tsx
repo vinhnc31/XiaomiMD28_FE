@@ -1,5 +1,6 @@
 import {RouteProp} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import BaseHeader from '@src/containers/components/Base/BaseHeader';
 import {APP_NAVIGATION, GUEST_NAVIGATION} from '@src/navigations/routes';
 import React, {useEffect, useState} from 'react';
 import {ms, vs, hs} from '@src/styles/scalingUtils';
@@ -13,6 +14,7 @@ import {
   Image,
   Modal,
   TouchableOpacity,
+  ScrollView,
   RefreshControl,
   TouchableWithoutFeedback,
 } from 'react-native';
@@ -21,13 +23,14 @@ import {AppStackParam} from '@src/navigations/AppNavigation/stackParam';
 import {BaseLoading} from '@src/containers/components/Base/BaseLoading';
 import Carousel from './Carousel';
 
-import {ProductDetailModel, CommentProductId} from '@src/services/product/product.model';
+import {ProductModel, ProductDetailModel, CommentProductId} from '@src/services/product/product.model';
 import ProductService from '@src/services/product';
 import {navigateToPage} from '@src/navigations/services';
 import FavoriteService from '@src/services/favorite';
 import {useAuth} from '@src/hooks/useAuth';
 import Toast from 'react-native-toast-message';
 import CartService from '@src/services/cart';
+import {ToastAndroid} from 'react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
@@ -90,6 +93,7 @@ const DetailsScreen = (props: Props) => {
       const productService = new ProductService();
       const result = await productService.getProductId(productId);
       setProductIdData(result.data);
+      console.log('aaaaaa', Object.keys(result.data));
       if (result.data && Object.keys(result.data).length > 0) {
         setNoData(false);
       } else {
@@ -290,9 +294,9 @@ const DetailsScreen = (props: Props) => {
                   <Text
                     style={{
                       color: '#817F7F',
-                      fontWeight: '300',
-                      fontSize: ms(13),
-                      fontFamily: 'LibreBaskerville',
+                      fontWeight: '400',
+                      fontSize: ms(14),
+                      fontFamily: 'LibreBaskerville-Bold',
                       marginLeft: hs(70),
                     }}>
                     Sản phẩm:
@@ -348,7 +352,7 @@ const DetailsScreen = (props: Props) => {
       productName: productIdData?.name,
     });
   };
-  const [dataProduct, setDataProduct] = useState([]);
+  const [dataProduct,setDataProduct]=useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalAction, setModalAction] = useState('');
   // add du lieu hien thi
@@ -360,8 +364,8 @@ const DetailsScreen = (props: Props) => {
   const [selectedCountModal, setSelectedCountModal] = useState(1); // truyen
   const [config, setConfig] = useState(false);
   const {colorProducts} = productIdData;
-  const [a, seta] = useState(null);
-  const [b, setb] = useState(null);
+  const [a,seta] = useState(null);
+  const [b,setb] = useState(null);
 
   const renderItemColorModal = ({item, index}) => {
     return (
@@ -406,18 +410,18 @@ const DetailsScreen = (props: Props) => {
   };
   //logic backroud
   const [selectedColorId, setSelectedColorId] = useState(0);
-
+ 
   const [selectedColorConfigId, setSelectedColorConfigId] = useState(0);
-
+  
   // view
   const [isRenderColorConfigId, setIsRenderColorConfigId] = useState<boolean>(true);
   const handleColorModalPress = item => {
-    if (item.colorConfigs.length === 0) {
-      setConfig(true);
-    } else {
-      setConfig(false);
+    if(item.colorConfigs.length===0){
+      setConfig(true)
+    }else{
+      setConfig(false)
     }
-    setb(item);
+    setb(item)
     // Handle color modal press logic
     setProductColorIdModal(item.id); // add
     setSelectedImageModal(item?.image); //view
@@ -425,12 +429,7 @@ const DetailsScreen = (props: Props) => {
     //bg
     setSelectedColorConfigId(0);
     //logic set data
-    if (item?.colorConfigs.length === 0) {
-      setSelectedQuantityModal(0);
-      setProductColorConfigIdModal(null);
-    } else {
-      setSelectedQuantityModal(productIdData?.quantity ? productIdData?.quantity : item?.colorConfigs[0].quantity);
-    }
+    setProductColorConfigIdModal(item?.colorConfigs.length === 0 ? null : ProductColorConfigIdModal);
     //logic view
     setIsRenderColorConfigId(item?.colorConfigs.length === 0 ? true : false);
   };
@@ -438,7 +437,7 @@ const DetailsScreen = (props: Props) => {
   const handleConfigModalPress = configItem => {
     {
       //add
-      seta(configItem);
+      seta(configItem); 
       setProductColorConfigIdModal(configItem.configId);
       setProductColorIdModal(configItem.ProductColorId);
       //view
@@ -451,56 +450,55 @@ const DetailsScreen = (props: Props) => {
   };
 
   const handleDecrease = () => {
-    setSelectedCountModal(prevCount => Math.max(prevCount - 1, 1));
+      setSelectedCountModal(prevCount => Math.max(prevCount - 1, 1));
   };
   const handleIncrease = () => {
-    setSelectedCountModal(prevCount => Math.min(prevCount + 1, selectedQuantityModal || 1));
+      setSelectedCountModal(prevCount => Math.min(prevCount + 1, selectedQuantityModal || 1));
   };
   const handleAddToCart = async () => {
     handleModalPress();
-    try {
-      const cartService = new CartService();
-      const addCartData = {
-        productId: productIdData?.id,
-        AccountId: AccountId,
-        quantity: selectedCountModal,
-        ProductColorId: productColorIdModal ?? null,
-        ProductColorConfigId: ProductColorConfigIdModal ?? null,
-      };
-      console.log('addCartData', addCartData);
-      const result = await cartService.postCart(addCartData);
-      Toast.show({
-        type: 'success',
-        position: 'top',
-        text1: 'Thành công',
-        text2: 'Đã thêm vào giỏ hàng',
-      });
-    } catch (error) {
-      console.log('error: ', error);
-      Toast.show({
-        type: 'error',
-        position: 'top',
-        text1: 'Thông báo',
-        text2: 'Không thể thêm vào giỏ hàng !',
-      });
-    }
+      try {
+        const cartService = new CartService();
+        const addCartData = {
+          productId: productIdData?.id,
+          AccountId: AccountId,
+          quantity: selectedCountModal,
+          ProductColorId: productColorIdModal ?? null,
+          ProductColorConfigId: ProductColorConfigIdModal ?? null,
+        };
+        console.log('addCartData', addCartData);
+        const result = await cartService.postCart(addCartData);
+        Toast.show({
+          type: 'success',
+          position: 'top',
+          text1: 'Thành công',
+          text2: 'Đã thêm vào giỏ hàng',
+        });
+      } catch (error) {
+        console.log('error: ', error);
+        Toast.show({
+          type: 'error',
+          position: 'top',
+          text1: 'Thông báo',
+          text2: 'Không thể thêm vào giỏ hàng !',
+        });
+      }
   };
   const handleBuyNow = () => {
     handleModalPress();
-    const data = [
-      {
-        productImage: !config ? productIdData?.images : b['image'],
-        productName: productIdData?.name,
-        productId: productIdData?.id,
-        productPrice: productIdData['colorProducts'].length == 0 || config ? productIdData.price : a['price'],
-        quantity: selectedCountModal,
-        ProductColorId: productColorIdModal ?? null,
-        ProductRam: !config ? a?.Config['nameConfig'] : null,
-        ProductColor: config || !config ? b?.Color['nameColor'] : null,
-        ProductColorConfigId: ProductColorConfigIdModal ?? null,
-      },
-    ];
-    navigateToPage(APP_NAVIGATION.PAYDETAIL, {data});
+      const data =[
+        {
+          productImage:!config ?productIdData?.images : b["image"],
+          productName: productIdData?.name,
+          productId: productIdData?.id,
+          productPrice:  productIdData["colorProducts"].length==0||config ? productIdData.price : a["price"],
+          quantity: selectedCountModal,
+          ProductColorId: productColorIdModal ?? null,
+          ProductRam:!config? a?.Config["nameConfig"] : null,
+          ProductColor:config||!config? b?.Color["nameColor"] : null,
+          ProductColorConfigId: ProductColorConfigIdModal ?? null,
+        }]  
+    navigateToPage(APP_NAVIGATION.PAYDETAIL,{data})
   };
   const handleModalPress = () => {
     // Đóng Modal khi người dùng ấn vào nền bên ngoài
@@ -508,10 +506,11 @@ const DetailsScreen = (props: Props) => {
     setModalVisible(false);
     setModalAction('');
     setConfig(false);
-    setSelectedImageModal(productIdData?.images || '');
-    setSelectedPriceModal(productIdData?.price || 0);
-    setSelectedQuantityModal(productIdData?.quantity || 0);
-    setSelectedCountModal(1);
+    if (productIdData?.images && productIdData?.price) {
+      setSelectedImageModal(productIdData?.images || '');
+      setSelectedPriceModal(productIdData?.price || 0);
+      setSelectedQuantityModal(getQuantitys(productIdData) || 0);
+    }
     setSelectedColorId(0);
     setSelectedColorConfigId(0);
     setIsRenderColorConfigId(true);
@@ -520,7 +519,7 @@ const DetailsScreen = (props: Props) => {
   useEffect(() => {
     setSelectedImageModal(productIdData?.images || '');
     setSelectedPriceModal(productIdData?.price || 0);
-    setSelectedQuantityModal(productIdData?.quantity || getQuantitys(productIdData));
+    setSelectedQuantityModal(getQuantitys(productIdData) || 0);
   }, [productIdData]);
   return (
     <SafeAreaView style={styles.mainContainer}>
@@ -569,6 +568,8 @@ const DetailsScreen = (props: Props) => {
                           <Carousel
                             data={dataSlider(productIdData) || []}
                             onColorChanged={colorId => {
+                              // Xử lý thông tin vị trí ở đây, ví dụ: console.log(index);
+                              console.log('index-----------------z', colorId);
                               setcolorIdSlider(colorId);
                             }}
                             colorIdButton={colorIdButtonSlider}
@@ -582,6 +583,7 @@ const DetailsScreen = (props: Props) => {
                             activeOpacity={0.8}
                             // Disable the button based on the loading state
                             onPress={() => {
+                              console.log('code logic button tymm <3');
                               if (user) {
                                 handleFavoritePress();
                               } else {
@@ -612,14 +614,11 @@ const DetailsScreen = (props: Props) => {
 
                         <View style={styles.viewStar}>
                           <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
-                          <Text style={styles.textStar}>
-                            {productIdData?.averageRating ? parseFloat(productIdData?.averageRating).toFixed(1) : 0.0}
-                          </Text>
-                          <Text style={styles.textCommentCount}>
-                            ({commentProductIdData.length || productIdData?.commentCount})
-                          </Text>
-                          <Text style={styles.textSell}>{' |  Kho : '}</Text>
-                          <Text style={styles.textCmt}>{productIdData?.quantity || getQuantitys(productIdData)}</Text>
+                          <Text style={styles.textStar}>{productIdData?.averageRating || 0.0}</Text>
+                          <Text style={styles.textSell}>| Kho : </Text>
+                          <Text style={styles.textCmt}>({getQuantitys(productIdData) || 0})</Text>
+                          {/* <Text style={styles.textSell}>| Đã bán : </Text>
+                          <Text style={styles.textSellNumber}>123</Text> */}
                         </View>
                       </View>
                       {dataSlider(productIdData) ? (
@@ -685,9 +684,7 @@ const DetailsScreen = (props: Props) => {
 
                                 <View style={styles.starPoint}>
                                   <Text style={styles.pointText}>
-                                    {productIdData?.averageRating
-                                      ? parseFloat(productIdData?.averageRating).toFixed(1)
-                                      : '0.0'}
+                                    {productIdData?.averageRating ? parseFloat(productIdData?.averageRating).toFixed(1) : '0.0'}
                                   </Text>
                                   <Text style={styles.pointText}> / 5 </Text>
                                   <View style={styles.imgStarContainer}>
@@ -886,7 +883,7 @@ const DetailsScreen = (props: Props) => {
                           <Text style={styles.modalNumberProductTitle}>Số lượng</Text>
                           <View style={styles.modalQuantityProductContainer}>
                             <TouchableOpacity
-                              disabled={selectedCountModal == 1 ? true : false}
+                              disabled={selectedCountModal==1 ?true : false}
                               onPress={handleDecrease}
                               activeOpacity={0.8}
                               style={styles.modalBtnMinusPlus}>
@@ -913,27 +910,19 @@ const DetailsScreen = (props: Props) => {
 
                         <TouchableOpacity
                           disabled={
-                            selectedQuantityModal == 0
-                              ? true
-                              : dataSlider(productIdData).length == 0
-                                ? false
-                                : config
-                                  ? false
-                                  : selectedColorId == 0 || selectedColorConfigId == 0
-                                    ? true
-                                    : false
+                            selectedQuantityModal == 0? true : dataSlider(productIdData).length == 0
+                              ? false
+                              :config ? false : selectedColorId == 0 || selectedColorConfigId == 0
+                                ? true
+                                : false
                           }
                           activeOpacity={0.8}
                           style={
-                            selectedQuantityModal == 0
-                              ? styles.modalBtnAddFalse
-                              : dataSlider(productIdData).length == 0
-                                ? styles.modalBtnAdd
-                                : config
-                                  ? styles.modalBtnAdd
-                                  : selectedColorConfigId == 0 || selectedColorId == 0
-                                    ? styles.modalBtnAddFalse
-                                    : styles.modalBtnAdd
+                            selectedQuantityModal == 0? styles.modalBtnAddFalse: dataSlider(productIdData).length == 0
+                              ? styles.modalBtnAdd
+                              :  config ?styles.modalBtnAdd : selectedColorConfigId == 0 ||selectedColorId == 0
+                                ? styles.modalBtnAddFalse
+                                : styles.modalBtnAdd
                           }
                           onPress={() => {
                             if (modalAction === 'addToCart') {
@@ -942,7 +931,7 @@ const DetailsScreen = (props: Props) => {
                               handleBuyNow();
                             }
                             setModalVisible(!modalVisible);
-                            handleModalPress();
+                            handleModalPress()
                           }}>
                           <Text style={styles.modalBtnText}>
                             {modalAction === 'addToCart' ? 'Thêm vào giỏ hàng' : 'Mua ngay'}

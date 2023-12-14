@@ -441,7 +441,8 @@ const ProductListScreen = (props: Props) => {
             horizontal={false}
             scrollEnabled={false}
             contentContainerStyle={styles.flatListSuggestContainer}
-            renderItem={({ item }) => <ListItemSuggest key={item.id} item={item} />}
+            // renderItem={({ item }) => <ListItemSuggest key={item.id} item={item} />}
+            renderItem={({ item, index }) => <ListItemSuggest item={item} index={index} />}
           />
         )}
 
@@ -456,35 +457,6 @@ const ProductListScreen = (props: Props) => {
   );
 };
 
-{/* <Modal
-        transparent={true}
-        animationType="slide"
-        visible={isModalVisible}
-        onRequestClose={toggleModal}
-        statusBarTranslucent={true}>
-        <View style={styles.modalContainer}>
-          <View style={{ height: 60, backgroundColor: '#FF6900', flexDirection: 'row' }}>
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-              <TouchableOpacity
-                onPress={toggleModal}
-                style={{ backgroundColor: 'white', width: 20, alignItems: 'center' }}>
-                <Text>X</Text>
-              </TouchableOpacity>
-            </View>
-
-            <View style={{ flex: 9, alignItems: 'center', justifyContent: 'center' }}>
-              <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'white' }}>Lọc kết quả</Text>
-            </View>
-          </View>
-
-          <View>
-            <TouchableOpacity onPress={toggleCheckbox} style={styles.checkboxContainer}>
-              <View style={[styles.checkbox, isChecked && styles.checked]} />
-              <Text style={styles.label}>Checkbox Label</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal> */}
 
 
 export default React.memo(ProductListScreen);

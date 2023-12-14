@@ -13,11 +13,18 @@ const endpoint = {
   },
  
   products: {
-    default: '/api/product',
-    getProduct: '/api/product',
+    default: '/api/products',
+    getAllProduct: '/api/products',
     getProductByIdCategory: '/api/product/category',
+    getMostProduct: '/api/product/most/Favorites',
     getProductId: '/api/product',
     getCommentProductId: '/api/comment',
+  },
+  cart:{
+    default:"/api/cart/1",
+    getCart:"/api/cart/1",
+    putCart:'/api/cart',
+    deleteCart:'/api/cart'
   },
   
   favorites:{

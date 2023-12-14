@@ -39,6 +39,7 @@ import { useAuth } from '@src/hooks/useAuth';
 import useNotificationPermission from '@src/hooks/useNotificationPermission';
 import CartService from '@src/services/cart';
 import { CartModel } from '@src/services/cart/cart.model';
+import Carousel from './Slideshow'
 
 
 interface Props {
@@ -67,41 +68,48 @@ const HomeScreen = (props: Props) => {
   const cartService = new CartService();
   const {user} = useAuth();
   useNotificationPermission();
+  const [dataFavorites, setDataFavorites] = useState<ProductModel[]>([]);
+
   const config = {
     style: 'currency',
     currency: 'VND',
     maximumFractionDigits: 9,
   };
 
-  const [displayedData, setDisplayedData] = useState<CategoryModel[]>([]);
+  const [displayedDataFavorite, setDisplayedDataFavorite] = useState<ProductModel[]>([]);
 
 
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMoreData, setHasMoreData] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+
 
   const [newDataProduct, setNewDataProduct] = useState<ProductModel[]>([]);
 
   const handleEndReached = () => {
-    if (!isLoadingMore && hasMoreData) {
+    if (!isLoadingMore && hasMoreData && dataProduct.length > 0) {
       setPage(page + 1);
       setIsLoadingMore(true);
+      setLoadingMore(true); // Thêm dòng này
     }
   };
+  
 
   useEffect(() => {
-    if(dataProduct.length > 0) {
+    if (dataProduct.length > 0) {
       fetchSearchResults(page);
       console.log("page: " + page);
       console.log("new: ", newDataProduct.length);
     }
-  }, [page, dataProduct]);
+  }, [page]);
+
   const fetchSearchResults = useCallback(async (nextPage: number = 1) => {
     console.log("dataprd: ", dataProduct.length);
    
     try {
       setIsLoadingMore(true);
-      const pageSize = 10;
+      const pageSize = 5;
       const startIndex = (nextPage - 1) * pageSize;
       const endIndex = startIndex + pageSize;
 
@@ -130,28 +138,7 @@ const HomeScreen = (props: Props) => {
     }
   }, [dataProduct]);
 
-
-
-  // useEffect(() => {
-  //   if (refreshing) {
-  //     setRefreshing(false); // Đặt refreshing thành false trước khi tải lại để tránh tác động lặp
-  //     fetchDataCategory()
-  //     fetchDataProduct()
-  //       .then(() => setRefreshing(false))
-  //       .catch(() => setRefreshing(false));
-
-  //   } else {
-  //     fetchDataCategory();
-  //     fetchDataProduct()
-  //   }
-
-  // }, [refreshing]);
-
-  useEffect(() => {
-    if (dataCategory.length > 0) {
-      setDisplayedData(dataCategory.slice(0, 5));
-    }
-  }, [dataCategory]);
+  
 
   const loadCart = useIsFocused();
   useEffect(() => {
@@ -164,6 +151,7 @@ const HomeScreen = (props: Props) => {
       setRefreshing(false);
       await fetchDataCategory();
       await fetchDataProduct();
+      await fetchDataFavorites();
     } catch (error) {
       setError('err');
     }
@@ -195,6 +183,12 @@ const HomeScreen = (props: Props) => {
       console.log(resultCart.data)
     }
   };
+  useEffect(() => {
+    if (dataFavorites.length > 0) {
+      setDisplayedDataFavorite(dataFavorites);
+    }
+  }, [dataFavorites]);
+
   const fetchDataCategory = async () => {
     try {
       const categoryService = new CategoryService();
@@ -217,6 +211,20 @@ const HomeScreen = (props: Props) => {
       setError('err');
     }
   };
+  
+
+  const fetchDataFavorites = async () => {
+    try {
+      const productService = new ProductService();
+      const result = await productService.getMostProduct();
+      setDataFavorites(result.data.slice(0, 3));
+      console.log('Data from favorite:', result.data.length);
+    } catch (error) {
+      setError('err');
+    }
+  }
+
+
 
   //Gợi ý hôm nay
   function ListItemSuggest({item, index}: {item: ProductModel; index: number}) {
@@ -281,9 +289,11 @@ const HomeScreen = (props: Props) => {
   function ListItemFavorite({item, index}: {item: ProductModel; index: number}) {
     return (
       <TouchableWithoutFeedback
-        onPress={() => {
-          console.log('code Xem chi tiet data: ', item.name), goToDetailProducts(item.id);
-        }}>
+        // onPress={() => {
+        //   console.log('code Xem chi tiet data: ', item.name), goToDetailProducts(item.id);
+        // }}>
+        onPress={() => console.log('da chon 1 item', goToDetailProducts(item.id))}>
+          
         <View style={styles.item}>
           <Image source={{uri: item.images}} style={styles.image} resizeMode="cover" />
           <View style={styles.overlay}>
@@ -365,36 +375,21 @@ const HomeScreen = (props: Props) => {
             indicatorStyle="black"
             showsVerticalScrollIndicator={false}
             onScroll={handleEndReached}
-          
             // scrollEnabled={false}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}
             />
             }>
 
             <View style={{
-              height: vs(168), marginTop: vs(8), flex: 1,
-              elevation: 1,
-              shadowColor: 'black',
-              shadowOffset: { width: 0, height: 1 },
-              shadowOpacity: 0.2,
-              shadowRadius: 2, 
-              borderWidth:1,
-              borderRadius: 8,
-              margin: 8
+              height: vs(168),
+               marginTop: vs(8), 
+               flex: 1,
+               borderRadius: 10,
             }}>
-              {displayedData.length > 0 && (
-                <FlatListSlider
-                  data={displayedData}
-                  // imageKey={'image'}
-                  timer={5000}
-                  onPress={item => console.log("data clicked: ", item)}
-                  indicatorContainerStyle={{ position: 'absolute', bottom: 20 }}
-                  indicatorActiveColor={'#FF6900'}
-                  indicatorInActiveColor={'#ffffff'}
-                  indicatorActiveWidth={20}
-                  animation
-                />
+              {displayedDataFavorite.length > 0 && (
+                <Carousel data={dataFavorites}/>
               )}
+              
             </View>
 
             <View style={styles.categoryView}>
@@ -412,7 +407,9 @@ const HomeScreen = (props: Props) => {
                   data={displayedDataCategory}
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}
-                  renderItem={({ item }) => <ListItemCategory item={item} index={0} />}
+                  // renderItem={({ item }) => <ListItemCategory item={item} index={0} />}
+                  renderItem={({ item, index }) => <ListItemCategory item={item} index={index} />}
+
                 />
               </View>
             </View>
@@ -420,11 +417,12 @@ const HomeScreen = (props: Props) => {
             <View style={{ width: '100%', marginTop: vs(16), marginBottom: vs(8) }}>
               <Text style={styles.titleText}>Yêu thích nhiều nhất</Text>
               <FlatList
-                data={displayedData1}
+                data={dataFavorites}
                 keyExtractor={item => item.id.toString()}
                 horizontal={true}
                 contentContainerStyle={styles.flatListContainer}
-                renderItem={({item}) => <ListItemFavorite item={item} index={0} />}
+                // renderItem={({ item }) => <ListItemFavorite item={item} index={0} />}
+                renderItem={({ item, index }) => <ListItemFavorite item={item} index={index} />}
                 scrollEnabled={false}
               />
             </View>
