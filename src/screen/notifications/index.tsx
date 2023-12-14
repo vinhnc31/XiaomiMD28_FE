@@ -133,6 +133,10 @@ const NotificationScreen = (props: Props) => {
       />
     </SafeAreaView>
   );
+  
+
+ 
 };
 
 export default React.memo(NotificationScreen);
+

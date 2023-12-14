@@ -9,8 +9,10 @@ import { navigateToPage, goBack } from "@src/navigations/services";
 import TouchableScale from 'react-native-touchable-scale';
 import CategoryService from "@src/services/category";
 import { CategoryModel } from "@src/services/category/category.model";
-import {APP_NAVIGATION, GUEST_NAVIGATION} from '@src/navigations/routes';
-import {AppStackParam} from '@src/navigations/AppNavigation/stackParam';
+import { APP_NAVIGATION, GUEST_NAVIGATION } from '@src/navigations/routes';
+import { AppStackParam } from '@src/navigations/AppNavigation/stackParam';
+
+import { BaseLoading } from '@src/containers/components/Base/BaseLoading';
 
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
@@ -38,10 +40,12 @@ const CategoryScreen = (props: Props) => {
 
   const fetchDataCategory = async () => {
     try {
+      setLoading(true);
       const categoryService = new CategoryService();
       const result = await categoryService.fetchCategory();
       // console.log(result.data);
       setData(result.data)
+      setLoading(false);
     } catch (error) {
       setError('err');
       setLoading(false);
@@ -54,7 +58,7 @@ const CategoryScreen = (props: Props) => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, flexDirection: 'column', backgroundColor: '#FBEFE5'}}>
+    <SafeAreaView style={{ flex: 1, flexDirection: 'column', backgroundColor: '#FBEFE5' }}>
       <View>
         <BaseHeader
           title="Danh mục"
@@ -63,41 +67,43 @@ const CategoryScreen = (props: Props) => {
         />
       </View>
 
-      <View style={{flex: 1}}>
-        <FlatList
-          data={data}
-          // keyExtractor={(item) => item.id}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item, index }) => (
-            <TouchableScale key={index} onPress={() => goToProductListById(item.id, item.name)} activeScale={0.9} friction={9} tension={100}>
-              <View style={styles.viewItemCategory}>
-                <View style={{ flex: 2 }}>
-                  {item.image ? (
-                    <Image source={{ uri: item.image }} style={styles.imgCategory} />
-                  ) : (
-                    <Text>No Image</Text>
-                  )} 
-                </View>
-                <View style={styles.viewTextCategory}>
-                  <Text style={styles.textNameCategory}>{item.name}</Text>
-                  <View style={{ flexDirection: 'row' }}>
-                    <Text style={styles.textQuantityCategory}>{item.productCount}</Text>
-                    <Text style={styles.textQuantityCategory}> Sản phẩm</Text>
+      <View style={{ flex: 1 }}>
+        {loading ? (
+          <BaseLoading size={30} top={50} loading={true} color={'#FF6900'}/>
+        ) : (
+          <FlatList
+            data={data}
+            // keyExtractor={(item) => item.id}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item, index }) => (
+              <TouchableScale key={index} onPress={() => goToProductListById(item.id, item.name)} activeScale={0.9} friction={9} tension={100}>
+                <View style={styles.viewItemCategory}>
+                  <View style={{ flex: 2 }}>
+                    {item.image ? (
+                      <Image source={{ uri: item.image }} style={styles.imgCategory} />
+                    ) : (
+                      <Text>No Image</Text>
+                    )}
                   </View>
-                </View>
+                  <View style={styles.viewTextCategory}>
+                    <Text style={styles.textNameCategory}>{item.name}</Text>
+                    <View style={{ flexDirection: 'row' }}>
+                      <Text style={styles.textQuantityCategory}>{item.productCount}</Text>
+                      <Text style={styles.textQuantityCategory}> Sản phẩm</Text>
+                    </View>
+                  </View>
 
-                <View style={{ position: 'absolute', right: -17, bottom: 25 }}>
-                  {/* <TouchableOpacity onPress={() => console.log("alo")}> */}
+                  <View style={{ position: 'absolute', right: -17, bottom: 25 }}>
                     <Image
                       style={{ width: 35, height: 35 }}
                       source={require('../../assets/images/btnChuyenMan.png')}
                     />
-                  {/* </TouchableOpacity> */}
+                  </View>
                 </View>
-              </View>
-            </TouchableScale>
-          )}
-        />
+              </TouchableScale>
+            )}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
