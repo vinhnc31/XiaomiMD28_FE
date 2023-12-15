@@ -428,7 +428,7 @@ const HomeScreen = (props: Props) => {
             </View>
 
             <View style={{ width: '100%', paddingBottom: vs(30) }}>
-              <Text style={[styles.titleText]}>Gợi ý hôm nay</Text>
+              <Text style={[styles.titleText]}>Gợi ý</Text>
               <FlatList
                 data={newDataProduct}
                 keyExtractor={item => item.id.toString()}
