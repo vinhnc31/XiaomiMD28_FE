@@ -153,6 +153,8 @@ const ProductListScreen = (props: Props) => {
     // Kiểm tra nếu giá trị minimum và maximum rỗng thì gọi hàm fetchProducts
     if (isNaN(minPrice) && isNaN(maxPrice)) {
       fetchProducts();
+      setValueConfiguration(null);
+      setValueColor(null);
     } else {
       setValueConfiguration(null);
       setValueColor(null);
@@ -382,6 +384,7 @@ const ProductListScreen = (props: Props) => {
                 onChange={item => {
                   console.log("color: ", item.nameColor)
                   setValueColor(item.nameColor);
+                  setValueConfiguration(null);
                   setIsFocus(false);
                 }}
                 renderItem={(item, index, isSelected) => (
@@ -419,6 +422,7 @@ const ProductListScreen = (props: Props) => {
                 onChange={item => {
                   console.log('Selected Configuration:', item.nameConfig);
                   setValueConfiguration(item.nameConfig);
+                  setValueColor(null);
                   setIsFocus(false);
                 }}
                 disable={categoryId !== 1}

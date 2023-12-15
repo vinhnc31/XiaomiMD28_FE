@@ -24,20 +24,20 @@ export default class ProductService extends BaseService<ProductModel> {
 
   // Thêm hàm mới để lấy sản phẩm theo giá
   public async getProductByPrice(minPrice: number, maxPrice: number, categoryId: number) {
-    const { data } = await http.get<ProductModel[]>(`${url.getAllProduct}/filter?minPrice=${minPrice}&maxPrice=${maxPrice}&categoryId=${categoryId}`);
+    const { data } = await http.get<ProductModel[]>(`${url.getProductId}/filter?minPrice=${minPrice}&maxPrice=${maxPrice}&categoryId=${categoryId}`);
     return data;
   }
 
   // get màu
   public async getProductByColor(color: string, categoryId: number) {
     const encodedColor = encodeURIComponent(color);
-    const { data } = await http.get<ProductModel[]>(`${url.getAllProduct}/filter/Color?color=${encodedColor}&categoryId=${categoryId}`);
+    const { data } = await http.get<ProductModel[]>(`${url.getProductId}/filter/Color?color=${encodedColor}&categoryId=${categoryId}`);
     return data;
   }
 
   public async getProductByConfig(config: string, categoryId: number) {
     const encodedConfig = encodeURIComponent(config);
-    const { data } = await http.get<ProductModel[]>(`${url.getAllProduct}/filter/Config?config=${encodedConfig}&categoryId=${categoryId}`);
+    const { data } = await http.get<ProductModel[]>(`${url.getProductId}/filter/Config?config=${encodedConfig}&categoryId=${categoryId}`);
     return data;
   }
 
@@ -60,5 +60,11 @@ export default class ProductService extends BaseService<ProductModel> {
         const { data } = await http.get<ProductDetailModel>(`${url.getCommentProductId}/${productId}`);
         return data;
     }
+
+    public async getProductByLimit(offset: number, limit: number) {
+      const { data } = await http.get<ProductModel[]>(`${url.getProductByLimit}?offset=${offset}&limit=${limit}`);
+      return data;
+    }
+  
     
 }

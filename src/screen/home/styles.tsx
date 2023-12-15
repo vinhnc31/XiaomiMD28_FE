@@ -89,8 +89,8 @@ export default StyleSheet.create({
   },
 
   rightArrowImage: {
-    width: vs(12),
-    height: vs(12),
+    width: vs(13),
+    height: vs(11),
     marginTop: vs(4),
   },
 

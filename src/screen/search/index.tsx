@@ -115,7 +115,6 @@ const SearchScreen = (props: Props) => {
 
   useEffect(() => {
     if (isSearching && search === "") {
-      // setFilteredDataSource([]);
       setSuggestions([]);
       setIsSearching(false);
     }
@@ -261,13 +260,14 @@ const SearchScreen = (props: Props) => {
         {!loading && suggestions.length > 0 && (
           <FlatList
             data={suggestions}
+            showsVerticalScrollIndicator={false}
             keyExtractor={(item) => item.id.toString()}
             renderItem={renderSuggestionItem}
           />
         )}{!loading && searchResults.length > 0 && (
           <FlatList
             data={searchResults}
-            // keyExtractor={(item) => item.id.toString()}
+            showsVerticalScrollIndicator={false}
             keyExtractor={(item, index) => index.toString()}
             columnWrapperStyle={{ justifyContent: 'space-between' }}
             numColumns={2}

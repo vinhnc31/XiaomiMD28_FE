@@ -19,6 +19,7 @@ const endpoint = {
     getMostProduct: '/api/product/most/Favorites',
     getProductId: '/api/product',
     getCommentProductId: '/api/comment',
+    getProductByLimit: '/api/product',
   },
   cart:{
     default:"/api/cart/1",

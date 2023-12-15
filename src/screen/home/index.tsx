@@ -1,4 +1,4 @@
-import {RouteProp, useFocusEffect, useIsFocused, useNavigation} from '@react-navigation/native';
+import { RouteProp, useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native';
 import styles from './styles';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { MenuStackParam } from '@src/navigations/AppNavigation/stackParam';
@@ -20,27 +20,27 @@ import {
   Easing,
   ActivityIndicator
 } from 'react-native';
-import {BaseButton} from '@src/containers/components/Base';
-import {BaseLoading} from '@src/containers/components/Base/BaseLoading';
+import { BaseButton } from '@src/containers/components/Base';
+import { BaseLoading } from '@src/containers/components/Base/BaseLoading';
 import Swiper from 'react-native-swiper';
-import {navigateToPage} from '@src/navigations/services';
+import { navigateToPage } from '@src/navigations/services';
 
-import {Movie} from './homeFlatlist';
+import { Movie } from './homeFlatlist';
 import TouchableScale from 'react-native-touchable-scale';
 import CategoryService from '@src/services/category';
-import {CategoryModel} from '@src/services/category/category.model';
+import { CategoryModel } from '@src/services/category/category.model';
 import ProductService from '@src/services/product';
-import {ProductModel} from '@src/services/product/product.model';
+import { ProductModel } from '@src/services/product/product.model';
 import R from '@src/res';
 import { vs, width } from '@src/styles/scalingUtils';
 
-import { FlatListSlider } from 'react-native-flatlist-slider';
 import { useAuth } from '@src/hooks/useAuth';
 import useNotificationPermission from '@src/hooks/useNotificationPermission';
 import CartService from '@src/services/cart';
 import { CartModel } from '@src/services/cart/cart.model';
-import Carousel from './Slideshow'
+import Carousel from './Slideshow';
 
+import { throttle } from 'lodash';
 
 interface Props {
   navigation: BottomTabNavigationProp<MenuStackParam>;
@@ -66,7 +66,7 @@ const HomeScreen = (props: Props) => {
 
   const [activeIndex, setActiveIndex] = useState(0);
   const cartService = new CartService();
-  const {user} = useAuth();
+  const { user } = useAuth();
   useNotificationPermission();
   const [dataFavorites, setDataFavorites] = useState<ProductModel[]>([]);
 
@@ -87,64 +87,46 @@ const HomeScreen = (props: Props) => {
 
   const [newDataProduct, setNewDataProduct] = useState<ProductModel[]>([]);
 
-  const handleEndReached = () => {
-    if (!isLoadingMore && hasMoreData && dataProduct.length > 0) {
-      setPage(page + 1);
-      setIsLoadingMore(true);
-      setLoadingMore(true); // Thêm dòng này
+
+
+  const [isEndReached, setIsEndReached] = useState(false);
+
+
+
+  const loadMoreData = async () => {
+    if (!isLoadingMore && hasMoreData) {
+      try {
+        setIsLoadingMore(true);
+        const newPage = page + 1;
+        const productService = new ProductService();
+        const newData = await productService.getProductByLimit((newPage - 1) * 20, 20);
+
+        console.log('Data from loadMoreData:', newData.data.length);
+        console.log(`Loaded data for page ${newPage}: ${newData.data.length} items`);
+
+        if (newData.data.length > 0) {
+          setNewDataProduct((prevData) => [...prevData, ...newData.data]);
+          setPage(newPage);
+        } else {
+          setHasMoreData(false);
+        }
+      } catch (error) {
+        console.error('Error in loadMoreData:', error);
+      } finally {
+        setIsLoadingMore(false);
+      }
     }
   };
-  
 
-  useEffect(() => {
-    if (dataProduct.length > 0) {
-      fetchSearchResults(page);
-      console.log("page: " + page);
-      console.log("new: ", newDataProduct.length);
-    }
-  }, [page]);
-
-  const fetchSearchResults = useCallback(async (nextPage: number = 1) => {
-    console.log("dataprd: ", dataProduct.length);
-   
-    try {
-      setIsLoadingMore(true);
-      const pageSize = 5;
-      const startIndex = (nextPage - 1) * pageSize;
-      const endIndex = startIndex + pageSize;
-
-      console.log('Fetching more results. Page1:', nextPage);
-      let filtered = [];
-      filtered = dataProduct.slice(startIndex, endIndex);
+  const throttledLoadMoreData = throttle(loadMoreData, 200);
 
 
-      setHasMoreData(filtered.length === pageSize);
-
-      if (nextPage === 1) {
-        setNewDataProduct((prevResults) => {
-          if (nextPage === 1) {
-            return filtered;
-          } else {
-            return [...prevResults, ...filtered];
-          }
-        });
-
-      } else {
-        setNewDataProduct((prevResults) => [...prevResults, ...filtered]);
-      }
-    } catch (error) {
-    } finally {
-      setIsLoadingMore(false);
-    }
-  }, [dataProduct]);
-
-  
 
   const loadCart = useIsFocused();
   useEffect(() => {
     fetchData();
     featchCart();
-  }, [user,refreshing,loadCart]);
+  }, [user, refreshing, loadCart]);
 
   const fetchData = async () => {
     try {
@@ -169,15 +151,15 @@ const HomeScreen = (props: Props) => {
     navigateToPage(APP_NAVIGATION.CART);
   };
   const gotoListProduct = (id, name) => {
-    navigateToPage(APP_NAVIGATION.PRODUCTLIST, {categoryId: id, name: name});
+    navigateToPage(APP_NAVIGATION.PRODUCTLIST, { categoryId: id, name: name });
     console.log(id);
   };
   const goToDetailProducts = (id: number) => {
-    navigateToPage(APP_NAVIGATION.DETAILSPRODUCT, {productId: id});
+    navigateToPage(APP_NAVIGATION.DETAILSPRODUCT, { productId: id });
   };
 
   const featchCart = async () => {
-    if(user){
+    if (user) {
       const resultCart = await cartService.fetchCart(user?.id!);
       setData(resultCart.data);
       console.log(resultCart.data)
@@ -211,7 +193,7 @@ const HomeScreen = (props: Props) => {
       setError('err');
     }
   };
-  
+
 
   const fetchDataFavorites = async () => {
     try {
@@ -227,7 +209,7 @@ const HomeScreen = (props: Props) => {
 
 
   //Gợi ý hôm nay
-  function ListItemSuggest({item, index}: {item: ProductModel; index: number}) {
+  function ListItemSuggest({ item, index }: { item: ProductModel; index: number }) {
     return (
       <TouchableScale
         key={index}
@@ -237,7 +219,7 @@ const HomeScreen = (props: Props) => {
         tension={100}>
         <View style={styles.suggestItem}>
           <View style={styles.viewSuggestImage}>
-            <Image source={{uri: item.images}} style={{width: '100%', height: '100%'}} />
+            <Image source={{ uri: item.images }} style={{ width: '100%', height: '100%' }} />
           </View>
 
           <View style={styles.viewSuggestText}>
@@ -271,7 +253,7 @@ const HomeScreen = (props: Props) => {
         tension={100}>
         <View style={styles.categoryItem}>
           <View style={styles.viewCategoryImage}>
-            <Image source={{uri: item.image}} style={styles.categoryImage} />
+            <Image source={{ uri: item.image }} style={styles.categoryImage} />
           </View>
           <View style={styles.viewCategoryText}>
             <Text numberOfLines={2} style={styles.viewCategoryTextName}>
@@ -283,22 +265,20 @@ const HomeScreen = (props: Props) => {
     );
   }
 
-  
-
   //danh sach yeu thich
-  function ListItemFavorite({item, index}: {item: ProductModel; index: number}) {
+  function ListItemFavorite({ item, index }: { item: ProductModel; index: number }) {
     return (
       <TouchableWithoutFeedback
         // onPress={() => {
         //   console.log('code Xem chi tiet data: ', item.name), goToDetailProducts(item.id);
         // }}>
         onPress={() => console.log('da chon 1 item', goToDetailProducts(item.id))}>
-          
+
         <View style={styles.item}>
-          <Image source={{uri: item.images}} style={styles.image} resizeMode="cover" />
+          <Image source={{ uri: item.images }} style={styles.image} resizeMode="cover" />
           <View style={styles.overlay}>
-            <View style={{flex: 4}}></View>
-            <View style={{flex: 1.5, justifyContent: 'center', paddingHorizontal: vs(12)}}>
+            <View style={{ flex: 4 }}></View>
+            <View style={{ flex: 1.5, justifyContent: 'center', paddingHorizontal: vs(12) }}>
               <Text numberOfLines={1} style={styles.text}>
                 {item.name}
               </Text>
@@ -333,10 +313,10 @@ const HomeScreen = (props: Props) => {
       <View style={styles.mainContainer}>
         <TouchableWithoutFeedback onPress={() => navigateToPage(APP_NAVIGATION.SEARCH)}>
           <View style={styles.inputContainer}>
-            <View style={{flex: 1.5, height: '100%', alignItems: 'center', justifyContent: 'center'}}>
-              <Image style={{width: vs(20), height: vs(20)}} source={R.images.iconSearch} />
+            <View style={{ flex: 1.5, height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+              <Image style={{ width: vs(20), height: vs(20) }} source={R.images.iconSearch} />
             </View>
-            <View style={{flex: 9, height: '100%', justifyContent: 'center'}}>
+            <View style={{ flex: 9, height: '100%', justifyContent: 'center' }}>
               <Text style={styles.title}>Search...</Text>
             </View>
           </View>
@@ -346,7 +326,7 @@ const HomeScreen = (props: Props) => {
             onPress={goToCart}
             renderIcon={
               <View>
-                <Image style={{width: vs(35), height: vs(35)}} source={R.images.iconCart} />
+                <Image style={{ width: vs(35), height: vs(35) }} source={R.images.iconCart} />
                 <View
                   style={{
                     height: 20,
@@ -358,38 +338,59 @@ const HomeScreen = (props: Props) => {
                     borderRadius: 20,
                     alignItems: 'center',
                   }}>
-                  <Text style={{color: 'white'}}>{data.length}</Text>
+                  <Text style={{ color: 'white' }}>{data.length}</Text>
                 </View>
               </View>
             }
-            style={{marginBottom: vs(10)}}
+            style={{ marginBottom: vs(10) }}
           />
         </View>
       </View>
 
-      <View style={{flex: 9, backgroundColor: '#FBEFE5', paddingHorizontal: 8}}>
+      <View style={{ flex: 9, backgroundColor: '#FBEFE0', paddingHorizontal: 8 }}>
         {loading ? (
           <BaseLoading size={20} top={100} loading={true} />
         ) : (
           <ScrollView
             indicatorStyle="black"
             showsVerticalScrollIndicator={false}
-            onScroll={handleEndReached}
-            // scrollEnabled={false}
+            // onScroll={(event) => {
+            //   const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+
+            //   const paddingToBottom = 20;
+            //   setIsEndReached(
+            //     layoutMeasurement.height + contentOffset.y >=
+            //     contentSize.height - paddingToBottom
+            //   );
+
+            //   // Thêm điều kiện để gọi loadMoreData khi cuộn đến cuối trang
+            //   if (isEndReached) {
+            //     loadMoreData();
+            //   }
+            // }}
+
+            onScroll={(event) => {
+              const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+              const paddingToBottom = 20;
+
+              if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom) {
+                throttledLoadMoreData();
+              }
+            }}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}
             />
             }>
 
             <View style={{
               height: vs(168),
-               marginTop: vs(8), 
-               flex: 1,
-               borderRadius: 10,
+              marginTop: vs(8),
+              flex: 1,
+              borderRadius: 10,
             }}>
               {displayedDataFavorite.length > 0 && (
-                <Carousel data={dataFavorites}/>
+                <Carousel data={dataFavorites} />
               )}
-              
+
             </View>
 
             <View style={styles.categoryView}>
@@ -402,12 +403,11 @@ const HomeScreen = (props: Props) => {
                   </View>
                 </TouchableOpacity>
               </View>
-              <View style={{height: '100%', marginTop: vs(6)}}>
+              <View style={{ height: '100%', marginTop: vs(6) }}>
                 <FlatList
                   data={displayedDataCategory}
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}
-                  // renderItem={({ item }) => <ListItemCategory item={item} index={0} />}
                   renderItem={({ item, index }) => <ListItemCategory item={item} index={index} />}
 
                 />
@@ -421,7 +421,6 @@ const HomeScreen = (props: Props) => {
                 keyExtractor={item => item.id.toString()}
                 horizontal={true}
                 contentContainerStyle={styles.flatListContainer}
-                // renderItem={({ item }) => <ListItemFavorite item={item} index={0} />}
                 renderItem={({ item, index }) => <ListItemFavorite item={item} index={index} />}
                 scrollEnabled={false}
               />
@@ -437,9 +436,7 @@ const HomeScreen = (props: Props) => {
                 horizontal={false}
                 scrollEnabled={false}
                 contentContainerStyle={styles.flatListSuggestContainer}
-                renderItem={({ item }) => <ListItemSuggest item={item} index={0} />}
-                // onEndReached={handleEndReached}
-                // onEndReachedThreshold={0.1} 
+                renderItem={({ item, index }) => <ListItemSuggest item={item} index={index} />}
               />
             </View>
 
