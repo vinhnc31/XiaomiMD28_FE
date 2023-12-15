@@ -18,7 +18,8 @@ import {
   Dimensions,
   Animated,
   Easing,
-  ActivityIndicator
+  ActivityIndicator,
+  ScrollViewProps
 } from 'react-native';
 import { BaseButton } from '@src/containers/components/Base';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -37,8 +38,9 @@ import { ProductModel } from '@src/services/product/product.model';
 import R from '@src/res';
 import { vs, width } from '@src/styles/scalingUtils';
 
-import { FlatListSlider } from 'react-native-flatlist-slider';
 import Carousel from './Slideshow'
+
+import { throttle } from 'lodash';
 
 
 interface Props {
@@ -59,10 +61,8 @@ const HomeScreen = (props: Props) => {
   const [showAllCategory, setShowAllCategory] = useState(false);
   const displayedDataCategory = showAllCategory ? dataCategory : dataCategory.slice(0, 5);
 
-  const limitedData = dataProduct.slice(0, 5);
-  const animatedValues = limitedData.map(() => new Animated.Value(0));
-
   const [dataFavorites, setDataFavorites] = useState<ProductModel[]>([]);
+
 
   const config = {
     style: "currency",
@@ -76,64 +76,9 @@ const HomeScreen = (props: Props) => {
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMoreData, setHasMoreData] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
 
 
   const [newDataProduct, setNewDataProduct] = useState<ProductModel[]>([]);
-
-  const handleEndReached = () => {
-    if (!isLoadingMore && hasMoreData && dataProduct.length > 0) {
-      setPage(page + 1);
-      setIsLoadingMore(true);
-      setLoadingMore(true); // Thêm dòng này
-    }
-  };
-  
-
-  useEffect(() => {
-    if (dataProduct.length > 0) {
-      fetchSearchResults(page);
-      console.log("page: " + page);
-      console.log("new: ", newDataProduct.length);
-    }
-  }, [page]);
-
-  const fetchSearchResults = useCallback(async (nextPage: number = 1) => {
-    console.log("dataprd: ", dataProduct.length);
-   
-    try {
-      setIsLoadingMore(true);
-      const pageSize = 5;
-      const startIndex = (nextPage - 1) * pageSize;
-      const endIndex = startIndex + pageSize;
-
-      console.log('Fetching more results. Page1:', nextPage);
-      let filtered = [];
-      filtered = dataProduct.slice(startIndex, endIndex);
-
-
-      setHasMoreData(filtered.length === pageSize);
-
-      if (nextPage === 1) {
-        setNewDataProduct((prevResults) => {
-          if (nextPage === 1) {
-            return filtered;
-          } else {
-            return [...prevResults, ...filtered];
-          }
-        });
-
-      } else {
-        setNewDataProduct((prevResults) => [...prevResults, ...filtered]);
-      }
-    } catch (error) {
-    } finally {
-      setIsLoadingMore(false);
-    }
-  }, [dataProduct]);
-
-  
-
 
 
   useEffect(() => {
@@ -179,7 +124,7 @@ const HomeScreen = (props: Props) => {
       const categoryService = new CategoryService();
       const result = await categoryService.fetchCategory();
       setDataCategory(result.data);
-      console.log(result.data.length);
+      // console.log(result.data.length);
     } catch (error) {
       setError('err');
     }
@@ -189,9 +134,7 @@ const HomeScreen = (props: Props) => {
     try {
       const productService = new ProductService();
       const result = await productService.getProduct();
-      setDataProduct(result.data);
-      setNewDataProduct(result.data.slice(0, 10));
-      console.log('Data from fetchDataProduct:', result.data.length);
+      setNewDataProduct(result.data.slice(0, 6));
     } catch (error) {
       setError('err');
     }
@@ -202,11 +145,37 @@ const HomeScreen = (props: Props) => {
       const productService = new ProductService();
       const result = await productService.getMostProduct();
       setDataFavorites(result.data.slice(0, 3));
-      console.log('Data from favorite:', result.data.length);
+      // console.log('Data from favorite:', result.data.length);
     } catch (error) {
       setError('err');
     }
   }
+
+  const loadMoreData = async () => {
+    if (!isLoadingMore && hasMoreData) {
+      try {
+        setIsLoadingMore(true);
+        const newPage = page + 1;
+        const productService = new ProductService();
+        const newData = await productService.getProductByLimit((newPage - 1) * 20, 20);
+  
+        console.log('Data from loadMoreData:', newData.data.length);
+        console.log(`Loaded data for page ${newPage}: ${newData.data.length} items`);
+  
+        if (newData.data.length > 0) {
+          setNewDataProduct((prevData) => [...prevData, ...newData.data]);
+          setPage(newPage);
+        } else {
+          setHasMoreData(false);
+        }
+      } catch (error) {
+        console.error('Error in loadMoreData:', error);
+      } finally {
+        setIsLoadingMore(false);
+      }
+    }
+  };
+  
 
 
 
@@ -217,8 +186,8 @@ const HomeScreen = (props: Props) => {
         key={index}
         onPress={() => {
           // if (!loadingMore) {
-            console.log('ListItemSuggest pressed:', item.id);
-            // Thêm phần code xử lý khi item được nhấn
+          console.log('ListItemSuggest pressed:', item.id);
+          // Thêm phần code xử lý khi item được nhấn
           // }
         }}
         activeScale={0.9}
@@ -307,6 +276,10 @@ const HomeScreen = (props: Props) => {
     );
   }
 
+  const [isEndReached, setIsEndReached] = useState(false);
+
+  const throttledLoadMoreData = throttle(loadMoreData, 200);
+
   return (
     <SafeAreaView style={{ flex: 1, flexDirection: 'column' }}>
       <View style={styles.mainContainer}>
@@ -337,8 +310,30 @@ const HomeScreen = (props: Props) => {
           <ScrollView
             indicatorStyle="black"
             showsVerticalScrollIndicator={false}
-            onScroll={handleEndReached}
+           
+            onScroll={(event) => {
+              const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
           
+              const paddingToBottom = 20;
+              setIsEndReached(
+                layoutMeasurement.height + contentOffset.y >=
+                contentSize.height - paddingToBottom
+              );
+          
+              // Thêm điều kiện để gọi loadMoreData khi cuộn đến cuối trang
+              if (isEndReached) {
+                loadMoreData();
+              }
+            }}
+
+            // onScroll={(event) => {
+            //   const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+            //   const paddingToBottom = 20;
+          
+            //   if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom) {
+            //     throttledLoadMoreData();
+            //   }
+            // }}
             // scrollEnabled={false}
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}
             />
@@ -346,15 +341,15 @@ const HomeScreen = (props: Props) => {
 
             <View style={{
               height: vs(168),
-               marginTop: vs(8), 
-               flex: 1,
-               borderRadius: 10,
-               backgroundColor: 'red',
+              marginTop: vs(8),
+              flex: 1,
+              borderRadius: 10,
+              backgroundColor: 'red',
             }}>
               {displayedDataFavorite.length > 0 && (
-                <Carousel data={dataFavorites}/>
+                <Carousel data={dataFavorites} />
               )}
-              
+
             </View>
 
             <View style={styles.categoryView}>
@@ -403,16 +398,14 @@ const HomeScreen = (props: Props) => {
                 scrollEnabled={false}
                 contentContainerStyle={styles.flatListSuggestContainer}
                 renderItem={({ item }) => <ListItemSuggest item={item} index={0} />}
-                // onEndReached={handleEndReached}
-                // onEndReachedThreshold={0.1} 
               />
             </View>
 
             {isLoadingMore && (
-              <View style={{ height: 100 }}>
-                <BaseLoading size={30} top={0} loading={true} color={'#FF6900'} />
-              </View>
-            )}
+          <View style={{ height: 100 }}>
+            <BaseLoading size={30} top={0} loading={true} color={'#FF6900'} />
+          </View>
+        )}
 
           </ScrollView>
         )}

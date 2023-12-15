@@ -52,5 +52,10 @@ export default class ProductService extends BaseService<ProductModel> {
     return data;
   }
 
+  public async getProductByLimit(offset: number, limit: number) {
+    const { data } = await http.get<ProductModel[]>(`${url.getProductByLimit}?offset=${offset}&limit=${limit}`);
+    return data;
+  }
+
   
 }
