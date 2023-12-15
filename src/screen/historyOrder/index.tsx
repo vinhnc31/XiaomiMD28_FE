@@ -78,9 +78,9 @@ const HistoryOrderScreen = (props: Props) => {
     else if (item.status == '2') await evaluate(item);
   };
   const cancer = async () => {
-    await statusOrder.putOrder(Number(status.id), {status: '3'});
     onHide();
     toast.showSuccess({messageText: 'Hủy đơn hàng thành công'});
+    await statusOrder.putOrder(Number(status.id), {status: '3'});
     fetchData();
   };
   const submit = async (item) => {
