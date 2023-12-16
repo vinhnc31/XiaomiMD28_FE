@@ -180,7 +180,7 @@ const HomeScreen = (props: Props) => {
     if(user){
       const resultCart = await cartService.fetchCart(user?.id!);
       setData(resultCart.data);
-      console.log(resultCart.data)
+      console.log(resultCart.data.length)
     }
   };
   useEffect(() => {

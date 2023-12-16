@@ -57,6 +57,7 @@ const DetailsScreen = (props: Props) => {
   const productId = route.params ? route.params.productId : undefined;
   const AccountId = user?.id || '';
   const [favoriteId, setFavoriteId] = useState(0);
+  const productService = new ProductService();
 
   const [noData, setNoData] = useState(false);
 
@@ -90,10 +91,9 @@ const DetailsScreen = (props: Props) => {
 
   const fetchDataProduct = async () => {
     try {
-      const productService = new ProductService();
+      
       const result = await productService.getProductId(productId);
       setProductIdData(result.data);
-      console.log('aaaaaa', Object.keys(result.data));
       if (result.data && Object.keys(result.data).length > 0) {
         setNoData(false);
       } else {
@@ -107,7 +107,6 @@ const DetailsScreen = (props: Props) => {
   const fetchDataCommentProduct = async () => {
     try {
       setLoading(true);
-      const productService = new ProductService();
       const result = await productService.getCommentProductId(productId);
 
       setCommentProductIdData(result.data);
@@ -410,7 +409,6 @@ const DetailsScreen = (props: Props) => {
   };
   //logic backroud
   const [selectedColorId, setSelectedColorId] = useState(0);
- 
   const [selectedColorConfigId, setSelectedColorConfigId] = useState(0);
   
   // view
@@ -429,7 +427,7 @@ const DetailsScreen = (props: Props) => {
     //bg
     setSelectedColorConfigId(0);
     //logic set data
-    setProductColorConfigIdModal(item?.colorConfigs.length === 0 ? null : ProductColorConfigIdModal);
+    //setProductColorConfigIdModal(item?.colorConfigs.length === 0 ? null : ProductColorConfigIdModal);
     //logic view
     setIsRenderColorConfigId(item?.colorConfigs.length === 0 ? true : false);
   };
@@ -466,7 +464,6 @@ const DetailsScreen = (props: Props) => {
           ProductColorId: productColorIdModal ?? null,
           ProductColorConfigId: ProductColorConfigIdModal ?? null,
         };
-        console.log('addCartData', addCartData);
         const result = await cartService.postCart(addCartData);
         Toast.show({
           type: 'success',
@@ -568,7 +565,6 @@ const DetailsScreen = (props: Props) => {
                           <Carousel
                             data={dataSlider(productIdData) || []}
                             onColorChanged={colorId => {
-                              // Xử lý thông tin vị trí ở đây, ví dụ: console.log(index);
                               console.log('index-----------------z', colorId);
                               setcolorIdSlider(colorId);
                             }}
@@ -583,7 +579,6 @@ const DetailsScreen = (props: Props) => {
                             activeOpacity={0.8}
                             // Disable the button based on the loading state
                             onPress={() => {
-                              console.log('code logic button tymm <3');
                               if (user) {
                                 handleFavoritePress();
                               } else {
