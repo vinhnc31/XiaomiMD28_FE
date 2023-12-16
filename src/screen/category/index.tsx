@@ -13,6 +13,7 @@ import { APP_NAVIGATION, GUEST_NAVIGATION } from '@src/navigations/routes';
 import { AppStackParam } from '@src/navigations/AppNavigation/stackParam';
 
 import { BaseLoading } from '@src/containers/components/Base/BaseLoading';
+import CategoryStore from "@src/containers/store/storeCategory";
 
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
@@ -31,12 +32,15 @@ const CategoryScreen = (props: Props) => {
   const handleCartPress = () => {
     navigateToPage(APP_NAVIGATION.CART)
   };
+
+  const getCategory = CategoryStore(state => state.dataCategory);
+  console.log("home category: ", getCategory.length);
   
 
-  useEffect(() => {
-    fetchDataCategory()
-    console.log("eff: ", data)
-  }, [])
+  // useEffect(() => {
+  //   fetchDataCategory()
+  //   console.log("eff: ", data)
+  // }, [])
 
   const fetchDataCategory = async () => {
     try {
@@ -72,7 +76,7 @@ const CategoryScreen = (props: Props) => {
           <BaseLoading size={30} top={50} loading={true} color={'#FF6900'}/>
         ) : (
           <FlatList
-            data={data}
+            data={getCategory}
             // keyExtractor={(item) => item.id}
             showsVerticalScrollIndicator={false}
             renderItem={({ item, index }) => (

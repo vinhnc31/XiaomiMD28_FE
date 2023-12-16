@@ -22,14 +22,10 @@ import {
 } from 'react-native';
 import { BaseButton } from '@src/containers/components/Base';
 import { BaseLoading } from '@src/containers/components/Base/BaseLoading';
-import Swiper from 'react-native-swiper';
 import { navigateToPage } from '@src/navigations/services';
 
-import { Movie } from './homeFlatlist';
 import TouchableScale from 'react-native-touchable-scale';
-import CategoryService from '@src/services/category';
 import { CategoryModel } from '@src/services/category/category.model';
-import ProductService from '@src/services/product';
 import { ProductModel } from '@src/services/product/product.model';
 import R from '@src/res';
 import { vs, width } from '@src/styles/scalingUtils';
@@ -41,6 +37,11 @@ import { CartModel } from '@src/services/cart/cart.model';
 import Carousel from './Slideshow';
 
 import { throttle } from 'lodash';
+import CategoryStore from '@src/containers/store/storeCategory';
+import FavoriteStore from '@src/containers/store/storeFavorite';
+import useProductStore from '@src/containers/store/storeProduct';
+import ProductService from '@src/services/product';
+import useBannerStore from '@src/containers/store/bannerStore';
 
 interface Props {
   navigation: BottomTabNavigationProp<MenuStackParam>;
@@ -54,58 +55,42 @@ const HomeScreen = (props: Props) => {
   const [error, setError] = useState('');
   const [refreshing, setRefreshing] = useState(false);
 
-  const [showAll, setShowAll] = useState(false);
-  const displayedData1 = showAll ? dataProduct : dataProduct.slice(0, 3);
-
-  const [dataCategory, setDataCategory] = useState<CategoryModel[]>([]);
-  const [showAllCategory, setShowAllCategory] = useState(false);
-  const displayedDataCategory = showAllCategory ? dataCategory : dataCategory.slice(0, 5);
-
-  const limitedData = dataProduct.slice(0, 5);
-  const animatedValues = limitedData.map(() => new Animated.Value(0));
-
-  const [activeIndex, setActiveIndex] = useState(0);
-  const cartService = new CartService();
-  const { user } = useAuth();
-  useNotificationPermission();
-  const [dataFavorites, setDataFavorites] = useState<ProductModel[]>([]);
-
-  const config = {
-    style: 'currency',
-    currency: 'VND',
-    maximumFractionDigits: 9,
-  };
-
   const [displayedDataFavorite, setDisplayedDataFavorite] = useState<ProductModel[]>([]);
-
-
   const [page, setPage] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMoreData, setHasMoreData] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-
-
   const [newDataProduct, setNewDataProduct] = useState<ProductModel[]>([]);
-
-
-
   const [isEndReached, setIsEndReached] = useState(false);
 
 
+  const getCategory = CategoryStore(state => state.dataCategory);
+  const limitedDataCategory = getCategory.slice(0, 5);
+
+  const getFavorite = FavoriteStore(state => state.dataFavorite);
+  const limitedDataFavorite = getFavorite.slice(0, 3);
+
+  const bannerData = useBannerStore(state => state.bannerData);
+  console.log("Banner data: " + bannerData.length);
+
+  const getProductByLimit = useProductStore(state => state.getProductByLimit);
+
+  const cartService = new CartService();
+  const { user } = useAuth();
+  useNotificationPermission();
+
 
   const loadMoreData = async () => {
+    console.log('Load more data is called!');
     if (!isLoadingMore && hasMoreData) {
       try {
         setIsLoadingMore(true);
         const newPage = page + 1;
-        const productService = new ProductService();
-        const newData = await productService.getProductByLimit((newPage - 1) * 20, 20);
+        const newData = getProductByLimit((newPage - 1) * 4, 4, useProductStore.getState);
 
-        console.log('Data from loadMoreData:', newData.data.length);
-        console.log(`Loaded data for page ${newPage}: ${newData.data.length} items`);
+        console.log(`Loaded data for page ${newPage}: ${newData.length} items`);
 
-        if (newData.data.length > 0) {
-          setNewDataProduct((prevData) => [...prevData, ...newData.data]);
+        if (newData.length > 0) {
+          setNewDataProduct((prevData) => [...prevData, ...newData]);
           setPage(newPage);
         } else {
           setHasMoreData(false);
@@ -118,12 +103,15 @@ const HomeScreen = (props: Props) => {
     }
   };
 
-  const throttledLoadMoreData = throttle(loadMoreData, 200);
-
-
+  const config = {
+    style: 'currency',
+    currency: 'VND',
+    maximumFractionDigits: 9,
+  };
 
   const loadCart = useIsFocused();
   useEffect(() => {
+    console.log("Loading:", loading);
     fetchData();
     featchCart();
   }, [user, refreshing, loadCart]);
@@ -131,18 +119,16 @@ const HomeScreen = (props: Props) => {
   const fetchData = async () => {
     try {
       setRefreshing(false);
-      await fetchDataCategory();
-      await fetchDataProduct();
-      await fetchDataFavorites();
     } catch (error) {
       setError('err');
     }
   };
 
+  const throttledLoadMoreData = throttle(loadMoreData, 2000);
+
   const onRefresh = () => {
     setRefreshing(true);
   };
-
 
   const goToCategory = () => {
     navigateToPage(APP_NAVIGATION.CATEGORY);
@@ -165,48 +151,6 @@ const HomeScreen = (props: Props) => {
       console.log(resultCart.data)
     }
   };
-  useEffect(() => {
-    if (dataFavorites.length > 0) {
-      setDisplayedDataFavorite(dataFavorites);
-    }
-  }, [dataFavorites]);
-
-  const fetchDataCategory = async () => {
-    try {
-      const categoryService = new CategoryService();
-      const result = await categoryService.fetchCategory();
-      setDataCategory(result.data);
-      console.log(result.data.length);
-    } catch (error) {
-      setError('err');
-    }
-  };
-
-  const fetchDataProduct = async () => {
-    try {
-      const productService = new ProductService();
-      const result = await productService.getProduct();
-      setDataProduct(result.data);
-      setNewDataProduct(result.data.slice(0, 10));
-      console.log('Data from fetchDataProduct:', result.data.length);
-    } catch (error) {
-      setError('err');
-    }
-  };
-
-
-  const fetchDataFavorites = async () => {
-    try {
-      const productService = new ProductService();
-      const result = await productService.getMostProduct();
-      setDataFavorites(result.data.slice(0, 3));
-      console.log('Data from favorite:', result.data.length);
-    } catch (error) {
-      setError('err');
-    }
-  }
-
-
 
   //Gợi ý hôm nay
   function ListItemSuggest({ item, index }: { item: ProductModel; index: number }) {
@@ -308,6 +252,7 @@ const HomeScreen = (props: Props) => {
     );
   }
 
+
   return (
     <SafeAreaView style={{ flex: 1, flexDirection: 'column' }}>
       <View style={styles.mainContainer}>
@@ -383,14 +328,14 @@ const HomeScreen = (props: Props) => {
 
             <View style={{
               height: vs(168),
-              marginTop: vs(8),
+              marginTop: vs(6),
+              width: '100%',
               flex: 1,
               borderRadius: 10,
             }}>
-              {displayedDataFavorite.length > 0 && (
-                <Carousel data={dataFavorites} />
-              )}
-
+              {/* {modifiedArray.length > 0 && ( */}
+                <Carousel data={bannerData} />
+              {/* )} */}
             </View>
 
             <View style={styles.categoryView}>
@@ -405,11 +350,11 @@ const HomeScreen = (props: Props) => {
               </View>
               <View style={{ height: '100%', marginTop: vs(6) }}>
                 <FlatList
-                  data={displayedDataCategory}
+                  data={limitedDataCategory}
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}
+                  keyExtractor={item => item.id.toString()}
                   renderItem={({ item, index }) => <ListItemCategory item={item} index={index} />}
-
                 />
               </View>
             </View>
@@ -417,7 +362,7 @@ const HomeScreen = (props: Props) => {
             <View style={{ width: '100%', marginTop: vs(16), marginBottom: vs(8) }}>
               <Text style={styles.titleText}>Yêu thích nhiều nhất</Text>
               <FlatList
-                data={dataFavorites}
+                data={limitedDataFavorite}
                 keyExtractor={item => item.id.toString()}
                 horizontal={true}
                 contentContainerStyle={styles.flatListContainer}
@@ -440,11 +385,11 @@ const HomeScreen = (props: Props) => {
               />
             </View>
 
-            {isLoadingMore && (
-              <View style={{ height: 100 }}>
-                <BaseLoading size={30} top={0} loading={true} color={'#FF6900'} />
+            {isLoadingMore ? (
+              <View style={{ height: 100, alignItems: 'center', justifyContent: 'center' }}>
+                <Text>Loading...</Text>
               </View>
-            )}
+            ) : null}
 
           </ScrollView>
         )}
@@ -454,3 +399,6 @@ const HomeScreen = (props: Props) => {
 };
 
 export default React.memo(HomeScreen);
+
+
+

@@ -27,4 +27,7 @@ export const images = {
   iconFilter: require('../assets/images/filter.png'),
   iconFiltered: require('../assets/images/filtered.png'),
   imgNoResult: require('../assets/images/noResult.png'),
+
+  //banner
+  banner1: require('../assets/images/banner1.webp'),
 };

@@ -17,13 +17,14 @@ import {
   View,
 } from 'react-native';
 import R from '@src/res';
-import { goBack } from '@src/navigations/services';
+import { goBack, navigateToPage } from '@src/navigations/services';
 import { vs } from '@src/styles/scalingUtils';
 import BaseInput from '@src/containers/components/Base/BaseInput';
 import { BaseLoading } from '@src/containers/components/Base/BaseLoading';
 
 import styles from './style';
 import TouchableScale from 'react-native-touchable-scale';
+import useProductStore from '@src/containers/store/storeProduct';
 
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
@@ -51,8 +52,6 @@ const SearchScreen = (props: Props) => {
     goBack();
   };
 
-  const [products, setProducts] = useState<ProductModel[]>([]);  //chuyen den man get all data
-  const [error, setError] = useState('');
   const [searchResults, setSearchResults] = useState<ProductModel[]>([]);  // kq search
   const [loading, setLoading] = useState<boolean>(false);
   const [suggestions, setSuggestions] = useState<ProductModel[]>([]);
@@ -66,6 +65,7 @@ const SearchScreen = (props: Props) => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMoreData, setHasMoreData] = useState(true);
 
+  const products = useProductStore(state => state.dataProduct);
 
   const config = {
     style: 'currency',
@@ -73,24 +73,11 @@ const SearchScreen = (props: Props) => {
     maximumFractionDigits: 9,
   };
 
-  useEffect(() => {
-    fetchDataProduct();
-  }, []);
 
   useEffect(() => {
     fetchSearchResults(search, page);
     console.log("page: " + page);
   }, [page]);
-
-  const fetchDataProduct = async () => {
-    try {
-      const productService = new ProductService();
-      const result = await productService.getProduct();
-      setProducts(result.data);
-    } catch (error) {
-      setError('Lỗi');
-    }
-  }
 
   const searchFilterArr = (text) => {
     setIsSearching(true);
@@ -104,7 +91,6 @@ const SearchScreen = (props: Props) => {
       setHasData(newData.length > 0);
       setSearch(text);
       console.log("Tìm kiếm: ", text);
-      // console.log("setFilteredDataSource: ", filteredDataSource.length)
     } else {
       setSearchResults([])
       setSearch(text);
@@ -158,12 +144,10 @@ const SearchScreen = (props: Props) => {
       setShowSuggestions(false);
       setSuggestions([]);
     } catch (error) {
-      // Handle error
     } finally {
       setIsLoadingMore(false);
     }
   }, [products, search]);
-
 
 
   const handleSuggestionPress = useCallback((item: ProductModel) => {
@@ -179,9 +163,13 @@ const SearchScreen = (props: Props) => {
     </TouchableOpacity>
   );
 
+  const goToDetailProducts = (id: number) => {
+    navigateToPage(APP_NAVIGATION.DETAILSPRODUCT, { productId: id });
+  };
+
   const renderListItemSuggest = ({ item }: { item: ProductModel }) => (
     <TouchableScale
-      onPress={() => console.log('da chon 1 item', item.id)}
+      onPress={() => goToDetailProducts(item?.id)}
       activeScale={0.9}
       friction={9}
       tension={100}>

@@ -1,27 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Dimensions, FlatList, Image, StyleSheet, Pressable, TouchableWithoutFeedback } from 'react-native';
+import { View, Dimensions, FlatList, Image, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { hs, vs, ms } from '@src/styles/scalingUtils';
 import { navigateToPage } from '@src/navigations/services';
 import { APP_NAVIGATION } from '@src/navigations/routes';
-import { TouchableOpacity } from 'react-native';
+import { ProductModel } from '@src/services/product/product.model';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
-interface ColorItem {
+interface DataItem {
   id: number;
   images: string;
+  data: ProductModel[];
 }
 
 interface CarouselProps {
-  data: Array<ColorItem>;
-  onColorChanged?: (colorId: number) => void;
-  slideshowInterval?: number; // Khoảng thời gian chuyển đổi ảnh theo mili giây
+  data: DataItem[];
+  slideshowInterval?: number; // Add this line
 }
 
-const Carousel: React.FC<CarouselProps> = ({ data, onColorChanged, slideshowInterval = 5000 }) => {
+const Carousel: React.FC<CarouselProps> = ({ data, slideshowInterval = 5000}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const swiperRef = useRef<FlatList<ColorItem>>(null);
+  const swiperRef = useRef<FlatList<DataItem>>(null);
   const [flatListWidth, setFlatListWidth] = useState(SCREEN_WIDTH);
 
   useEffect(() => {
@@ -33,13 +33,6 @@ const Carousel: React.FC<CarouselProps> = ({ data, onColorChanged, slideshowInte
     return () => clearInterval(intervalId);
   }, [currentIndex, data.length, slideshowInterval]);
 
-  const handleColorChanged = (colorId: number) => {
-    setCurrentIndex(data.findIndex(item => item.id === colorId));
-    if (onColorChanged) {
-      onColorChanged(colorId);
-    }
-  };
-
   const handleScroll = (event: any) => {
     setCurrentIndex(Math.round(event.nativeEvent.contentOffset.x / flatListWidth));
   };
@@ -47,8 +40,6 @@ const Carousel: React.FC<CarouselProps> = ({ data, onColorChanged, slideshowInte
   const handleMomentumScrollEnd = (event: any) => {
     const newIndex = Math.round(event.nativeEvent.contentOffset.x / flatListWidth);
     setCurrentIndex(newIndex >= 0 && newIndex < data.length ? newIndex : 0);
-    const selectedColorId = data[newIndex >= 0 && newIndex < data.length ? newIndex : 0]?.id || null;
-    handleColorChanged(selectedColorId);
   };
 
   const getItemLayout = (_: any, index: number) => ({
@@ -58,7 +49,7 @@ const Carousel: React.FC<CarouselProps> = ({ data, onColorChanged, slideshowInte
   });
 
   const goToDetailProducts = (id: number) => {
-    navigateToPage(APP_NAVIGATION.DETAILSPRODUCT, {productId: id});
+    navigateToPage(APP_NAVIGATION.DETAILSPRODUCT, { productId: id });
   };
 
   return (
@@ -72,12 +63,11 @@ const Carousel: React.FC<CarouselProps> = ({ data, onColorChanged, slideshowInte
         data={data}
         keyExtractor={item => item.id.toString()}
         renderItem={({ item, index }) => (
-            <TouchableWithoutFeedback key={item.id} onPress={() => goToDetailProducts(item.id)} style={styles.slideContainer}>
-              <View style={styles.slide}>
-                <Image source={{ uri: item.images }} style={styles.image} />
-              </View>
-
-            </TouchableWithoutFeedback>
+          <TouchableWithoutFeedback key={item.id} onPress={() => goToDetailProducts(item.id)} style={styles.slide}>
+            {/* <View style={styles.slide}> */}
+              <Image source={{ uri: item.images }} style={styles.image} />
+            {/* </View> */}
+          </TouchableWithoutFeedback>
         )}
         onMomentumScrollEnd={handleMomentumScrollEnd}
         initialScrollIndex={currentIndex}
@@ -101,18 +91,32 @@ const Carousel: React.FC<CarouselProps> = ({ data, onColorChanged, slideshowInte
 
 const styles = StyleSheet.create({
   image: {
-    width: SCREEN_WIDTH,
-    height: '100%',
+    width: hs(360),
+    height: vs(180),
     resizeMode: 'cover',
-  },
-  slideContainer: {
-    width: SCREEN_WIDTH,
-    height: SCREEN_HEIGHT * 0.3, // Điều chỉnh chiều cao của slide container tại đây
   },
   slide: {
     flex: 1,
-    width: '100%',
+    width: SCREEN_WIDTH,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
   },
+  // image: {
+  //   flex: 1,
+  //   width: SCREEN_WIDTH,
+  //   height: '100%',
+  //   resizeMode: 'cover',
+  // },
+  
+  // slideContainer: {
+  //   width: SCREEN_WIDTH,
+  //   height: SCREEN_HEIGHT * 0.3, // Adjust the height of the slide container here
+  // },
+  // slide: {
+  //   flex: 1,
+  //   width: '100%',
+  // },
   pagination: {
     flexDirection: 'row',
     position: 'absolute',
@@ -133,7 +137,7 @@ const styles = StyleSheet.create({
   },
   activeDot: {
     backgroundColor: '#FF6900',
-    width: hs(20), // Kích thước của dấu chấm khi được chọn
+    width: hs(20), // Size of the dot when selected
   },
 });
 

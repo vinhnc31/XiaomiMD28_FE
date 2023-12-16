@@ -200,14 +200,14 @@ export default StyleSheet.create({
   },
 
   suggestItem: {
-    width: Dimensions.get('window').width / 2 - 16 ,
+    width: Dimensions.get('window').width / 2 - 10 ,
     // width: 170,
     height: vs(270),
     borderColor: '#F6F8F6',
     borderWidth: 1,
     alignItems: 'center',
-    marginHorizontal: vs(4),
-    marginVertical: vs(4),
+    // marginHorizontal: vs(4),
+    marginVertical: vs(2),
     borderRadius: vs(10),
     backgroundColor: '#ffffff', 
     padding: 12,
