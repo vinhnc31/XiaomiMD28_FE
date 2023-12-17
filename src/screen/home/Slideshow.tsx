@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
   activeDot: {
     backgroundColor: '#FF6900',
-    width: hs(20), // Size of the dot when selected
+    width: hs(8), // Size of the dot when selected
   },
 });
 
