@@ -50,7 +50,6 @@ const NotificationScreen = (props: Props) => {
   const AccountId = user?.id;
   const [dataOrder, setDataOrder] = useState<HistoryOrderModel[]>([]);
   const historyOrder = new HistoryOrderService();
-  const [item, setDataNoti] = useState();
   useEffect(() => {
     fetchDataNotification();
     fetchDataOrder();
@@ -86,9 +85,8 @@ const NotificationScreen = (props: Props) => {
   const test = (id: number) => {
     for (let i = 0; i < dataOrder.length; i++) {
       if (dataOrder[i].id === id) {
-        setDataNoti(dataOrder[i]);
-        if (item) {
-          navigateToPage(APP_NAVIGATION.ORDERDETAIL, {item});
+        if (dataOrder) {
+          navigateToPage(APP_NAVIGATION.ORDERDETAIL, {item: dataOrder[i]});
         }
       }
     }
