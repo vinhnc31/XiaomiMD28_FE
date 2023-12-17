@@ -75,7 +75,7 @@ const HomeScreen = (props: Props) => {
   const getProductByLimit = useProductStore(state => state.getProductByLimit);
 
   const getAllProduct = useProductStore(state => state.dataProduct);
-  // console.log("All Product: " + getAllProduct.length);
+  console.log("All Product: " + getAllProduct.length);
 
   const cartService = new CartService();
   const { user } = useAuth();
@@ -110,24 +110,21 @@ const HomeScreen = (props: Props) => {
     }
   }, [getAllProduct]);
 
+  console.log('prd: ', newDataProduct.length)
 
   useEffect(() => {
-    // setPage(1);
-    // loadMoreData(page);
-    // console.log("page: " + page);
-
-    if (page > 1) {
+    if (newDataProduct.length == 0 && getAllProduct.length >= 10) {
+      setNewDataProduct(getAllProduct.slice(0, 10));
+    } 
       loadMoreData(page);
-    }
-  }, [page]);
+  }, [page, getAllProduct.length]);
 
  
   const handleEndReached = () => {
     if (!isLoadingMore && hasMoreData) {
-    // setIsLoadingMore(true);
+      setIsLoadingMore(true);
       setPage(page + 1);
-    }
-    console.log('End reached!');
+    } 
   };
 
 
@@ -405,8 +402,8 @@ const HomeScreen = (props: Props) => {
 
         {isLoadingMore ? (
           <View style={{ height: 50, alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
-            <Text style={{ color: 'red' }}>Loading...</Text>
-            {/* <BaseLoading size={20} top={10}  color={'red'}/> */}
+            <Text style={{ color: '#FF6900' }}>Loading...</Text>
+            {/* <BaseLoading size={100} top={50}/> */}
           </View>
         ) : null}
       </View>
