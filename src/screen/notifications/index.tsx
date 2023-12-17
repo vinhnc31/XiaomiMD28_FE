@@ -160,19 +160,12 @@ const NotificationScreen = (props: Props) => {
                     <>
                       {dataOrder.map(order => {
                         if (order.id === item.OrderId) {
-                          return order.OrdersProducts[0]['productcolor']['image'] ? (
-                            <Image
-                              key={order.id}
-                              source={{uri: order.OrdersProducts[0]['productcolor']['image']}}
-                              style={styles.imgNotification}
-                            />
-                          ) : (
-                            <Image
-                              key={order.id}
-                              source={{uri: order.OrdersProducts[0]['Product']['images']}}
-                              style={styles.imgNotification}
-                            />
-                          );
+                          const productColor = order.OrdersProducts[0]?.productcolor;
+                          const imageSource = productColor?.image
+                            ? {uri: productColor.image}
+                            : {uri: order.OrdersProducts[0]['Product']['images']};
+
+                          return <Image key={order.id} source={imageSource} style={styles.imgNotification} />;
                         }
                       })}
                     </>

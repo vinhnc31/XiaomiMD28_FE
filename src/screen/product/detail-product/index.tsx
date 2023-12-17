@@ -624,7 +624,7 @@ const DetailsScreen = (props: Props) => {
                         <View style={styles.viewStar}>
                           <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
                           <Text style={styles.textStar}>
-                            {productIdData?.averageRating || 0.0}
+                            {productIdData?.averageRating? parseFloat(productIdData?.averageRating).toFixed(1):"0"}
                           </Text>
                           <Text style={styles.textSell}>| Kho : </Text>
                           {productIdData?.colorProducts.length > 0
@@ -698,7 +698,7 @@ const DetailsScreen = (props: Props) => {
                                 <View style={styles.starPoint}>
                                   <Text style={styles.pointText}>
                                     {productIdData?.averageRating
-                                      ? productIdData?.averageRating
+                                      ? parseFloat(productIdData?.averageRating).toFixed(1)
                                       : '0'}
                                   </Text>
                                   <Text style={styles.pointText}> / 5 </Text>

@@ -25,7 +25,6 @@ export default StyleSheet.create({
     marginVertical: vs(6),
     borderRadius: ms(10),
     borderWidth: 0.8,
-    paddingHorizontal: hs(8),
     paddingVertical: vs(8),
     borderColor: '#000000',
     marginHorizontal: hs(16),

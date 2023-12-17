@@ -85,7 +85,7 @@ const HomeScreen = (props: Props) => {
   const loadMoreData = useCallback(async (nextPage: number = 1) => {
     try {
       setIsLoadingMore(true);
-      const pageSize = 10;
+      const pageSize = 6;
       const startIndex = (nextPage - 1) * pageSize;
       const endIndex = startIndex + pageSize;
 
@@ -149,12 +149,11 @@ const HomeScreen = (props: Props) => {
       setError('err');
     }
   };
-
-
   const onRefresh = () => {
     setRefreshing(true);
+    fetchDataProduct();
+    fetchDataFavorites()
   };
-
   const goToCategory = () => {
     navigateToPage(APP_NAVIGATION.CATEGORY);
   };
@@ -176,6 +175,31 @@ const HomeScreen = (props: Props) => {
       // console.log(resultCart.data.length)
     }
   };
+
+
+  const fetchDataProduct = async () => {
+    try {
+      const productService = new ProductService();
+      const result = await productService.getProduct();
+      useProductStore.setState((state) => ({
+        dataProduct: result.data,
+      }));
+    } catch (error) {
+      setError('err');
+    }
+  };
+
+  const fetchDataFavorites = async () => {
+    try {
+      const productService = new ProductService();
+      const result = await productService.getMostProduct();
+      FavoriteStore.setState((state) => ({
+        dataFavorite: result.data,
+      }));
+    } catch (error) {
+      setError('err');
+    }
+  }
 
   //Gợi ý hôm nay
   function ListItemSuggest({ item, index }: { item: ProductModel; index: number }) {
@@ -202,7 +226,7 @@ const HomeScreen = (props: Props) => {
             </Text>
             <View style={styles.viewStar}>
               <Image style={styles.imgStar} source={R.images.iconStar} />
-              <Text style={styles.text}>{item.averageRating} </Text>
+              <Text style={styles.text}>{item.averageRating?parseFloat(item?.averageRating).toFixed(1):null} </Text>
               <Text style={styles.textCmt}>({item.commentCount})</Text>
             </View>
           </View>
@@ -259,7 +283,7 @@ const HomeScreen = (props: Props) => {
               }}>
               <View style={styles.viewStar}>
                 <Image style={styles.imgStar} source={R.images.iconStar} />
-                <Text style={styles.text}>{item.averageRating} </Text>
+                <Text style={styles.text}>{item.averageRating ?parseFloat(item?.averageRating).toFixed(1):null} </Text>
                 <Text style={styles.textCmt}>({item.commentCount})</Text>
               </View>
               <Text style={styles.text}>
