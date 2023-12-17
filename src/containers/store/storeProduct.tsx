@@ -14,6 +14,7 @@ interface ProductStoreActions {
 const useProductStore = create<ProductStoreState & ProductStoreActions>((set) => ({
   dataProduct: [],
   setProductData: (data) => set({ dataProduct: data }),
+  
   getProductByLimit: (start, limit, get) => {
     // Assuming your dataProduct is an array of products
     const { dataProduct } = get(); // 'get()' is a function from zustand

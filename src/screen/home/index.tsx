@@ -74,10 +74,37 @@ const HomeScreen = (props: Props) => {
 
   const getProductByLimit = useProductStore(state => state.getProductByLimit);
 
+  const getAllProduct = useProductStore(state => state.dataProduct);
+  console.log("All Product: " + getAllProduct.length);
+
   const cartService = new CartService();
   const { user } = useAuth();
   useNotificationPermission();
 
+
+  // const loadMoreData = async () => {
+  //   console.log('Load more data is called!');
+  //   if (!isLoadingMore && hasMoreData) {
+  //     try {
+  //       setIsLoadingMore(true);
+  //       const newPage = page + 1;
+  //       const newData = getProductByLimit((newPage - 1) * 4, 4, useProductStore.getState);
+
+  //       console.log(`Loaded data for page ${newPage}: ${newData.length} items`);
+
+  //       if (newData.length > 0) {
+  //         setNewDataProduct((prevData) => [...prevData, ...newData]);
+  //         setPage(newPage);
+  //       } else {
+  //         setHasMoreData(false);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error in loadMoreData:', error);
+  //     } finally {
+  //       setIsLoadingMore(false);
+  //     }
+  //   }
+  // };
 
   const loadMoreData = async () => {
     console.log('Load more data is called!');
@@ -85,10 +112,13 @@ const HomeScreen = (props: Props) => {
       try {
         setIsLoadingMore(true);
         const newPage = page + 1;
-        const newData = getProductByLimit((newPage - 1) * 4, 4, useProductStore.getState);
-
+        const startIndex = (newPage - 1) * 4;
+        const endIndex = startIndex + 4;
+  
+        const newData = getAllProduct.slice(startIndex, endIndex);
+  
         console.log(`Loaded data for page ${newPage}: ${newData.length} items`);
-
+  
         if (newData.length > 0) {
           setNewDataProduct((prevData) => [...prevData, ...newData]);
           setPage(newPage);
@@ -102,6 +132,7 @@ const HomeScreen = (props: Props) => {
       }
     }
   };
+
 
   const config = {
     style: 'currency',
