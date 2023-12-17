@@ -63,14 +63,15 @@ const EvaluateScreen = (props: Props) => {
   }, [image]);
   const sendEvaluate = () => {
     const formData = new FormData();
-
-    console.log(convertUploadFile(image));
+    console.log(image);
     result.map(item => {
       formData.append('AccountId', Number(user?.id));
       formData.append('commentBody', comment);
-      image ? formData.append('images', convertUploadFile(image)) : formData.append('images', null);
       formData.append('productId', item['productId']);
       formData.append('star', defaultRating);
+      if (image) {
+        formData.append('images', convertUploadFile(image));
+      }
       evaluateService.postEvaluate(formData);
       orderService.putEvaluate(data.id, {statusOrder: 1});
     });
