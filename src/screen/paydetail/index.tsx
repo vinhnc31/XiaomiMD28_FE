@@ -144,11 +144,13 @@ const PayDetailScreen = (props: Props) => {
   };
   const payVNPay = async () => {
     await onPay();
-    const dataView = await payService.postPay({amount: sumPay, orderId: data.id, bankCode: ''});
-    // console.log(dataView.data)
-    const dataVnPay = dataView.data;
-    console.log(dataVnPay);
-    navigateToPage(APP_NAVIGATION.PAYVIEW, {dataVnPay});
+    if(dataPay){
+      const dataView = await payService.postPay({amount: sumPay, orderId: dataPay.id, bankCode: ''});
+      console.log(dataView.data)
+      const dataVnPay = dataView.data;
+      console.log(dataVnPay);
+      navigateToPage(APP_NAVIGATION.PAYVIEW, {dataVnPay});
+    }
   };
   // console.log(data[0]["Product"]["price"]*data[0].quantity)
   return (
