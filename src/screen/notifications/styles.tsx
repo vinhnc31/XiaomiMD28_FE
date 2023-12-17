@@ -18,7 +18,7 @@ export default StyleSheet.create({
     color: 'black',
     marginLeft: hs(20),
   },
-  btnContainer: { justifyContent: 'center', alignItems: 'center', width: '100%' },
+  btnContainer: { justifyContent: 'center', alignItems: 'center', width: SCREEN_WIDTH * 0.9, alignSelf: 'center' },
   viewItemNotification: {
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
