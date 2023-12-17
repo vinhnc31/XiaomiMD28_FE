@@ -91,7 +91,6 @@ const DetailsScreen = (props: Props) => {
 
   const fetchDataProduct = async () => {
     try {
-      
       const result = await productService.getProductId(productId);
       setProductIdData(result.data);
       if (result.data && Object.keys(result.data).length > 0) {
@@ -158,7 +157,6 @@ const DetailsScreen = (props: Props) => {
       const favoriteService = new FavoriteService();
       if (isFavorite) {
         const removeResult = await favoriteService.deleteFavorite(favoriteId);
-        console.log('xóa yêu thích -----', removeResult?.status);
         if (removeResult) {
           Toast.show({
             text1: 'Xóa thành công khỏi mục yêu thích',
@@ -177,7 +175,6 @@ const DetailsScreen = (props: Props) => {
           productId,
           AccountId,
         });
-        console.log('Thêm vào danh sách yêu thích thành công', addPavoriteResult.status);
         if (addPavoriteResult) {
           Toast.show({
             text1: 'Đã thêm thành công vào danh sách yêu thích',
@@ -208,7 +205,7 @@ const DetailsScreen = (props: Props) => {
       setIsFavorite(isProductInFavorites);
     } catch (error) {
       console.log('Error checking liked products:', error);
-      setLoading(true);
+      setLoading(false);
     }
   };
 
@@ -243,7 +240,6 @@ const DetailsScreen = (props: Props) => {
   };
 
   const handleColorChange = (colorId: number) => {
-    console.log('Selected Color ID:', colorId);
     setcolorIdSlider(colorId);
     setcolorIdButtonSlider(colorId);
   };
@@ -351,7 +347,6 @@ const DetailsScreen = (props: Props) => {
       productName: productIdData?.name,
     });
   };
-  const [dataProduct,setDataProduct]=useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalAction, setModalAction] = useState('');
   // add du lieu hien thi
@@ -363,8 +358,8 @@ const DetailsScreen = (props: Props) => {
   const [selectedCountModal, setSelectedCountModal] = useState(1); // truyen
   const [config, setConfig] = useState(false);
   const {colorProducts} = productIdData;
-  const [a,seta] = useState(null);
-  const [b,setb] = useState(null);
+  const [a, seta] = useState(null);
+  const [b, setb] = useState(null);
 
   const renderItemColorModal = ({item, index}) => {
     return (
@@ -410,24 +405,30 @@ const DetailsScreen = (props: Props) => {
   //logic backroud
   const [selectedColorId, setSelectedColorId] = useState(0);
   const [selectedColorConfigId, setSelectedColorConfigId] = useState(0);
-  
+
   // view
   const [isRenderColorConfigId, setIsRenderColorConfigId] = useState<boolean>(true);
   const handleColorModalPress = item => {
-    if(item.colorConfigs.length===0){
-      setConfig(true)
-    }else{
-      setConfig(false)
+    if (item.colorConfigs.length === 0) {
+      setConfig(true);
+    } else {
+      setConfig(false);
     }
-    setb(item)
+    setb(item);
     // Handle color modal press logic
     setProductColorIdModal(item.id); // add
     setSelectedImageModal(item?.image); //view
     setSelectedColorId(item?.id || null); //btn
     //bg
     setSelectedColorConfigId(0);
-    //logic set data
-    //setProductColorConfigIdModal(item?.colorConfigs.length === 0 ? null : ProductColorConfigIdModal);
+    //logic set data quantity
+    const selectedQuantity =
+      productIdData.colorProducts && productIdData.colorProducts.length > 0
+        ? getQuantitys(productIdData) === 0
+          ? productIdData.quantity
+          : getQuantitys(productIdData)
+        : productIdData.quantity;
+    setSelectedQuantityModal(selectedQuantity < 0 ? 0 : selectedQuantity);
     //logic view
     setIsRenderColorConfigId(item?.colorConfigs.length === 0 ? true : false);
   };
@@ -435,12 +436,12 @@ const DetailsScreen = (props: Props) => {
   const handleConfigModalPress = configItem => {
     {
       //add
-      seta(configItem); 
+      seta(configItem);
       setProductColorConfigIdModal(configItem.configId);
       setProductColorIdModal(configItem.ProductColorId);
       //view
       setSelectedPriceModal(configItem.price || 0);
-      setSelectedQuantityModal(configItem.quantity || 0);
+      setSelectedQuantityModal(configItem.quantity < 0 ? 0 : configItem.quantity);
       //bg
       setSelectedColorConfigId(configItem.configId || 0);
       // logic view
@@ -448,54 +449,55 @@ const DetailsScreen = (props: Props) => {
   };
 
   const handleDecrease = () => {
-      setSelectedCountModal(prevCount => Math.max(prevCount - 1, 1));
+    setSelectedCountModal(prevCount => Math.max(prevCount - 1, 1));
   };
   const handleIncrease = () => {
-      setSelectedCountModal(prevCount => Math.min(prevCount + 1, selectedQuantityModal || 1));
+    setSelectedCountModal(prevCount => Math.min(prevCount + 1, selectedQuantityModal || 1));
   };
   const handleAddToCart = async () => {
     handleModalPress();
-      try {
-        const cartService = new CartService();
-        const addCartData = {
-          productId: productIdData?.id,
-          AccountId: AccountId,
-          quantity: selectedCountModal,
-          ProductColorId: productColorIdModal ?? null,
-          ProductColorConfigId: ProductColorConfigIdModal ?? null,
-        };
-        const result = await cartService.postCart(addCartData);
-        Toast.show({
-          type: 'success',
-          position: 'top',
-          text1: 'Thành công',
-          text2: 'Đã thêm vào giỏ hàng',
-        });
-      } catch (error) {
-        console.log('error: ', error);
-        Toast.show({
-          type: 'error',
-          position: 'top',
-          text1: 'Thông báo',
-          text2: 'Không thể thêm vào giỏ hàng !',
-        });
-      }
+    try {
+      const cartService = new CartService();
+      const addCartData = {
+        productId: productIdData?.id,
+        AccountId: AccountId,
+        quantity: selectedCountModal,
+        ProductColorId: productColorIdModal ?? null,
+        ProductColorConfigId: ProductColorConfigIdModal ?? null,
+      };
+      const result = await cartService.postCart(addCartData);
+      Toast.show({
+        type: 'success',
+        position: 'top',
+        text1: 'Thành công',
+        text2: 'Đã thêm vào giỏ hàng',
+      });
+    } catch (error) {
+      console.log('error: ', error);
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Thông báo',
+        text2: 'Không thể thêm vào giỏ hàng !',
+      });
+    }
   };
   const handleBuyNow = () => {
     handleModalPress();
-      const data =[
-        {
-          productImage:!config ?productIdData?.images : b["image"],
-          productName: productIdData?.name,
-          productId: productIdData?.id,
-          productPrice:  productIdData["colorProducts"].length==0||config ? productIdData.price : a["price"],
-          quantity: selectedCountModal,
-          ProductColorId: productColorIdModal ?? null,
-          ProductRam:!config? a?.Config["nameConfig"] : null,
-          ProductColor:config||!config? b?.Color["nameColor"] : null,
-          ProductColorConfigId: ProductColorConfigIdModal ?? null,
-        }]  
-    navigateToPage(APP_NAVIGATION.PAYDETAIL,{data})
+    const data = [
+      {
+        productImage: !config ? productIdData?.images : b['image'],
+        productName: productIdData?.name,
+        productId: productIdData?.id,
+        productPrice: productIdData['colorProducts'].length == 0 || config ? productIdData.price : a['price'],
+        quantity: selectedCountModal,
+        ProductColorId: productColorIdModal ?? null,
+        ProductRam: !config ? a?.Config['nameConfig'] : null,
+        ProductColor: config || !config ? b?.Color['nameColor'] : null,
+        ProductColorConfigId: ProductColorConfigIdModal ?? null,
+      },
+    ];
+    navigateToPage(APP_NAVIGATION.PAYDETAIL, {data});
   };
   const handleModalPress = () => {
     // Đóng Modal khi người dùng ấn vào nền bên ngoài
@@ -512,12 +514,24 @@ const DetailsScreen = (props: Props) => {
     setSelectedColorConfigId(0);
     setIsRenderColorConfigId(true);
   };
-
   useEffect(() => {
     setSelectedImageModal(productIdData?.images || '');
     setSelectedPriceModal(productIdData?.price || 0);
-    setSelectedQuantityModal(getQuantitys(productIdData) || 0);
+
+    const selectedQuantity =
+      productIdData.colorProducts && productIdData.colorProducts.length > 0
+        ? getQuantitys(productIdData) === 0
+          ? productIdData.quantity
+          : getQuantitys(productIdData)
+        : productIdData.quantity;
+    setSelectedQuantityModal(selectedQuantity >= 0 ? selectedQuantity : 0);
   }, [productIdData]);
+
+  const renderQuantityText = () => {
+    const quantity = getQuantitys(productIdData) || productIdData?.quantity || 0;
+
+    return <Text style={styles.textCmt}>({quantity < 0 ? 0 : quantity})</Text>;
+  };
   return (
     <SafeAreaView style={styles.mainContainer}>
       <View style={styles.backContainer}>
@@ -565,7 +579,6 @@ const DetailsScreen = (props: Props) => {
                           <Carousel
                             data={dataSlider(productIdData) || []}
                             onColorChanged={colorId => {
-                              console.log('index-----------------z', colorId);
                               setcolorIdSlider(colorId);
                             }}
                             colorIdButton={colorIdButtonSlider}
@@ -609,11 +622,15 @@ const DetailsScreen = (props: Props) => {
 
                         <View style={styles.viewStar}>
                           <Image style={styles.imgStar} source={require('../../../assets/images/star4.png')} />
-                          <Text style={styles.textStar}>{productIdData?.averageRating || 0.0}</Text>
+                          <Text style={styles.textStar}>
+                            {parseFloat(productIdData?.averageRating).toFixed(1) || 0.0}
+                          </Text>
                           <Text style={styles.textSell}>| Kho : </Text>
-                          <Text style={styles.textCmt}>({getQuantitys(productIdData) || 0})</Text>
-                          {/* <Text style={styles.textSell}>| Đã bán : </Text>
-                          <Text style={styles.textSellNumber}>123</Text> */}
+                          {productIdData?.colorProducts.length > 0
+                            ? getQuantitys(productIdData) === 0
+                              ? renderQuantityText()
+                              : renderQuantityText()
+                            : renderQuantityText()}
                         </View>
                       </View>
                       {dataSlider(productIdData) ? (
@@ -673,13 +690,15 @@ const DetailsScreen = (props: Props) => {
                                 <View style={styles.reviewsTitleContainer}>
                                   <Text style={styles.reviewTitleText}>Đánh giá của khác hàng</Text>
                                   <Text style={styles.numberReviews}>
-                                    ({commentProductIdData.length || productIdData?.commentCount})
+                                    ({ productIdData?.commentCount || commentProductIdData.length})
                                   </Text>
                                 </View>
 
                                 <View style={styles.starPoint}>
                                   <Text style={styles.pointText}>
-                                    {productIdData?.averageRating ? parseFloat(productIdData?.averageRating).toFixed(1) : '0.0'}
+                                    {productIdData?.averageRating
+                                      ? parseFloat(productIdData?.averageRating).toFixed(1)
+                                      : '0.0'}
                                   </Text>
                                   <Text style={styles.pointText}> / 5 </Text>
                                   <View style={styles.imgStarContainer}>
@@ -757,7 +776,6 @@ const DetailsScreen = (props: Props) => {
                 <TouchableOpacity
                   onPress={() => {
                     if (user) {
-                      console.log('them vao gio hang');
                       setModalVisible(true);
                       setModalAction('addToCart');
                     } else {
@@ -778,7 +796,6 @@ const DetailsScreen = (props: Props) => {
                 <TouchableOpacity
                   onPress={() => {
                     if (user) {
-                      console.log('mua ngay');
                       setModalVisible(true);
                       setModalAction('buyNow');
                     } else {
@@ -799,7 +816,6 @@ const DetailsScreen = (props: Props) => {
                 transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => {
-                  console.log('Modal has been closed.');
                   setModalVisible(!modalVisible);
                 }}>
                 <TouchableWithoutFeedback onPress={handleModalPress}>
@@ -858,7 +874,7 @@ const DetailsScreen = (props: Props) => {
                             <View></View>
                           ) : (
                             <>
-                              <Text style={styles.modalProductConfigTitle}>Ram</Text>
+                              <Text style={styles.modalProductConfigTitle}>Thông số</Text>
                               <View style={{}}>
                                 <FlatList
                                   horizontal
@@ -878,7 +894,7 @@ const DetailsScreen = (props: Props) => {
                           <Text style={styles.modalNumberProductTitle}>Số lượng</Text>
                           <View style={styles.modalQuantityProductContainer}>
                             <TouchableOpacity
-                              disabled={selectedCountModal==1 ?true : false}
+                              disabled={selectedCountModal == 1 ? true : false}
                               onPress={handleDecrease}
                               activeOpacity={0.8}
                               style={styles.modalBtnMinusPlus}>
@@ -905,19 +921,27 @@ const DetailsScreen = (props: Props) => {
 
                         <TouchableOpacity
                           disabled={
-                            selectedQuantityModal == 0? true : dataSlider(productIdData).length == 0
-                              ? false
-                              :config ? false : selectedColorId == 0 || selectedColorConfigId == 0
-                                ? true
-                                : false
+                            selectedQuantityModal == 0
+                              ? true
+                              : dataSlider(productIdData).length == 0
+                                ? false
+                                : config
+                                  ? false
+                                  : selectedColorId == 0 || selectedColorConfigId == 0
+                                    ? true
+                                    : false
                           }
                           activeOpacity={0.8}
                           style={
-                            selectedQuantityModal == 0? styles.modalBtnAddFalse: dataSlider(productIdData).length == 0
-                              ? styles.modalBtnAdd
-                              :  config ?styles.modalBtnAdd : selectedColorConfigId == 0 ||selectedColorId == 0
-                                ? styles.modalBtnAddFalse
-                                : styles.modalBtnAdd
+                            selectedQuantityModal == 0
+                              ? styles.modalBtnAddFalse
+                              : dataSlider(productIdData).length == 0
+                                ? styles.modalBtnAdd
+                                : config
+                                  ? styles.modalBtnAdd
+                                  : selectedColorConfigId == 0 || selectedColorId == 0
+                                    ? styles.modalBtnAddFalse
+                                    : styles.modalBtnAdd
                           }
                           onPress={() => {
                             if (modalAction === 'addToCart') {
@@ -926,7 +950,7 @@ const DetailsScreen = (props: Props) => {
                               handleBuyNow();
                             }
                             setModalVisible(!modalVisible);
-                            handleModalPress()
+                            handleModalPress();
                           }}>
                           <Text style={styles.modalBtnText}>
                             {modalAction === 'addToCart' ? 'Thêm vào giỏ hàng' : 'Mua ngay'}

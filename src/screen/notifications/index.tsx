@@ -148,7 +148,14 @@ const NotificationScreen = (props: Props) => {
               tension={100}
               style={styles.btnContainer}>
               <View style={styles.viewItemNotification}>
-                <View style={{justifyContent: 'center', alignSelf: 'center', width: vs(100), height: vs(100), backgroundColor: '#F1F1F1'}}>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    width: vs(100),
+                    height: vs(100),
+                    backgroundColor: '#F1F1F1',
+                  }}>
                   {item?.imageVoucher ? (
                     <Image source={{uri: item?.imageVoucher}} style={styles.imgNotification} />
                   ) : (

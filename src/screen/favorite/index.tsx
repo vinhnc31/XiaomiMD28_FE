@@ -71,7 +71,6 @@ const FavoriteScreen = (props: Props) => {
       return () => {};
     }, []),
   );
-
   const featchCart = async () => {
     if (user) {
       const resultCart = await cartService.fetchCart(user?.id!);
@@ -144,8 +143,19 @@ const FavoriteScreen = (props: Props) => {
   };
 
   const ProductItem2 = ({item}: {item: FavoriteModel}) => {
+    //tinh so star
+    let totalStars = 0;
+    let averageStars;
+    const comments = item?.Product.comments;
+    if (comments && comments.length > 0) {
+      for (let i = 0; i < comments.length; i++) {
+        const comment = comments[i];
+        totalStars += comment.star;
+      }
+      averageStars = totalStars / comments.length;
+    }
+    //no data
     if (!item?.Product) {
-      console.error('Item is undefined');
       return (
         <TouchableOpacity onPress={() => handleFavoritePress(item.id)}>
           <View style={styles.item}>
@@ -195,6 +205,7 @@ const FavoriteScreen = (props: Props) => {
         </TouchableOpacity>
       );
     }
+    // data
     return (
       <TouchableOpacity onPress={() => goToDetailProduct(item?.productId)}>
         <View style={styles.item}>
@@ -226,8 +237,8 @@ const FavoriteScreen = (props: Props) => {
 
             <View style={styles.viewStar}>
               <Image style={styles.imgStar} source={require('../../assets/images/star4.png')} />
-              <Text style={styles.textStar}>{item?.Product.averageRating || 0.0}</Text>
-              <Text style={styles.textCmt}>({item?.Product.quantity || 0})</Text>
+              <Text style={styles.textStar}>{averageStars?.toFixed(1) || 0.0}</Text>
+              <Text style={styles.textCmt}>({item?.Product['comments'].length || 0})</Text>
             </View>
           </View>
         </View>

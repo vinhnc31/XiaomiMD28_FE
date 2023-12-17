@@ -11,16 +11,16 @@ export default StyleSheet.create({
     marginTop: vs(15),
     marginBottom: vs(8),
   },
-  imgCmtAvatar: {width: vs(20), height: vs(20)},
+  imgCmtAvatar: {width: vs(30), height: vs(30), borderRadius: ms(150)},
   txtCmtName: {
     color: '#2A2A2A',
     fontWeight: '400',
-    fontSize: ms(14),
+    fontSize: ms(16),
     fontFamily: 'LibreBaskerville-Bold',
     marginLeft: hs(5),
   },
-    
-    imgStarCmtContainer: {flexDirection: 'row', alignItems: 'center', marginTop: vs(10) },
+
+  imgStarCmtContainer: {flexDirection: 'row', alignItems: 'center', marginTop: vs(5)},
   txtCmtBody: {
     marginVertical: vs(10),
     color: '#2A2A2A',
@@ -28,7 +28,7 @@ export default StyleSheet.create({
     fontSize: ms(13),
     fontFamily: 'LibreBaskerville-Bold',
   },
-  imgCmtBody: {width: hs(80), height: vs(80), marginBottom: vs(15), marginTop: vs(10)},
+  imgCmtBody: {width: hs(120), height: hs(120), marginBottom: vs(15), marginTop: vs(10)},
   borderBottom: {width: '100%', borderBottomWidth: 1, borderColor: '#DAD6D6', flex: 0.01},
   imgStarCmt: {
     width: hs(10),
