@@ -85,7 +85,7 @@ const HomeScreen = (props: Props) => {
   const loadMoreData = useCallback(async (nextPage: number = 1) => {
     try {
       setIsLoadingMore(true);
-      const pageSize = 10;
+      const pageSize = 6;
       const startIndex = (nextPage - 1) * pageSize;
       const endIndex = startIndex + pageSize;
 
@@ -149,14 +149,11 @@ const HomeScreen = (props: Props) => {
       setError('err');
     }
   };
-
-
   const onRefresh = () => {
     setRefreshing(true);
     fetchDataProduct();
     fetchDataFavorites()
   };
-
   const goToCategory = () => {
     navigateToPage(APP_NAVIGATION.CATEGORY);
   };
@@ -229,7 +226,7 @@ const HomeScreen = (props: Props) => {
             </Text>
             <View style={styles.viewStar}>
               <Image style={styles.imgStar} source={R.images.iconStar} />
-              <Text style={styles.text}>{item.averageRating} </Text>
+              <Text style={styles.text}>{item.averageRating?parseFloat(item?.averageRating).toFixed(1):null} </Text>
               <Text style={styles.textCmt}>({item.commentCount})</Text>
             </View>
           </View>
@@ -286,7 +283,7 @@ const HomeScreen = (props: Props) => {
               }}>
               <View style={styles.viewStar}>
                 <Image style={styles.imgStar} source={R.images.iconStar} />
-                <Text style={styles.text}>{item.averageRating} </Text>
+                <Text style={styles.text}>{item.averageRating ?parseFloat(item?.averageRating).toFixed(1):null} </Text>
                 <Text style={styles.textCmt}>({item.commentCount})</Text>
               </View>
               <Text style={styles.text}>
