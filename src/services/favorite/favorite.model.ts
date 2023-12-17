@@ -11,6 +11,14 @@ export interface FavoriteModel {
         importPrice: number;
         quantity: number;
         CategoryId: number;
+        comments: Array<{
+            images: string;
+            id: number;
+            commentBody: string;
+            star: number;
+            AccountId: number;
+            productId: number;
+        }>;
     }
 }
 

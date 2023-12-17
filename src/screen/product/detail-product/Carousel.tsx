@@ -1,4 +1,14 @@
-import {View, Text, Dimensions, FlatList, Image, StyleSheet, Pressable, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  Dimensions,
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import {ms, vs, hs} from '@src/styles/scalingUtils';
 import React, {useState, useEffect, useRef} from 'react';
 
@@ -23,9 +33,23 @@ const Carousel: React.FC<CarouselProps> = ({data, onColorChanged, colorIdButton}
   const swiperRef = useRef<FlatList<ColorItem>>(null);
   const [indexDot, setIndexDot] = useState(0);
   const [isButton, setIsButton] = useState(false);
+  //modal
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [modalIndex, setModalIndex] = useState(0); // Track the index for the modal FlatList
   if (!data || data.length === 0) {
     return;
   }
+  const openModal = (index: number) => {
+    setSelectedImage(data[index].image);
+    setIsModalVisible(true);
+    setModalIndex(index);
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+    setSelectedImage(null);
+  };
 
   useEffect(() => {
     const index = data.findIndex(item => item.colorId === colorIdButton);
@@ -76,13 +100,17 @@ const Carousel: React.FC<CarouselProps> = ({data, onColorChanged, colorIdButton}
         data={data}
         keyExtractor={item => item.id.toString()}
         renderItem={({item, index}) => (
-          <View key={item.id} style={styles.slide}>
-            {item.image ? (
-              <Image source={{uri: item.image}} style={styles.image} />
-            ) : (
-              <Image source={require('../../../assets/images/noimage.jpg')} style={styles.image} />
-            )}
-          </View>
+          <>
+            <TouchableOpacity onPress={() => openModal(index)}>
+              <View key={item.id} style={styles.slide}>
+                {item.image ? (
+                  <Image source={{uri: item.image}} style={styles.image} />
+                ) : (
+                  <Image source={require('../../../assets/images/noimage.jpg')} style={styles.image} />
+                )}
+              </View>
+            </TouchableOpacity>
+          </>
         )}
         onMomentumScrollEnd={handleMomentumScrollEnd}
         initialScrollIndex={currentIndex}
@@ -97,6 +125,45 @@ const Carousel: React.FC<CarouselProps> = ({data, onColorChanged, colorIdButton}
           />
         ))}
       </View>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={() => {
+          closeModal();
+        }}>
+        <FlatList
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          data={data}
+          keyExtractor={item => item.id.toString()}
+          renderItem={({item, index}) => (
+            <>
+              <TouchableWithoutFeedback onPress={closeModal} style={styles.modalContent}>
+                <View style={styles.modalContent}>
+                  <Image source={{uri: item?.image}} style={styles.fullScreenImage} />
+                </View>
+              </TouchableWithoutFeedback>
+            </>
+          )}
+          onMomentumScrollEnd={event => {
+            const newIndex = Math.round(event.nativeEvent.contentOffset.x / SCREEN_WIDTH);
+            setModalIndex(newIndex);
+          }}
+          initialScrollIndex={modalIndex}
+          getItemLayout={getItemLayout}
+        />
+        <TouchableOpacity onPress={closeModal} style={styles.closeIcon}>
+          <Image style={{width: hs(30), height: hs(30)}} source={require('../../../assets/images/closewhite.png')} />
+        </TouchableOpacity>
+        <View style={styles.pagination2}>
+          <Text style={styles.paginationText}>
+            {modalIndex + 1}/{data.length}
+          </Text>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -130,6 +197,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  
   dot: {
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     width: hs(8),
@@ -142,6 +210,40 @@ const styles = StyleSheet.create({
   activeDot: {
     backgroundColor: 'black',
     width: hs(10), // Kích thước của dấu chấm khi được chọn
+  },
+  //modal
+  modalContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000000',
+  },
+  fullScreenImage: {
+    width: SCREEN_WIDTH * 1,
+    height: SCREEN_WIDTH * 1,
+    backgroundColor: 'black',
+    resizeMode: 'contain',
+    borderRadius: ms(5),
+  },
+  closeIcon: {
+    position: 'absolute',
+    width: hs(30),
+    height: hs(30),
+    top: vs(20),
+    right: hs(15),
+  },
+  paginationText: {
+    color: 'white',
+    fontSize: ms(20),
+  },
+  pagination2: {
+    flexDirection: 'row',
+    position: 'absolute',
+    bottom: vs(50),
+    left: 0,
+    right: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
