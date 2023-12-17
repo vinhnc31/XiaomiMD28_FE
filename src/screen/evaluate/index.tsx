@@ -62,11 +62,12 @@ const EvaluateScreen = (props: Props) => {
     return getAvatar();
   }, [image]);
   const sendEvaluate=()=>{
+    console.log(convertUploadFile(image)["name"])
     result.map((item)=>{
       evaluateService.postEvaluate({
         AccountId: Number(user?.id),
         commentBody: comment,
-        image: image ? convertUploadFile(image) : null,
+        images: image ? convertUploadFile(image)["name"] : null,
         productId: item["productId"],
         star: defaultRating,
       })

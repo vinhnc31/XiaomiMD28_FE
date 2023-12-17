@@ -1,8 +1,8 @@
 export interface EvaluateModel {
-  productId: string;
+  productId: number;
   AccountId: number;
   commentBody: string;
-  image: any;
+  images: any;
   star: number;
   // ordersId:number
 }
