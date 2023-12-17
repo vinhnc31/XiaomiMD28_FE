@@ -403,7 +403,6 @@ const HomeScreen = (props: Props) => {
         {isLoadingMore ? (
           <View style={{ height: 50, alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
             <Text style={{ color: '#FF6900' }}>Loading...</Text>
-            {/* <BaseLoading size={100} top={50}/> */}
           </View>
         ) : null}
       </View>

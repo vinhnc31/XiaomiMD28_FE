@@ -757,16 +757,6 @@ const DetailsScreen = (props: Props) => {
                           renderItem={renderItemComments}
                         />
                       </View>
-
-                      <>
-                        <TouchableOpacity
-                          activeOpacity={0.8}
-                          style={styles.btnSeeMoreComment}
-                          onPress={goToReviewProduct}>
-                          <Text style={styles.seeMoreReviewsText}>Xem thêm</Text>
-                        </TouchableOpacity>
-                        <Text style={[styles.borderBottom, { flex: 0.01 }]}></Text>
-                      </>
                     </View>
                   </>
                 )}
