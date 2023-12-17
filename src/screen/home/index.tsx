@@ -153,6 +153,8 @@ const HomeScreen = (props: Props) => {
 
   const onRefresh = () => {
     setRefreshing(true);
+    fetchDataProduct();
+    fetchDataFavorites()
   };
 
   const goToCategory = () => {
@@ -176,6 +178,31 @@ const HomeScreen = (props: Props) => {
       // console.log(resultCart.data.length)
     }
   };
+
+
+  const fetchDataProduct = async () => {
+    try {
+      const productService = new ProductService();
+      const result = await productService.getProduct();
+      useProductStore.setState((state) => ({
+        dataProduct: result.data,
+      }));
+    } catch (error) {
+      setError('err');
+    }
+  };
+
+  const fetchDataFavorites = async () => {
+    try {
+      const productService = new ProductService();
+      const result = await productService.getMostProduct();
+      FavoriteStore.setState((state) => ({
+        dataFavorite: result.data,
+      }));
+    } catch (error) {
+      setError('err');
+    }
+  }
 
   //Gợi ý hôm nay
   function ListItemSuggest({ item, index }: { item: ProductModel; index: number }) {

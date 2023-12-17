@@ -10,6 +10,7 @@ import ProductService from '@src/services/product';
 import ProductStore from '@src/containers/store/storeProduct';
 import FavoriteStore from '@src/containers/store/storeFavorite';
 import useBannerStore from '@src/containers/store/bannerStore';
+import useProductStore from '@src/containers/store/storeProduct';
 
 
 export default function BaseScreenLoading() {
@@ -32,7 +33,7 @@ export default function BaseScreenLoading() {
     try {
       const productService = new ProductService();
       const result = await productService.getProduct();
-      ProductStore.setState((state) => ({
+      useProductStore.setState((state) => ({
         dataProduct: result.data,
       }));
     } catch (error) {
