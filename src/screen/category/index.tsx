@@ -14,6 +14,8 @@ import { AppStackParam } from '@src/navigations/AppNavigation/stackParam';
 
 import { BaseLoading } from '@src/containers/components/Base/BaseLoading';
 import CategoryStore from "@src/containers/store/storeCategory";
+import CartService from "@src/services/cart";
+import { useAuth } from "@src/hooks/useAuth";
 
 interface Props {
   navigation: NativeStackNavigationProp<AppStackParam>;
@@ -36,29 +38,20 @@ const CategoryScreen = (props: Props) => {
   const getCategory = CategoryStore(state => state.dataCategory);
   console.log("home category: ", getCategory.length);
   
-
-  // useEffect(() => {
-  //   fetchDataCategory()
-  //   console.log("eff: ", data)
-  // }, [])
-
-  const fetchDataCategory = async () => {
-    try {
-      setLoading(true);
-      const categoryService = new CategoryService();
-      const result = await categoryService.fetchCategory();
-      // console.log(result.data);
-      setData(result.data)
-      setLoading(false);
-    } catch (error) {
-      setError('err');
-      setLoading(false);
-    }
-  };
-
   const goToProductListById = (id, name) => {
     navigateToPage(APP_NAVIGATION.PRODUCTLIST, { categoryId: id, name: name });
     console.log(id);
+  };
+
+  const cartService = new CartService();
+  const { user } = useAuth();
+
+  const featchCart = async () => {
+    if (user) {
+      const resultCart = await cartService.fetchCart(user?.id!);
+      setData(resultCart.data);
+      console.log(resultCart.data)
+    }
   };
 
   return (
@@ -68,6 +61,7 @@ const CategoryScreen = (props: Props) => {
           title="Danh mục"
           onCartPress={handleCartPress}
           onBackPress={handleBackPress}
+          
         />
       </View>
 

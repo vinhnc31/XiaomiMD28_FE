@@ -93,7 +93,7 @@ const DetailsScreen = (props: Props) => {
       const productService = new ProductService();
       const result = await productService.getProductId(productId);
       setProductIdData(result.data);
-      console.log('aaaaaa', Object.keys(result.data));
+      // console.log('aaaaaa', Object.keys(result.data));
       if (result.data && Object.keys(result.data).length > 0) {
         setNoData(false);
       } else {

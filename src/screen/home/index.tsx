@@ -70,67 +70,64 @@ const HomeScreen = (props: Props) => {
   const limitedDataFavorite = getFavorite.slice(0, 3);
 
   const bannerData = useBannerStore(state => state.bannerData);
-  console.log("Banner data: " + bannerData.length);
+  // console.log("Banner data: " + bannerData.length);
 
   const getProductByLimit = useProductStore(state => state.getProductByLimit);
 
   const getAllProduct = useProductStore(state => state.dataProduct);
-  console.log("All Product: " + getAllProduct.length);
+  // console.log("All Product: " + getAllProduct.length);
 
   const cartService = new CartService();
   const { user } = useAuth();
   useNotificationPermission();
 
 
-  // const loadMoreData = async () => {
-  //   console.log('Load more data is called!');
-  //   if (!isLoadingMore && hasMoreData) {
-  //     try {
-  //       setIsLoadingMore(true);
-  //       const newPage = page + 1;
-  //       const newData = getProductByLimit((newPage - 1) * 4, 4, useProductStore.getState);
+  const loadMoreData = useCallback(async (nextPage: number = 1) => {
+    try {
+      setIsLoadingMore(true);
+      const pageSize = 10;
+      const startIndex = (nextPage - 1) * pageSize;
+      const endIndex = startIndex + pageSize;
 
-  //       console.log(`Loaded data for page ${newPage}: ${newData.length} items`);
+      console.log('Fetching more results. Page:', nextPage);
+      let filtered = [];
 
-  //       if (newData.length > 0) {
-  //         setNewDataProduct((prevData) => [...prevData, ...newData]);
-  //         setPage(newPage);
-  //       } else {
-  //         setHasMoreData(false);
-  //       }
-  //     } catch (error) {
-  //       console.error('Error in loadMoreData:', error);
-  //     } finally {
-  //       setIsLoadingMore(false);
-  //     }
-  //   }
-  // };
+      // Add logic to get more suggestion data based on your requirements
+      filtered = getAllProduct.slice(startIndex, endIndex);
+      console.log('Filtered data:', filtered.length);
 
-  const loadMoreData = async () => {
-    console.log('Load more data is called!');
-    if (!isLoadingMore && hasMoreData) {
-      try {
-        setIsLoadingMore(true);
-        const newPage = page + 1;
-        const startIndex = (newPage - 1) * 4;
-        const endIndex = startIndex + 4;
-  
-        const newData = getAllProduct.slice(startIndex, endIndex);
-  
-        console.log(`Loaded data for page ${newPage}: ${newData.length} items`);
-  
-        if (newData.length > 0) {
-          setNewDataProduct((prevData) => [...prevData, ...newData]);
-          setPage(newPage);
-        } else {
-          setHasMoreData(false);
-        }
-      } catch (error) {
-        console.error('Error in loadMoreData:', error);
-      } finally {
-        setIsLoadingMore(false);
+      setHasMoreData(filtered.length === pageSize);
+
+      if (nextPage === 1) {
+        setNewDataProduct(filtered);
+      } else {
+        setNewDataProduct((prevResults) => [...prevResults, ...filtered]);
       }
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+    } finally {
+      setIsLoadingMore(false);
     }
+  }, [getAllProduct]);
+
+
+  useEffect(() => {
+    // setPage(1);
+    // loadMoreData(page);
+    // console.log("page: " + page);
+
+    if (page > 1) {
+      loadMoreData(page);
+    }
+  }, [page]);
+
+ 
+  const handleEndReached = () => {
+    if (!isLoadingMore && hasMoreData) {
+    // setIsLoadingMore(true);
+      setPage(page + 1);
+    }
+    console.log('End reached!');
   };
 
 
@@ -149,13 +146,13 @@ const HomeScreen = (props: Props) => {
 
   const fetchData = async () => {
     try {
+      console.log("Fetching data...");
       setRefreshing(false);
     } catch (error) {
       setError('err');
     }
   };
 
-  const throttledLoadMoreData = throttle(loadMoreData, 2000);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -244,9 +241,6 @@ const HomeScreen = (props: Props) => {
   function ListItemFavorite({ item, index }: { item: ProductModel; index: number }) {
     return (
       <TouchableWithoutFeedback
-        // onPress={() => {
-        //   console.log('code Xem chi tiet data: ', item.name), goToDetailProducts(item.id);
-        // }}>
         onPress={() => console.log('da chon 1 item', goToDetailProducts(item.id))}>
 
         <View style={styles.item}>
@@ -282,7 +276,6 @@ const HomeScreen = (props: Props) => {
       </TouchableWithoutFeedback>
     );
   }
-
 
   return (
     <SafeAreaView style={{ flex: 1, flexDirection: 'column' }}>
@@ -327,106 +320,98 @@ const HomeScreen = (props: Props) => {
         {loading ? (
           <BaseLoading size={20} top={100} loading={true} />
         ) : (
-          <ScrollView
-            indicatorStyle="black"
-            showsVerticalScrollIndicator={false}
-            // onScroll={(event) => {
-            //   const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-
-            //   const paddingToBottom = 20;
-            //   setIsEndReached(
-            //     layoutMeasurement.height + contentOffset.y >=
-            //     contentSize.height - paddingToBottom
-            //   );
-
-            //   // Thêm điều kiện để gọi loadMoreData khi cuộn đến cuối trang
-            //   if (isEndReached) {
-            //     loadMoreData();
-            //   }
-            // }}
-
-            onScroll={(event) => {
-              const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-              const paddingToBottom = 20;
-
-              if (layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom) {
-                throttledLoadMoreData();
+          <FlatList
+            data={[
+              {id: "1", type: 'carousel', data: bannerData },
+              {id: "2", type: 'category', data: limitedDataCategory },
+              {id: "3", type: 'favorite', data: limitedDataFavorite },
+              {id: "4", type: 'suggestion', data: newDataProduct },
+            ]}
+            keyExtractor={(item, index) => item.id}
+            renderItem={({ item, index }) => {
+              if (item.type === 'carousel') {
+                return (
+                  <View style={{
+                    height: vs(168),
+                    marginTop: vs(6),
+                    width: '100%',
+                    flex: 1,
+                    borderRadius: 10,
+                  }}>
+                    <Carousel data={item.data} />
+                  </View>
+                );
+              } else if (item.type === 'category') {
+                return (
+                  <View style={styles.categoryView}>
+                    <View style={styles.contentWrapper}>
+                      <Text style={styles.titleText}>Danh mục</Text>
+                      <TouchableOpacity onPress={goToCategory}>
+                        <View style={styles.viewButton}>
+                          <Text style={styles.seeMoreText}>Xem thêm</Text>
+                          <Image style={styles.rightArrowImage} source={R.images.iconRightArrow} />
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                    <View style={{ height: '100%', marginTop: vs(6) }}>
+                      <FlatList
+                        data={item.data}
+                        horizontal={true}
+                        keyExtractor={(item) => item.id.toString()}
+                        showsHorizontalScrollIndicator={false}
+                        renderItem={({ item, index }) => <ListItemCategory item={item} index={index} />}
+                      />
+                    </View>
+                  </View>
+                );
+              } else if (item.type === 'favorite') {
+                return (
+                  <View style={{ width: '100%', marginTop: vs(16), marginBottom: vs(8) }}>
+                    <Text style={styles.titleText}>Yêu thích nhiều nhất</Text>
+                    <FlatList
+                      data={item.data}
+                      keyExtractor={item => item.id.toString()}
+                      horizontal={true}
+                      contentContainerStyle={styles.flatListContainer}
+                      renderItem={({ item, index }) => <ListItemFavorite item={item} index={index} />}
+                      scrollEnabled={false}
+                    />
+                  </View>
+                );
+              } else if (item.type === 'suggestion') {
+                return (
+                  <View style={{ width: '100%', paddingBottom: vs(30) }}>
+                    <Text style={[styles.titleText]}>Gợi ý</Text>
+                    <FlatList
+                      data={item.data}
+                      keyExtractor={item => item.id.toString()}
+                      columnWrapperStyle={{ justifyContent: 'space-between' }}
+                      numColumns={2}
+                      horizontal={false}
+                      scrollEnabled={false}
+                      contentContainerStyle={styles.flatListSuggestContainer}
+                      renderItem={({ item, index }) => <ListItemSuggest item={item} index={index} />}
+                    />
+                  </View>
+                );
               }
             }}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}
-            />
-            }>
-
-            <View style={{
-              height: vs(168),
-              marginTop: vs(6),
-              width: '100%',
-              flex: 1,
-              borderRadius: 10,
-            }}>
-              {/* {modifiedArray.length > 0 && ( */}
-                <Carousel data={bannerData} />
-              {/* )} */}
-            </View>
-
-            <View style={styles.categoryView}>
-              <View style={styles.contentWrapper}>
-                <Text style={styles.titleText}>Danh mục</Text>
-                <TouchableOpacity onPress={goToCategory}>
-                  <View style={styles.viewButton}>
-                    <Text style={styles.seeMoreText}>Xem thêm</Text>
-                    <Image style={styles.rightArrowImage} source={R.images.iconRightArrow} />
-                  </View>
-                </TouchableOpacity>
-              </View>
-              <View style={{ height: '100%', marginTop: vs(6) }}>
-                <FlatList
-                  data={limitedDataCategory}
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-                  keyExtractor={item => item.id.toString()}
-                  renderItem={({ item, index }) => <ListItemCategory item={item} index={index} />}
-                />
-              </View>
-            </View>
-
-            <View style={{ width: '100%', marginTop: vs(16), marginBottom: vs(8) }}>
-              <Text style={styles.titleText}>Yêu thích nhiều nhất</Text>
-              <FlatList
-                data={limitedDataFavorite}
-                keyExtractor={item => item.id.toString()}
-                horizontal={true}
-                contentContainerStyle={styles.flatListContainer}
-                renderItem={({ item, index }) => <ListItemFavorite item={item} index={index} />}
-                scrollEnabled={false}
-              />
-            </View>
-
-            <View style={{ width: '100%', paddingBottom: vs(30) }}>
-              <Text style={[styles.titleText]}>Gợi ý</Text>
-              <FlatList
-                data={newDataProduct}
-                keyExtractor={item => item.id.toString()}
-                columnWrapperStyle={{ justifyContent: 'space-between' }}
-                numColumns={2}
-                horizontal={false}
-                scrollEnabled={false}
-                contentContainerStyle={styles.flatListSuggestContainer}
-                renderItem={({ item, index }) => <ListItemSuggest item={item} index={index} />}
-              />
-            </View>
-
-            {isLoadingMore ? (
-              <View style={{ height: 100, alignItems: 'center', justifyContent: 'center' }}>
-                <Text>Loading...</Text>
-              </View>
-            ) : null}
-
-          </ScrollView>
+            showsVerticalScrollIndicator={false}
+            onEndReached={handleEndReached}
+            onEndReachedThreshold={0.1}
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          />
         )}
+
+        {isLoadingMore ? (
+          <View style={{ height: 50, alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
+            {/* <Text style={{ color: 'red' }}>Loading...</Text> */}
+            <BaseLoading size={20} top={10} loading={true} color={'red'}/>
+          </View>
+        ) : null}
       </View>
     </SafeAreaView>
-  );
+  )
 };
 
 export default React.memo(HomeScreen);

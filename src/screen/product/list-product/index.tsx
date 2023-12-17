@@ -222,6 +222,7 @@ const ProductListScreen = (props: Props) => {
 
   const sortByAscending = () => {
     sortProducts('asc');
+    
   };
 
   const sortByDescending = () => {
@@ -385,6 +386,8 @@ const ProductListScreen = (props: Props) => {
                   console.log("color: ", item.nameColor)
                   setValueColor(item.nameColor);
                   setValueConfiguration(null);
+                  setMinimum('');
+                  setMax('')
                   setIsFocus(false);
                 }}
                 renderItem={(item, index, isSelected) => (
@@ -423,6 +426,8 @@ const ProductListScreen = (props: Props) => {
                   console.log('Selected Configuration:', item.nameConfig);
                   setValueConfiguration(item.nameConfig);
                   setValueColor(null);
+                  setMinimum('');
+                  setMax('')
                   setIsFocus(false);
                 }}
                 disable={categoryId !== 1}

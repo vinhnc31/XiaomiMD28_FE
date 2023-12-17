@@ -8,18 +8,23 @@ import CartService from '@src/services/cart';
 
 
 const BaseHeader = ({title, onBackPress, onCartPress, onFilterPress, data}: any) => {
-  const {user} = useAuth();
 
-  const [cartData, setCartData] = useState<CartModel[]>([]);
-  const cartService = new CartService();
+  const [cartData, setData] = useState<CartModel[]>([]);
 
   useEffect(() => {
     featchCart();
   }, []);
 
+
+  const cartService = new CartService();
+  const { user } = useAuth();
+
   const featchCart = async () => {
-    const resultCart = await cartService.fetchCart(user?.id!);
-    setCartData(resultCart.data);
+    if (user) {
+      const resultCart = await cartService.fetchCart(user?.id!);
+      setData(resultCart.data);
+      console.log(resultCart.data)
+    }
   };
   return (
     <View>
@@ -36,35 +41,28 @@ const BaseHeader = ({title, onBackPress, onCartPress, onFilterPress, data}: any)
           </Text>
         </View>
 
-        {/* <View style={{flex: 1, alignItems: 'flex-start'}}>
-          <TouchableOpacity onPress={onFilterPress}>
-            <Image source={R.images.iconFilter} style={styles.iconFilter} />
-          </TouchableOpacity>
-        </View> */}
-        <View style={{flex: 1, alignItems: 'flex-start'}}>
+        <View style={{flex: 1, alignItems: 'flex-start', marginRight: 8}}>
           <TouchableOpacity onPress={onCartPress}>
-            <Image source={R.images.iconCartBlack} style={styles.icon} />
-            {cartData?.length === 0 ? (
-              <></>
-            ) : (
-              <>
-                <View
-                  style={{
-                    height: hs(16),
-                    width: hs(16),
-                    backgroundColor: 'red',
-                    position: 'absolute',
-                    right: hs(-5),
-                    top: vs(-5),
-                    borderRadius: ms(20),
-                    alignItems: 'center',
-                  }}>
-                  <Text style={{color: 'white'}}>{cartData?.length || 0}</Text>
-                </View>
-              </>
-            )}
+            <View>
+              <Image style={{ width: vs(35), height: vs(35) }} source={R.images.iconCartBlack} />
+              <View
+                style={{
+                  height: 20,
+                  width: 20,
+                  backgroundColor: 'red',
+                  position: 'absolute',
+                  right: -5,
+                  top: -5,
+                  borderRadius: 20,
+                  alignItems: 'center',
+                }}>
+                <Text style={{ color: 'white' }}>{cartData.length}</Text>
+              </View>
+            </View>
           </TouchableOpacity>
         </View>
+
+            
       </View>
       <View style={{borderColor: '#D9D9D9', borderWidth: 1.5}} />
     </View>

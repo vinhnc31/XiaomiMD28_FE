@@ -65,6 +65,8 @@ const SearchScreen = (props: Props) => {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [hasMoreData, setHasMoreData] = useState(true);
 
+  const [searchFromSuggestion, setSearchFromSuggestion] = useState(false);
+
   const products = useProductStore(state => state.dataProduct);
 
   const config = {
@@ -78,6 +80,21 @@ const SearchScreen = (props: Props) => {
     fetchSearchResults(search, page);
     console.log("page: " + page);
   }, [page]);
+
+  
+  useEffect(() => {
+    if (isSearching && search === "") {
+      setSuggestions([]);
+      setIsSearching(false);
+    }
+  }, [search, isSearching]);
+
+  useEffect(() => {
+    if (searchFromSuggestion) {
+      fetchSearchResults(search);
+      setSearchFromSuggestion(false);
+    }
+  }, [searchFromSuggestion, search, fetchSearchResults]);
 
   const searchFilterArr = (text) => {
     setIsSearching(true);
@@ -97,14 +114,6 @@ const SearchScreen = (props: Props) => {
     }
   }
 
-
-
-  useEffect(() => {
-    if (isSearching && search === "") {
-      setSuggestions([]);
-      setIsSearching(false);
-    }
-  }, [search, isSearching]);
 
   const handleEndReached = () => {
     if (!isLoadingMore && hasMoreData) {
@@ -155,13 +164,16 @@ const SearchScreen = (props: Props) => {
     setSelectedSuggestion(item);
     setSearch(item.name);
     fetchSearchResults(item.name);
+    setSearchFromSuggestion(true);
   }, [fetchSearchResults]);
 
+  
   const renderSuggestionItem = ({ item }: { item: ProductModel }) => (
     <TouchableOpacity style={styles.suggestionItem} onPress={() => handleSuggestionPress(item)}>
       <Text style={styles.suggestionText}>{item.name}</Text>
     </TouchableOpacity>
   );
+
 
   const goToDetailProducts = (id: number) => {
     navigateToPage(APP_NAVIGATION.DETAILSPRODUCT, { productId: id });
@@ -208,10 +220,14 @@ const SearchScreen = (props: Props) => {
 
     // Gọi hàm hiển thị dữ liệu sau khi nhấn Enter sau 2 giây
     setTimeout(() => {
-      fetchSearchResults(search);
-    }, 1000);
-  }, [fetchSearchResults, search]);
+      // Chỉ tìm kiếm nếu không phải từ gợi ý
+      if (!searchFromSuggestion) {
+        fetchSearchResults(search);
+      }
+    }, 400);
+  }, [fetchSearchResults, search, searchFromSuggestion]);
 
+  
 
   return (
     <SafeAreaView style={styles.container}>

@@ -83,8 +83,8 @@ const styles = StyleSheet.create({
     height: 30,
   },
   iconFilter: {
-    width: 28,
-    height: 28,
+    width: 25,
+    height: 25,
   },
   title: {
     fontSize: 18,
