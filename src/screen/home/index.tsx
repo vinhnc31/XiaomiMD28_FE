@@ -70,7 +70,7 @@ const HomeScreen = (props: Props) => {
   const limitedDataFavorite = getFavorite.slice(0, 3);
 
   const bannerData = useBannerStore(state => state.bannerData);
-  // console.log("Banner data: " + bannerData.length);
+  console.log("Banner data: " + bannerData.length);
 
   const getProductByLimit = useProductStore(state => state.getProductByLimit);
 
@@ -176,7 +176,7 @@ const HomeScreen = (props: Props) => {
     if (user) {
       const resultCart = await cartService.fetchCart(user?.id!);
       setData(resultCart.data);
-      console.log(resultCart.data)
+      // console.log(resultCart.data.length)
     }
   };
 
@@ -327,7 +327,7 @@ const HomeScreen = (props: Props) => {
               {id: "3", type: 'favorite', data: limitedDataFavorite },
               {id: "4", type: 'suggestion', data: newDataProduct },
             ]}
-            keyExtractor={(item, index) => item.id}
+            keyExtractor={(item, index) => item.id + `${Math.random()}`}
             renderItem={({ item, index }) => {
               if (item.type === 'carousel') {
                 return (
@@ -357,7 +357,7 @@ const HomeScreen = (props: Props) => {
                       <FlatList
                         data={item.data}
                         horizontal={true}
-                        keyExtractor={(item) => item.id.toString()}
+                        keyExtractor={(item) => item.id.toString() + `${Math.random()}`}
                         showsHorizontalScrollIndicator={false}
                         renderItem={({ item, index }) => <ListItemCategory item={item} index={index} />}
                       />
@@ -370,7 +370,7 @@ const HomeScreen = (props: Props) => {
                     <Text style={styles.titleText}>Yêu thích nhiều nhất</Text>
                     <FlatList
                       data={item.data}
-                      keyExtractor={item => item.id.toString()}
+                      keyExtractor={item => item.id.toString() + `${Math.random()}`}
                       horizontal={true}
                       contentContainerStyle={styles.flatListContainer}
                       renderItem={({ item, index }) => <ListItemFavorite item={item} index={index} />}
@@ -384,7 +384,7 @@ const HomeScreen = (props: Props) => {
                     <Text style={[styles.titleText]}>Gợi ý</Text>
                     <FlatList
                       data={item.data}
-                      keyExtractor={item => item.id.toString()}
+                      keyExtractor={item => item.id.toString() + `${Math.random()}`}
                       columnWrapperStyle={{ justifyContent: 'space-between' }}
                       numColumns={2}
                       horizontal={false}
@@ -405,8 +405,8 @@ const HomeScreen = (props: Props) => {
 
         {isLoadingMore ? (
           <View style={{ height: 50, alignItems: 'center', justifyContent: 'center', zIndex: 1 }}>
-            {/* <Text style={{ color: 'red' }}>Loading...</Text> */}
-            <BaseLoading size={20} top={10} loading={true} color={'red'}/>
+            <Text style={{ color: 'red' }}>Loading...</Text>
+            {/* <BaseLoading size={20} top={10}  color={'red'}/> */}
           </View>
         ) : null}
       </View>

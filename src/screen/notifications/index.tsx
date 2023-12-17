@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {
   Text,
@@ -15,19 +15,21 @@ import {
   TextInput,
   RefreshControl,
 } from 'react-native';
-import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AppStackParam, MenuStackParam } from '@src/navigations/AppNavigation/stackParam';
-import { MENU_NAVIGATION, APP_NAVIGATION, GUEST_NAVIGATION } from '@src/navigations/routes';
-import { navigateToPage, goBack } from '@src/navigations/services';
-import { NotificationModel } from '@src/services/notification/notification.model';
-import { useAuth } from '@src/hooks/useAuth';
+import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
+import {CompositeNavigationProp, RouteProp} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {AppStackParam, MenuStackParam} from '@src/navigations/AppNavigation/stackParam';
+import {MENU_NAVIGATION, APP_NAVIGATION, GUEST_NAVIGATION} from '@src/navigations/routes';
+import {navigateToPage, goBack} from '@src/navigations/services';
+import {NotificationModel} from '@src/services/notification/notification.model';
+import {useAuth} from '@src/hooks/useAuth';
 import NotificationService from '@src/services/notification';
 import TouchableScale from 'react-native-touchable-scale';
 import styles from './styles';
-import { BaseLoading } from '@src/containers/components/Base';
-import { ms, vs, hs } from '@src/styles/scalingUtils';
+import {BaseLoading} from '@src/containers/components/Base';
+import {ms, vs, hs} from '@src/styles/scalingUtils';
+import {HistoryOrderModel} from '@src/services/historyOrder/history.model';
+import HistoryOrderService from '@src/services/historyOrder';
 
 export type ScreenNavigationProps = CompositeNavigationProp<
   BottomTabNavigationProp<MenuStackParam, MENU_NAVIGATION.NOTIFICATIONS>,
@@ -41,13 +43,17 @@ interface Props {
 
 const NotificationScreen = (props: Props) => {
   const [data, setData] = useState<NotificationModel[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
-  const { user } = useAuth();
+  const {user} = useAuth();
   const AccountId = user?.id;
+  const [dataOrder, setDataOrder] = useState<HistoryOrderModel[]>([]);
+  const historyOrder = new HistoryOrderService();
+  const [item, setDataNoti] = useState();
   useEffect(() => {
     fetchDataNotification();
+    fetchDataOrder();
   }, [user]);
   const fetchDataNotification = async () => {
     try {
@@ -61,9 +67,37 @@ const NotificationScreen = (props: Props) => {
       setLoading(false);
     }
   };
+  const fetchDataOrder = async () => {
+    try {
+      setLoading(true);
+      const data = [].concat(
+        (await historyOrder.getOrder(Number(user?.id), '0')).data,
+        (await historyOrder.getOrder(Number(user?.id), '1')).data,
+        (await historyOrder.getOrder(Number(user?.id), '2')).data,
+        (await historyOrder.getOrder(Number(user?.id), '3')).data,
+      );
+
+      setDataOrder(data);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+  const test = (id: number) => {
+    for (let i = 0; i < dataOrder.length; i++) {
+      if (dataOrder[i].id === id) {
+        setDataNoti(dataOrder[i]);
+        if (item) {
+          navigateToPage(APP_NAVIGATION.ORDERDETAIL, {item});
+        }
+      }
+    }
+  };
+
   const onRefresh = async () => {
     setRefreshing(true);
     await fetchDataNotification();
+    await fetchDataOrder();
     setRefreshing(false);
   };
   const renderNoDataMessage = () => {
@@ -74,10 +108,10 @@ const NotificationScreen = (props: Props) => {
         </View>
       );
     }
-    if (data.length === 0) {
+    if (data?.length === 0) {
       return (
         <View style={styles.noDataContainer}>
-          <Image style={{ width: hs(120), height: hs(120) }} source={require('../../assets/images/noDataStar.png')} />
+          <Image style={{width: hs(120), height: hs(120)}} source={require('../../assets/images/noDataStar.png')} />
           <Text style={styles.noDataText}>Không có thông báo</Text>
         </View>
       );
@@ -85,16 +119,16 @@ const NotificationScreen = (props: Props) => {
     return null;
   };
   return (
-    <SafeAreaView style={{ flex: 1, flexDirection: 'column', backgroundColor: '#F8F8F8' }}>
+    <SafeAreaView style={{flex: 1, flexDirection: 'column', backgroundColor: '#F8F8F8'}}>
       <>
         <View style={styles.headerContainer}>
-          <View style={{ flex: 8, alignItems: 'flex-start', justifyContent: 'center' }}>
+          <View style={{flex: 8, alignItems: 'flex-start', justifyContent: 'center'}}>
             <Text numberOfLines={1} style={styles.headerTitle}>
               Thông báo
             </Text>
           </View>
         </View>
-        <View style={{ borderColor: '#A7A7A7', borderWidth: 0.8 }} />
+        <View style={{borderColor: '#A7A7A7', borderWidth: 0.8}} />
       </>
       {renderNoDataMessage()}
       <FlatList
@@ -102,24 +136,52 @@ const NotificationScreen = (props: Props) => {
         keyExtractor={item => item.id.toString()}
         showsVerticalScrollIndicator={true}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        renderItem={({ item, index }) => (
+        renderItem={({item, index}) => (
           <View>
             <TouchableScale
               key={index}
-              onPress={() => console.log('click---', data)}
+              onPress={() => {
+                test(item?.OrderId);
+              }}
               activeScale={1}
               friction={9}
               tension={100}
               style={styles.btnContainer}>
               <View style={styles.viewItemNotification}>
-                <View style={{ justifyContent: 'center', alignSelf: 'center' }}>
-                  <Image source={require('../../assets/images/logoApp.png')} style={styles.imgNotification} />
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    width: vs(100),
+                    height: vs(100),
+                    backgroundColor: '#F1F1F1',
+                  }}>
+                  {item?.imageVoucher ? (
+                    <Image source={{uri: item?.imageVoucher}} style={styles.imgNotification} />
+                  ) : (
+                    <>
+                      {dataOrder.map(order => {
+                        if (order.id === item.OrderId) {
+                          return order.OrdersProducts[0]['productcolor']['image'] ? (
+                            <Image
+                              key={order.id}
+                              source={{uri: order.OrdersProducts[0]['productcolor']['image']}}
+                              style={styles.imgNotification}
+                            />
+                          ) : (
+                            <Image
+                              key={order.id}
+                              source={{uri: order.OrdersProducts[0]['Product']['images']}}
+                              style={styles.imgNotification}
+                            />
+                          );
+                        }
+                      })}
+                    </>
+                  )}
                 </View>
-
                 <View style={styles.viewTextNotification}>
-                  <Text style={styles.textContentNotification}>
-                    {item?.content}
-                  </Text>
+                  <Text style={styles.textContentNotification}>{item?.content}</Text>
                 </View>
               </View>
             </TouchableScale>
@@ -128,10 +190,6 @@ const NotificationScreen = (props: Props) => {
       />
     </SafeAreaView>
   );
-
-
-
 };
 
 export default React.memo(NotificationScreen);
-

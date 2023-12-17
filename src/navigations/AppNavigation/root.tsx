@@ -21,7 +21,7 @@ import CategoryScreen from '@src/screen/category';
 const RootScreen = () => {
   const [notificationData, setNotificationData] = useState<NotificationModel[]>([]);
   const {user} = useAuth();
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -30,7 +30,7 @@ const RootScreen = () => {
         console.log('Error fetching data:', error);
       }
     };
-  
+
     fetchData();
     fetchDataNotification();
   }, [user]);
@@ -82,9 +82,7 @@ const RootScreen = () => {
           tabBarIcon: ({color, size}) => (
             <>
               <BaseIcon name="notifications" color={color} size={size} />
-              {notificationData?.length == 0 ? (
-                <></>
-              ) : (
+              {notificationData?.length ? (
                 <View
                   style={{
                     height: hs(16),
@@ -100,7 +98,7 @@ const RootScreen = () => {
                   }}>
                   <Text style={{color: 'white'}}>{notificationData?.length || 0}</Text>
                 </View>
-              )}
+              ) : null}
             </>
           ),
         }}

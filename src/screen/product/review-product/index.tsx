@@ -70,45 +70,15 @@ const ReviewProductScreen = (props: Props) => {
             <View>
               <View style={{flexDirection: 'row', marginTop: vs(7)}}>
                 <View style={styles.itemCmtContainer}>
-                  {item.Account.avatar == '' ? (
-                    <Image style={styles.imgCmtAvatar} source={require('../../../assets/images/user.png')} />
-                  ) : (
+                  {item.Account.avatar ? (
                     <Image style={styles.imgCmtAvatar} source={{uri: item.Account.avatar}} />
+                  ) : (
+                    <Image style={styles.imgCmtAvatar} source={require('../../../assets/images/user.png')} />
                   )}
                   <Text style={styles.txtCmtName}>{item?.Account.name || ''}</Text>
                 </View>
-                <View
-                  style={{
-                    flex: 1,
-                    flexDirection: 'row',
-                    justifyContent: 'flex-end',
-                    alignSelf: 'center',
-                  }}>
-                  <Text
-                    style={{
-                      color: '#817F7F',
-                      fontWeight: '400',
-                      fontSize: ms(14),
-                      fontFamily: 'LibreBaskerville-Bold',
-                      marginLeft: hs(70),
-                    }}>
-                    Sản phẩm:
-                  </Text>
-                  <Text
-                    numberOfLines={1}
-                    style={{
-                      flex: 1,
-                      color: '#000',
-                      fontWeight: '400',
-                      fontSize: ms(10),
-                      fontFamily: 'LibreBaskerville-Bold',
-                      marginLeft: hs(10),
-                      alignSelf: 'center',
-                    }}>
-                    {item?.productName || ''}
-                  </Text>
-                </View>
               </View>
+              
               <View style={styles.imgStarCmtContainer}>
                 <>
                   {[...Array(Math.floor(item?.star)).keys()].map(index => (
@@ -124,10 +94,39 @@ const ReviewProductScreen = (props: Props) => {
                 </>
               </View>
             </View>
+            <View
+                style={{
+                  marginTop: vs(10),
+                  flexDirection: 'row',
+                }}>
+                <Text
+                  style={{
+                    color: '#817F7F',
+                    fontWeight: '400',
+                    fontSize: ms(12),
+                    fontFamily: 'LibreBaskerville',
+                  }}>
+                  Sản phẩm:
+                </Text>
+                <Text
+                  numberOfLines={1}
+                  style={{
+                    color: '#000',
+                    fontWeight: '400',
+                    fontSize: ms(12),
+                    fontFamily: 'LibreBaskerville-Bold',
+                    marginLeft: hs(10),
+                    alignSelf: 'center',
+                  }}>
+                  {item?.productName || ''}
+                </Text>
+              </View>
 
             <View style={{marginVertical: vs(10)}}>
               <Text style={styles.txtCmtBody}>{item?.commentBody || ''}</Text>
-              {item.images ? <Image style={styles.imgCmtBody} source={{uri: item.images}} /> : null}
+              {item.images ? (
+                <Image style={styles.imgCmtBody} resizeMode="contain" source={{uri: item.images}} />
+              ) : null}
             </View>
           </View>
         </TouchableOpacity>
