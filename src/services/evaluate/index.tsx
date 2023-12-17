@@ -8,7 +8,7 @@ export default class EvaluateService extends BaseService<EvaluateModel> {
     constructor() {
         super(url.default);
     }
-    public async postEvaluate(body:EvaluateModel) {
+    public async postEvaluate(body:FormData) {
         const {data} = await http.post<EvaluateModel>(url.getEvaluate,body);
         return data;
     }

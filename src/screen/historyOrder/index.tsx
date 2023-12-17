@@ -89,12 +89,13 @@ const HistoryOrderScreen = (props: Props) => {
     fetchData();
   };
   const evaluate = async (item) => {
+    console.log(item)
     navigateToPage(APP_NAVIGATION.EVALUATE,{item})
   };
   useFocusEffect(
     React.useCallback(() => {
       fetchData();
-    }, [])
+    }, [data])
   );
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white', flexDirection: 'column'}}>
