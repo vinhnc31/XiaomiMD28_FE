@@ -70,12 +70,12 @@ const HomeScreen = (props: Props) => {
   const limitedDataFavorite = getFavorite.slice(0, 3);
 
   const bannerData = useBannerStore(state => state.bannerData);
-  console.log("Banner data: " + bannerData.length);
+
 
   const getProductByLimit = useProductStore(state => state.getProductByLimit);
 
   const getAllProduct = useProductStore(state => state.dataProduct);
-  console.log("All Product: " + getAllProduct.length);
+
 
   const cartService = new CartService();
   const { user } = useAuth();
@@ -89,12 +89,12 @@ const HomeScreen = (props: Props) => {
       const startIndex = (nextPage - 1) * pageSize;
       const endIndex = startIndex + pageSize;
 
-      console.log('Fetching more results. Page:', nextPage);
+    
       let filtered = [];
 
       // Add logic to get more suggestion data based on your requirements
       filtered = getAllProduct.slice(startIndex, endIndex);
-      console.log('Filtered data:', filtered.length);
+
 
       setHasMoreData(filtered.length === pageSize);
 
@@ -110,7 +110,6 @@ const HomeScreen = (props: Props) => {
     }
   }, [getAllProduct]);
 
-  console.log('prd: ', newDataProduct.length)
 
   useEffect(() => {
     if (newDataProduct.length == 0 && getAllProduct.length >= 10) {
@@ -136,14 +135,14 @@ const HomeScreen = (props: Props) => {
 
   const loadCart = useIsFocused();
   useEffect(() => {
-    console.log("Loading:", loading);
+
     fetchData();
     featchCart();
   }, [user, refreshing, loadCart]);
 
   const fetchData = async () => {
     try {
-      console.log("Fetching data...");
+    
       setRefreshing(false);
     } catch (error) {
       setError('err');
@@ -162,7 +161,6 @@ const HomeScreen = (props: Props) => {
   };
   const gotoListProduct = (id, name) => {
     navigateToPage(APP_NAVIGATION.PRODUCTLIST, { categoryId: id, name: name });
-    console.log(id);
   };
   const goToDetailProducts = (id: number) => {
     navigateToPage(APP_NAVIGATION.DETAILSPRODUCT, { productId: id });
@@ -172,7 +170,7 @@ const HomeScreen = (props: Props) => {
     if (user) {
       const resultCart = await cartService.fetchCart(user?.id!);
       setData(resultCart.data);
-      // console.log(resultCart.data.length)
+      
     }
   };
 

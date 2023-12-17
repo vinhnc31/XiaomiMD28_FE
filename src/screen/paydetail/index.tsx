@@ -44,7 +44,7 @@ const PayDetailScreen = (props: Props) => {
     {label: 'Thanh toán khi nhận hàng', value: '1'},
     {label: 'Thanh toán qua vnpay', value: '2'},
   ];
-  // console.log(data)
+
   const navigateToAddressPay = () => {
     navigateToPage(APP_NAVIGATION.ADDRESS, {
       onAddress: item => {
@@ -146,9 +146,7 @@ const PayDetailScreen = (props: Props) => {
     await onPay();
     if(dataPay){
       const dataView = await payService.postPay({amount: sumPay, orderId: dataPay.id, bankCode: ''});
-      console.log(dataView.data)
       const dataVnPay = dataView.data;
-      console.log(dataVnPay);
       navigateToPage(APP_NAVIGATION.PAYVIEW, {dataVnPay});
     }
   };

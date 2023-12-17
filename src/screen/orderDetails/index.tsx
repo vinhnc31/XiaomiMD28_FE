@@ -78,7 +78,6 @@ const OrderDetailScreen = (props: Props) => {
     });
     return `${formattedDate} ${formattedTime}`;
   };
-  console.log(result);
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white', flexDirection: 'column'}}>
       <BaseHeaderNoCart title="Thông tin đơn hàng" onBackPress={goBack} />

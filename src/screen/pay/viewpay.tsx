@@ -13,7 +13,7 @@ interface Props {
 }
 const PayViewScreen = (props: Props) => {
   const data = props.route.params?.dataVnPay;
-  console.log(data)
+
   return (
     <SafeAreaView style={{flex:1,flexDirection:'column'}}>
       <BaseHeaderNoCart title="Thanh toán" onBackPress={goBack} />

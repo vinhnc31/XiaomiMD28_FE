@@ -76,7 +76,7 @@ const ProductListScreen = (props: Props) => {
       setLoadingData(true);
       const productService = new ProductService();
       const productList = await productService.getProductByConfig(valueConfiguration, categoryId);
-      console.log("ssssssss: ", productList.data.length);
+   
       setProducts(productList.data);
       setHasData(productList.data.length > 0);
     } catch (error) {
@@ -92,7 +92,7 @@ const ProductListScreen = (props: Props) => {
       setLoadingData(true);
       const productService = new ProductService();
       const productList = await productService.getProductByColor(valueColor, categoryId);
-      console.log("data by color: ", productList.data.length);
+      
       setProducts(productList.data);
       setHasData(productList.data.length > 0);
     } catch (error) {
@@ -108,7 +108,7 @@ const ProductListScreen = (props: Props) => {
       setLoadingData(true);
       const productService = new ProductService();
       const productList = await productService.getProductByPrice(minPrice, maxPrice, categoryId);
-      console.log("Data by price: ", productList.length);
+      
       setProducts(productList.data);
       setHasData(productList.data.length > 0);
     } catch (error) {
@@ -123,7 +123,7 @@ const ProductListScreen = (props: Props) => {
       setLoadingData(true); // Bắt đầu tải dữ liệu
       const productService = new ProductService();
       const productList = await productService.getProductByIdCategory(categoryId);
-      console.log('Product: ', productList.data.length);
+  
       setProducts(productList.data);
       setHasData(productList.data.length > 0); // Cập nhật trạng thái có dữ liệu hay không
     } catch (error) {
@@ -138,7 +138,7 @@ const ProductListScreen = (props: Props) => {
       const categoryService = new ConfigurationService();
       const result = await categoryService.fetchConfiguration();
       setConfiguration(result.data);
-      console.log(result.data.length);
+    
     } catch (error) {
       setError('err');
     }
@@ -166,7 +166,7 @@ const ProductListScreen = (props: Props) => {
     fetchConfig();
     if (valueConfiguration && categoryId) {
       getProductByConfig();
-      console.log("vao day")
+     
     } else {
       fetchProducts();
     }
@@ -176,11 +176,11 @@ const ProductListScreen = (props: Props) => {
     fetchConfig();
     if (valueColor && categoryId) {
       getProductByColor();
-      console.log("vao day")
+      
     } else {
       fetchProducts();
     }
-    console.log("value, id: ", valueColor, categoryId);
+   
   }, [valueColor, categoryId]);
 
   const [isChecked, setChecked] = useState(false);
@@ -383,7 +383,7 @@ const ProductListScreen = (props: Props) => {
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
                 onChange={item => {
-                  console.log("color: ", item.nameColor)
+                  
                   setValueColor(item.nameColor);
                   setValueConfiguration(null);
                   setMinimum('');
@@ -423,7 +423,7 @@ const ProductListScreen = (props: Props) => {
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
                 onChange={item => {
-                  console.log('Selected Configuration:', item.nameConfig);
+                  
                   setValueConfiguration(item.nameConfig);
                   setValueColor(null);
                   setMinimum('');

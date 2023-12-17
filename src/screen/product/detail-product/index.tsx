@@ -438,7 +438,7 @@ const DetailsScreen = (props: Props) => {
     {
       //add
       seta(configItem);
-      setProductColorConfigIdModal(configItem.configId);
+      setProductColorConfigIdModal(configItem.id);
       setProductColorIdModal(configItem.ProductColorId);
       //view
       setSelectedPriceModal(configItem.price || 0);
