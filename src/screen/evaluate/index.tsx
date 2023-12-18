@@ -184,7 +184,6 @@ const EvaluateScreen = (props: Props) => {
           />
         </View>
         <BaseButton
-          disable={comment.toString().trim().length == 0 ? true : false}
           style={{marginBottom: 30}}
           onPress={() => {
             sendEvaluate();
